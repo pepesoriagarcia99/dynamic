@@ -12,7 +12,7 @@ export default defineConfig({
   ],
   build: {
     lib: {
-      entry: './src/main.ts',
+      entry: './src/main-wc.ts',
       name: 'Dynamic',
       fileName: 'dynamic',
       formats: ['umd']
