@@ -1,0 +1,29 @@
+{
+  "name": "dynamic",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/pepesoriagarcia99/datagrid#readme",
+  "bugs": {
+    "url": "https://github.com/pepesoriagarcia99/datagrid/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pepesoriagarcia99/datagrid.git"
+  },
+  "license": "ISC",
+  "author": "Jose Eduardo Soria",
+  "type": "commonjs",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "npx tsc",
+    "build:bundler": "node esBuild.js",
+    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q lib/dist/index.js env=development \""
+  },
+  "devDependencies": {
+    "@types/node": "~20",
+    "concurrently": "~8",
+    "nodemon": "~3",
+    "typescript": "~5"
+  },
+  "dependencies": {}
+}
