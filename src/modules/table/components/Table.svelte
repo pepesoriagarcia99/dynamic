@@ -12,6 +12,15 @@
   export let columns: Column[] = [];
   export let data: any[] = [];
 
+  export let selectable: boolean = false;
+  export let filterable: boolean = false;
+
+  // Computed
+  $: tableConfiguration = {
+    selectable,
+    filterable
+  };
+
   console.log('dyn-table component initialized with columns:', columns, 'and data:', data);
 
   function onRowClick(event: RowEvent) {
@@ -27,11 +36,11 @@
 </script>
 
 <table bind:this={el} class="table" part="table">
-  <Header {columns} />
+  <Header {columns} {tableConfiguration}/>
 
   <tbody>
     {#each data as row, i}
-      <Row index={i} {columns} {row} onSelect={(event) => onRowClick(event)} />
+      <Row index={i} {columns} {row} {tableConfiguration} onSelect={(event) => onRowClick(event)} />
     {/each}
   </tbody>
 </table>

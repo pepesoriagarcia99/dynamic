@@ -4,11 +4,12 @@
 
   // Inputs
   export let column: Column;
+  export let filterable: boolean = true;
 </script>
 
 <th>
   {column?.name}
-  {#if column.filterable}
+  {#if column.filterable && filterable}
     <Filter {column} />
   {/if}
 </th>

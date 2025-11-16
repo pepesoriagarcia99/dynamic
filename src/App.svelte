@@ -15,7 +15,6 @@
     { id: 2, name: 'Bob', age: 25, email: 'bob@example.com' },
     { id: 3, name: 'Charlie', age: 35, email: 'charlie@example.com' }
   ];
-
 </script>
 
 <main>
@@ -30,4 +29,38 @@
   .content {
     margin: 2rem;
   }
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  h1 {
+    margin-bottom: 20px;
+  }
+
+  /* table {
+    tb
+  }
+
+  dyn-table::part(row) {
+    transition: background 0.15s;
+    cursor: pointer;
+  }
+
+  dyn-table::part(row):hover {
+    background: #f5faff;
+  }
+
+  dyn-table::part(row-even) {
+    background: #ffffff;
+  }
+
+  dyn-table::part(row-odd) {
+    background: #fcfcfc;
+  }
+
+  dyn-table::part(row-selected) {
+    background: #cfe6ff;
+  } */
 </style>
