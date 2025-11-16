@@ -8,8 +8,13 @@
 
 <th>
   {column?.name}
-  <Filter {column} />
+  {#if column.filterable}
+    <Filter {column} />
+  {/if}
 </th>
 
 <style>
+  th {
+    text-align: left;
+  }
 </style>

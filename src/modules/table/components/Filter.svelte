@@ -1,9 +1,8 @@
 <script lang="ts">
-  import type { Column } from "../models/Column";
+  import type { Column } from '../models/Column';
 
-
-    export let column: Column;
-    console.log("🚀 ~ column:", column)  
+  export let column: Column;
+  console.log('🚀 ~ column:', column);
 </script>
 
 <div>

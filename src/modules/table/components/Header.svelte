@@ -7,7 +7,7 @@
 </script>
 
 <thead>
-  <tr>
+  <tr part="header">
     {#each columns as column}
       <ColumnHeader {column} />
     {/each}

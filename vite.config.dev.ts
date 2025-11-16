@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import { svelte } from '@sveltejs/vite-plugin-svelte'
+import tailwind from '@tailwindcss/vite';
 
 export default defineConfig({
     plugins: [
@@ -7,7 +8,8 @@ export default defineConfig({
             compilerOptions: {
                 dev: true
             }
-        })
+        }),
+        tailwind()
     ],
     build: {
         target: 'esnext',

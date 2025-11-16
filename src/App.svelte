@@ -21,6 +21,7 @@
 <main>
   <div class="content">
     <h1>🎨 Dynamic Table - Desarrollo</h1>
+
     <Table {columns} {data} />
   </div>
 </main>
