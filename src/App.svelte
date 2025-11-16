@@ -1,4 +1,5 @@
 <script lang="ts">
+  import './app.css';
   import Table from './components/Table.svelte';
 </script>
 
