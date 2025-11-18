@@ -2,20 +2,25 @@
   import type { Column } from '../models/Column';
   import type { RowEvent, RowEventType } from '../models/TableEvents';
 
-  // Inputs
+  /** Inputs */
   export let column: Column;
   export let row: any;
 
-  // Outputs
-  export let onSelect: (event: RowEvent) => void;
+  /** Outputs */
+  export let onClick: (event: RowEvent) => void;
 
+  /** Methods */
   function onCellClick(event: MouseEvent, type: RowEventType) {
     event.stopPropagation();
 
-    onSelect({
+    onClick({
       type,
       row,
-      column
+      column,
+      ctx: {
+        CTRL: event.ctrlKey || event.metaKey,
+        SHIFT: event.shiftKey
+      }
     });
   }
 </script>

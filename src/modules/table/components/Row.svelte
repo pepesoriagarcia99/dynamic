@@ -1,48 +1,68 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import type { Column } from '../models/Column';
   import type { TableConfiguration } from '../models/configuration/TableConfiguration';
-  import type { RowEvent, RowEventType } from '../models/TableEvents';
+  import type { RowData, RowEvent, RowEventType } from '../models/TableEvents';
+  import { selectionStore } from '../store/selection-store.svelte';
   import ColumnValue from './ColumnValue.svelte';
 
-  // Inputs
-  export let index: number = 0;
-  export let columns: Column[] = [];
-  export let row: any;
-  export let tableConfiguration: TableConfiguration;
+  interface RowProps {
+    index?: number;
+    columns?: Column[];
+    row: RowData;
+    tableConfiguration: TableConfiguration;
+    onClick?: (event: RowEvent) => void;
+  }
 
-  export let selected: boolean = false;
+  /** Inputs */
+  const { index = 0, columns = [], row, tableConfiguration, onClick = () => {} }: RowProps = $props();
 
-  // Outputs
-  export let onSelect: (event: RowEvent) => void;
+  /** Outputs */
+  // export let onClick: (event: RowEvent) => void;
 
-  // Computed part names
-  $: partNames = ['row', index % 2 === 0 ? 'row-even' : 'row-odd', selected ? 'row-selected' : null]
-    .filter(Boolean)
-    .join(' ');
+  /** Values */
+  let isSelected = $state<boolean>(false);
 
-  function onRowClick(type: RowEventType) {
-    onSelect({
+  /** Computed */
+  const partNames: string = $derived(
+    ['row', index % 2 === 0 ? 'row-even' : 'row-odd', isSelected ? 'row-selected' : null].filter(Boolean).join(' ')
+  );
+
+  /** Methods */
+  onMount(() => {
+    selectionStore.subscribe(row.__key, (selected) => {
+      isSelected = selected;
+    });
+  });
+
+  function onRowClick(type: RowEventType, event?: MouseEvent) {
+    onClick({
       type,
       index,
-      row
+      row,
+      ctx: {
+        CTRL: event ? event.ctrlKey || event.metaKey : false,
+        SHIFT: event ? event.shiftKey : false
+      }
     });
   }
 
   function onCellClick(event: RowEvent) {
     event.index = index;
-    onSelect(event);
+    onClick(event);
   }
 </script>
 
 <tr
-  class:cursor-pointer={tableConfiguration.selectable}
+  class:cursor-pointer={tableConfiguration.selectableType !== 'none'}
   part={partNames}
-  on:click={() => onRowClick('leftclick')}
-  on:contextmenu={() => onRowClick('rightclick')}
-  on:dblclick={() => onRowClick('doubleclick')}
+  class={partNames}
+  onclick={(e) => onRowClick('leftclick', e)}
+  oncontextmenu={() => onRowClick('rightclick')}
+  ondblclick={() => onRowClick('doubleclick')}
 >
   {#each columns as column}
-    <ColumnValue {column} {row} onSelect={(event) => onCellClick(event)} />
+    <ColumnValue {column} {row} onClick={(event) => onCellClick(event)} />
   {/each}
 </tr>
 

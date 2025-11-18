@@ -2,7 +2,7 @@
   import Filter from './Filter.svelte';
   import type { Column } from '../models/Column';
 
-  // Inputs
+  /** Inputs */
   export let column: Column;
   export let filterable: boolean = true;
 </script>

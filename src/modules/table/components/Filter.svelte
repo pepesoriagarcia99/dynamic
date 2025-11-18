@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Column } from '../models/Column';
 
+  /** Inputs */
   export let column: Column;
   console.log('🚀 ~ column:', column);
 </script>
