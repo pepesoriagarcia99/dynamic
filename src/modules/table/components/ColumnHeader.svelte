@@ -2,9 +2,14 @@
   import Filter from './Filter.svelte';
   import type { Column } from '../models/Column';
 
+  interface ColumnHeaderProps {
+    column: Column;
+    filterable?: boolean;
+  }
+
   /** Inputs */
-  export let column: Column;
-  export let filterable: boolean = true;
+  const { column, filterable = false }: ColumnHeaderProps = $props();
+
 </script>
 
 <th>

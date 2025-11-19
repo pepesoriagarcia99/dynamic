@@ -3,9 +3,13 @@
   import type { TableConfiguration } from '../models/configuration/TableConfiguration';
   import ColumnHeader from './ColumnHeader.svelte';
 
+  interface HeaderProps {
+    columns: Column[];
+    tableConfiguration: TableConfiguration;
+  }
+
   /** Inputs */
-  export let columns: Column[] = [];
-  export let tableConfiguration: TableConfiguration;
+  const { columns = [], tableConfiguration }: HeaderProps = $props();
 </script>
 
 <thead class="thead" part="thead">

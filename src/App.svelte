@@ -7,7 +7,7 @@
   import { onMount } from 'svelte';
 
   let columns: Column[] = [
-    { key: 'name', name: 'Name', type: String },
+    { key: 'name', name: 'Name', type: String, filterable: true },
     { key: 'url', name: 'URL', type: String }
   ];
 
@@ -44,7 +44,7 @@
     <h1>🎨 Dynamic Table - Desarrollo</h1>
 
     <div class="table-container">
-      <dyn-table {loading} {columns} {data} selectableType="multiple" on:rowClick={onRowClick} on:selection={onRowSelect}
+      <dyn-table {loading} {columns} {data} filterable={true} selectableType="multiple" on:rowClick={onRowClick} on:selection={onRowSelect}
       ></dyn-table>
     </div>
   </div>

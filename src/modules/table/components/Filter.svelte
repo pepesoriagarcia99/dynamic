@@ -1,14 +1,28 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import type { Column } from '../models/Column';
+  // import { filterStore } from '../store/filter-store.svelte';
+
+  interface FilterProps {
+    column: Column;
+    filterValue?: string;
+  }
 
   /** Inputs */
-  export let column: Column;
-  console.log('🚀 ~ column:', column);
+  let { column, filterValue = $bindable<string>('') }: FilterProps = $props();
+
+  $effect(() => {
+    console.log('Filter change COLUMN:', column, 'VALUE:', filterValue);
+  });
+
+  /** Methods */
+  onMount(() => {
+    // filterStore.subscribe(column, (filters) => { });
+  });
 </script>
 
 <div>
-  <!-- Filter UI elements go here -->
-  <input type="text" placeholder="Filter..." />
+  <input type="text" placeholder="Filter..." bind:value={filterValue} />
 </div>
 
 <style>
