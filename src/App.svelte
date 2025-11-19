@@ -5,6 +5,9 @@
   import Table from './modules/table/components/Table.svelte';
 
   import { onMount } from 'svelte';
+  import type { RowEvent } from './modules/table/models/TableEvents';
+  import type { SelectionEvent } from './modules/table/models/SelectionEvent';
+  import type { FilterEvent } from './modules/table/models/FilterEvent';
 
   let columns: Column[] = [
     { key: 'name', name: 'Name', type: String, filterable: true },
@@ -30,12 +33,16 @@
 
   onMount(loadPokemon);
 
-  function onRowClick(event: any) {
-    console.log('Row clicked:', event.detail);
+  function onRowClick(event: any & { detail: RowEvent }) {
+    console.log('CLICKED: ', event.detail);
   }
 
-  function onRowSelect(event: any) {
-    console.log('Row selected:', event.detail);
+  function onRowSelect(event: any & { detail: SelectionEvent }) {
+    console.log('SELECTED: ', event.detail);
+  }
+
+  function onFilterChange(event: any & { detail: FilterEvent }) {
+    console.log('FILTERED: ', event.detail);
   }
 </script>
 
@@ -44,7 +51,7 @@
     <h1>🎨 Dynamic Table - Desarrollo</h1>
 
     <div class="table-container">
-      <dyn-table {loading} {columns} {data} filterable={true} selectableType="multiple" on:rowClick={onRowClick} on:selection={onRowSelect}
+      <dyn-table {loading} {columns} {data} filterable={true} selectableType="multiple" on:rowClick={onRowClick} on:selection={onRowSelect} on:filterChange={onFilterChange}
       ></dyn-table>
     </div>
   </div>

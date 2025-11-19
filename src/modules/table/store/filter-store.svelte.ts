@@ -1,7 +1,7 @@
 import { Store } from "../../core/models/Store";
-import type { FilterItem } from "../models/FilterEvent";
 
-class FilterStore extends Store<FilterItem> {
+
+class FilterStore extends Store<string> {
 
     constructor() {
         super();
@@ -12,8 +12,8 @@ class FilterStore extends Store<FilterItem> {
      * @override
      */
     emit() {
-        // const event = this.elements.filter(element => element.value);
-        // super.emit(event.map(element => element.getValue()));
+        const event = this.elements.filter(element => element.value);
+        super.emit(event.map(element => element.getValue()));
     }
 }
 

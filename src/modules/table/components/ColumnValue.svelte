@@ -2,12 +2,15 @@
   import type { Column } from '../models/Column';
   import type { RowEvent, RowEventType } from '../models/TableEvents';
 
-  /** Inputs */
-  export let column: Column;
-  export let row: any;
+  interface ColumnValueProps {
+    column: Column;
+    row: any;
+    onClick: (event: RowEvent) => void;
+  }
 
-  /** Outputs */
-  export let onClick: (event: RowEvent) => void;
+  /** Inputs */
+  const { column, row, onClick = () => {} }: ColumnValueProps = $props();
+
 
   /** Methods */
   function onCellClick(event: MouseEvent, type: RowEventType) {
@@ -26,9 +29,9 @@
 </script>
 
 <td
-  on:click={(event) => onCellClick(event, 'leftclick')}
-  on:contextmenu={(event) => onCellClick(event, 'rightclick')}
-  on:dblclick={(event) => onCellClick(event, 'doubleclick')}>
+  onclick={(event) => onCellClick(event, 'leftclick')}
+  oncontextmenu={(event) => onCellClick(event, 'rightclick')}
+  ondblclick={(event) => onCellClick(event, 'doubleclick')}>
   {row[column.key]}
 </td>
 

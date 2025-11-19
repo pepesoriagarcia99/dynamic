@@ -12,10 +12,15 @@
   import type { Column } from '../models/Column';
   import type { RowData, RowEvent } from '../models/TableEvents';
   import type { SelectableType, SortableType, TableConfiguration } from '../models/configuration/TableConfiguration';
+
   import { selectionStore } from '../store/selection-store.svelte';
+  import { filterStore } from '../store/filter-store.svelte';
 
   import Header from './Header.svelte';
   import Row from './Row.svelte';
+  import type { FilterEvent } from '../models/FilterEvent';
+  import type { StoreComponentData } from '../../core/models/StoreComponent';
+  import type { SelectionEvent } from '../models/SelectionEvent';
 
   interface TableProps {
     columns?: Column[];
@@ -81,10 +86,20 @@
   /** Methods */
   onMount(() => {
     selectionStore.init(tableConfiguration);
-    selectionStore.subscribe((selection) => {
+    selectionStore.subscribe((selection: StoreComponentData<boolean>[]) => {
       el.dispatchEvent(
         new CustomEvent('selection', {
-          detail: selection,
+          detail: selection as SelectionEvent[],
+          bubbles: true,
+          composed: true
+        })
+      );
+    });
+
+    filterStore.subscribe((filters: StoreComponentData<string>[]) => {
+      el.dispatchEvent(
+        new CustomEvent('filterChange', {
+          detail: filters as FilterEvent[],
           bubbles: true,
           composed: true
         })
@@ -105,10 +120,6 @@
       })
     );
   }
-
-  // function onSelectChange() {
-
-  // }
 </script>
 
 <!-- TODO: CREAR LOS SLOTS -->

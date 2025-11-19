@@ -6,7 +6,7 @@ import type { EventContext, RowEvent } from "../models/TableEvents";
 /**
  * Store para gestionar la seleccion de filas en la tabla
  */
-class SelectionStoreV2 extends Store<boolean> {
+class SelectionStore extends Store<boolean> {
 
   private configuration?: TableConfiguration;
 
@@ -82,4 +82,4 @@ class SelectionStoreV2 extends Store<boolean> {
   }
 }
 
-export const selectionStore = new SelectionStoreV2();
+export const selectionStore = new SelectionStore();

@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
   import type { Column } from '../models/Column';
-  // import { filterStore } from '../store/filter-store.svelte';
+  import { filterStore } from '../store/filter-store.svelte';
+  import type { StoreComponent } from '../../core/models/StoreComponent';
 
   interface FilterProps {
     column: Column;
@@ -11,13 +11,12 @@
   /** Inputs */
   let { column, filterValue = $bindable<string>('') }: FilterProps = $props();
 
-  $effect(() => {
-    console.log('Filter change COLUMN:', column, 'VALUE:', filterValue);
-  });
+  /** Values */
+  let filterStoreComponent: StoreComponent<string> = filterStore.add(column.key, filterValue);
 
-  /** Methods */
-  onMount(() => {
-    // filterStore.subscribe(column, (filters) => { });
+  /** Effects */
+  $effect(() => {
+    filterStoreComponent?.setValue(filterValue);
   });
 </script>
 
@@ -26,4 +25,8 @@
 </div>
 
 <style>
+  input {
+    width: 100%;
+    padding: 4px 4px 4px 4px;
+  }
 </style>
