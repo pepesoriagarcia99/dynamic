@@ -1,149 +1,85 @@
+import { Store } from "../../core/models/Store";
 import type { TableConfiguration } from "../models/configuration/TableConfiguration";
 import type { EventContext, RowEvent } from "../models/TableEvents";
 
-type Subscriber = (selected: boolean) => void;
 
 /**
  * Store para gestionar la seleccion de filas en la tabla
  */
-class SelectionStore {
+class SelectionStoreV2 extends Store<boolean> {
 
   private configuration?: TableConfiguration;
 
-  private selection: string[] = [];
+  constructor() {
+    super();
+  }
 
-  private subscribers: Map<string, Subscriber> = new Map();
-
-  private selectionSubscribers: Set<(selection: string[]) => void> = new Set();
-
-  constructor() { }
-
-  init(configuration: TableConfiguration /*, data: RowData[]*/) {
+  init(configuration: TableConfiguration) {
     this.configuration = configuration;
-    // this.data = data;
-
-    this.selection = [];
-    this.subscribers.clear();
   }
 
   /**
    * Sistema de seleccion simple (una sola fila)
    * @param key 
    */
-  private simpleSelect(key: string) {
-    const index = this.selection.indexOf(key);
-    this.clearSelection();
+  private simpleSelect(event: RowEvent) {
+    const key = event.row.__key;
 
-    if (index !== -1) {
-      this.selection = [];
-    } else {
-      this.selection = [key];
-    }
-
-    const subscriber = this.subscribers.get(key);
-    if (subscriber) {
-      subscriber(index === -1);
-    }
+    this.elements.forEach(el => {
+      if (el.key === key) {
+        el.setValue(!el.value);
+      } else if (el.value === true) {
+        el.setValue(false);
+      }
+    });
   }
 
   /**
-   * Sistema de seleccion multiple (varias filas)
-   * @param key 
-   */
+ * Sistema de seleccion multiple (varias filas)
+ * @param key 
+ */
   private multipleSelect(event: RowEvent) {
     const key = event.row.__key;
     const eventContext: EventContext = event.ctx;
 
     if (eventContext.SHIFT && eventContext.CTRL) {
-      // const dataIndex = event.index;
-      // if (this.shiSftSelectStartIndex === null) {
-      //   this.shiSftSelectStartIndex = dataIndex!;
-
-      //   this.simpleSelect(key);
-      // } else {
-      //   const start = Math.min(this.shiSftSelectStartIndex, dataIndex!);
-      //   console.log("🚀 ~ SelectionStore ~ multipleSelect ~ start:", start)
-      //   const end = Math.max(this.shiSftSelectStartIndex, dataIndex!);
-      //   console.log("🚀 ~ SelectionStore ~ multipleSelect ~ end:", end)
-
-      //   this.clearSelection();
-      //   this.selection = [];
-
-      //   for (let i = start; i <= end; i++) {
-      //     const rowKey = this.data[i].__key;
-      //     this.selection.push(rowKey);
-      //     const subscriber = this.subscribers.get(rowKey);
-      //     if (subscriber) {
-      //       subscriber(true);
-      //     }
-      //   }
-      //   this.shiSftSelectStartIndex = null;
-      // }
+      /**
+       * TODO: Implementar seleccion multiple con SHIFT + CTRL
+       */
     } else if (eventContext.CTRL) {
-      const index = this.selection.indexOf(key);
-
-      if (index === -1) {
-        this.selection.push(key);
-      } else {
-        this.selection.splice(index, 1);
-      }
-
-      const subscriber = this.subscribers.get(key);
-      if (subscriber) {
-        subscriber(index === -1);
-      }
+      this.elements.forEach(el => {
+        if (el.key === key) {
+          el.setValue(!el.value);
+        }
+      });
     } else {
-      this.simpleSelect(key);
+      this.simpleSelect(event);
     }
   }
 
+  /**
+   * Maneja el evento de toggle de seleccion de fila
+   * 
+   * @param event Evento de fila
+   */
   onSelectToggle(event: RowEvent) {
-    const key = event.row.__key;
-
     if (this.configuration!.selectableType === 'single') {
-      this.simpleSelect(key);
+      this.simpleSelect(event);
     } else if (this.configuration!.selectableType === 'multiple') {
       this.multipleSelect(event);
     }
 
-    this.emitSelectionChange();
+    this.emit();
   }
 
-  onSelectAll() {
-    this.subscribers.forEach((callback) => {
-      callback(true);
-    });
-  }
-
-  clearSelection() {
-    this.subscribers.forEach((callback) => {
-      callback(false);
-    });
-  }
-
-  subscribe(key: string, callback: Subscriber) {
-    this.subscribers.set(key, callback);
-  }
-
-  subscribeSelection(callback: (selection: string[]) => void) {
-    this.selectionSubscribers.add(callback);
-  }
-
-  emitSelectionChange() {
-    this.selectionSubscribers.forEach((callback) => {
-      callback(this.selection);
-    });
-  }
-
-  unSubscribe(key: string) {
-    this.subscribers.delete(key);
-  }
-
-  clearSubscribers() {
-    this.subscribers.clear();
+  /**
+   * Emite cambios en la seleccion
+   * @override
+   */
+  emit() {
+    const event = this.elements.filter(element => element.value);
+    super.emit(event.map(element => element.getValue()));
   }
 }
 
-export const selectionStore = new SelectionStore();
-
-
+export const selectionStore = new SelectionStoreV2();

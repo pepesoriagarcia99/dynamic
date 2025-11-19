@@ -1,42 +1,38 @@
-import { StoreComponent } from "./StoreComponent";
+import { StoreComponent, type StoreComponentData } from "./StoreComponent";
 import { Subscription } from "./Subscription";
 
 
+/**
+ * Clase base para manejar un Store que contiene múltiples StoreComponents
+ */
+export class Store<T> extends Subscription<StoreComponentData<T>[]> {
 
-export class Store<T> extends Subscription<T> {
-
-    private elements: StoreComponent<T>[] = [];
+    protected elements: StoreComponent<T>[] = [];
 
     constructor() {
         super();
     }
 
-    emit() {
-        super.emit(this.elements.map(element => element.getValue()));
+    /**
+     * Emite los cambios en el store
+     * 
+     * @param customEvent Evento personalizado para emitir
+     */
+    emit(customEvent?: any): void {
+        const event = customEvent ?? this.elements.map(element => element.getValue());
+        super.emit(event);
     }
 
-    add(id: string, initialValue?: T): StoreComponent<T> {
-        const storeComponent = new StoreComponent(this, id, initialValue);
+    /**
+     * Agrega un nuevo componente al store
+     * 
+     * @param key Clave
+     * @param initialValue Valor inicial
+     * @returns Componente de store creado
+     */
+    add(key: string, initialValue: T): StoreComponent<T> {
+        const storeComponent = new StoreComponent(this, key, initialValue);
         this.elements.push(storeComponent);
         return storeComponent;
     }
-
-    // clear(): void {
-    //     this.elements = [];
-    // }
-
-    // subscribe(callback: (value: any) => void): string {
-    //     const subscribe = {
-    //         id: crypto.randomUUID(),
-    //         callback: callback
-    //     }
-
-    //     this.subscribers.push(subscribe);
-
-    //     return subscribe.id;
-    // }
-
-    // unsubscribe(id: string): void {
-    //     this.subscribers = this.subscribers.filter(sub => sub.id !== id);
-    // }
 }

@@ -2,39 +2,62 @@ import type { Store } from "./Store";
 import { Subscription } from "./Subscription";
 
 export interface StoreComponentData<T> {
-    id: string;
-    value?: T;
+    key: string;
+    value: T | null;
 }
 
-export class StoreComponent<T> extends Subscription<T> {
+/**
+ * Componente de un Store que maneja su propio estado y notifica cambios
+ */
+export class StoreComponent<T> extends Subscription<StoreComponentData<T>> {
 
-    private id: string;
+    #key: string;
 
-    private value?: T;
+    #value: T | null;
 
-    private store: Store<T>;
+    #store: Store<T>;
 
-    constructor(store: Store<T>, id: string, initialValue?: T) {
+    constructor(store: Store<T>, key: string, initialValue: T | null) {
         super();
 
-        this.id = id ?? crypto.randomUUID();
-        this.store = store;
-        this.value = initialValue;
+        this.#key = key;
+        this.#store = store;
+        this.#value = initialValue;
     }
 
+    /**
+     * Emite los cambios del componente
+     */
     emit() {
         super.emit(this.getValue());
     }
 
+    /**
+     * Establece el valor del componente
+     * * Emite los cambios en el componente y en el store
+     * @param value Valor a establecer
+     */
     setValue(value: T) {
-        this.value = value;
+        this.#value = value;
 
         this.emit();
-        this.store.emit();
+        this.#store.emit();
     }
 
+    /**
+     * Obtiene el valor del componente
+     * @returns Datos del componente de store
+     */
     getValue(): StoreComponentData<T> {
-        return { id: this.id, value: this.value };
+        return { key: this.#key, value: this.#value };
+    }
+
+    get key() {
+        return this.#key;
+    }
+
+    get value() {
+        return this.#value;
     }
 
     // emit() {

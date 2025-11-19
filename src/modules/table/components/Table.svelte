@@ -81,7 +81,7 @@
   /** Methods */
   onMount(() => {
     selectionStore.init(tableConfiguration);
-    selectionStore.subscribeSelection((selection) => {
+    selectionStore.subscribe((selection) => {
       el.dispatchEvent(
         new CustomEvent('selection', {
           detail: selection,

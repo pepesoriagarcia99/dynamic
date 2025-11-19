@@ -17,9 +17,6 @@
   /** Inputs */
   const { index = 0, columns = [], row, tableConfiguration, onClick = () => {} }: RowProps = $props();
 
-  /** Outputs */
-  // export let onClick: (event: RowEvent) => void;
-
   /** Values */
   let isSelected = $state<boolean>(false);
 
@@ -30,8 +27,9 @@
 
   /** Methods */
   onMount(() => {
-    selectionStore.subscribe(row.__key, (selected) => {
-      isSelected = selected;
+    const selectionComponent = selectionStore.add(row.__key, false);
+    selectionComponent.subscribe((event) => {
+      isSelected = event.value ?? false;
     });
   });
 
