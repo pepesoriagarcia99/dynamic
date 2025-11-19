@@ -11,7 +11,7 @@ class SelectionStore extends Store<boolean> {
   private configuration?: TableConfiguration;
 
   constructor() {
-    super();
+    super({ autoCommit: false });
   }
 
   init(configuration: TableConfiguration) {

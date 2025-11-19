@@ -1,6 +1,10 @@
 import { StoreComponent, type StoreComponentData } from "./StoreComponent";
 import { Subscription } from "./Subscription";
 
+export interface StoreConfiguration {
+    autoCommit: boolean; // Si es true emite cambios al Store automaticamente al cambiar un StoreComponent
+}
+
 
 /**
  * Clase base para manejar un Store que contiene múltiples StoreComponents
@@ -9,8 +13,11 @@ export class Store<T> extends Subscription<StoreComponentData<T>[]> {
 
     protected elements: StoreComponent<T>[] = [];
 
-    constructor() {
+    #configuration: StoreConfiguration;
+
+    constructor(configuration: StoreConfiguration = { autoCommit: true }) {
         super();
+        this.#configuration = configuration;
     }
 
     /**
@@ -31,7 +38,8 @@ export class Store<T> extends Subscription<StoreComponentData<T>[]> {
      * @returns Componente de store creado
      */
     add(key: string, initialValue: T): StoreComponent<T> {
-        const storeComponent = new StoreComponent(this, key, initialValue);
+        const configuration = { autoCommit: this.#configuration.autoCommit };
+        const storeComponent = new StoreComponent(this, configuration, key, initialValue);
         this.elements.push(storeComponent);
         return storeComponent;
     }

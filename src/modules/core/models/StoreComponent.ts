@@ -6,23 +6,31 @@ export interface StoreComponentData<T> {
     value: T | null;
 }
 
+export interface StoreComponentConfiguration {
+    autoCommit: boolean; // Configuracion heredada del Store
+}
+
 /**
  * Componente de un Store que maneja su propio estado y notifica cambios
  */
 export class StoreComponent<T> extends Subscription<StoreComponentData<T>> {
 
-    #key: string;
+    key: string;
 
-    #value: T | null;
+    value: T | null;
 
     #store: Store<T>;
 
-    constructor(store: Store<T>, key: string, initialValue: T | null) {
+    #configuration: StoreComponentConfiguration;
+
+    constructor(store: Store<T>, configuration: StoreComponentConfiguration, key: string, initialValue: T | null) {
         super();
 
-        this.#key = key;
         this.#store = store;
-        this.#value = initialValue;
+        this.#configuration = configuration;
+
+        this.key = key;
+        this.value = initialValue;
     }
 
     /**
@@ -38,10 +46,12 @@ export class StoreComponent<T> extends Subscription<StoreComponentData<T>> {
      * @param value Valor a establecer
      */
     setValue(value: T) {
-        this.#value = value;
+        this.value = value;
 
         this.emit();
-        this.#store.emit();
+        if(this.#configuration.autoCommit) {
+            this.#store.emit();
+        }
     }
 
     /**
@@ -49,16 +59,9 @@ export class StoreComponent<T> extends Subscription<StoreComponentData<T>> {
      * @returns Datos del componente de store
      */
     getValue(): StoreComponentData<T> {
-        return { key: this.#key, value: this.#value };
+        return { key: this.key, value: this.value };
     }
 
-    get key() {
-        return this.#key;
-    }
-
-    get value() {
-        return this.#value;
-    }
 
     // emit() {
     //     this.subscribers.forEach(subscriber => subscriber.callback({ id: this.id, value: this.value }));
