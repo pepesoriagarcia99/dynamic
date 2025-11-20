@@ -15,6 +15,9 @@
   let filterStoreComponent: StoreComponent<string> = filterStore.add(column.key, filterValue);
 
   /** Effects */
+  const partNamesContainer: string = $derived(`filter-container filter-container-${column.key}`);
+  const partNamesInput: string = $derived(`filter-input filter-input-${column.key}`);
+
   $effect(() => {
     filterStoreComponent?.setValue(filterValue);
   });
@@ -31,16 +34,23 @@
   }
 </script>
 
-<div class="filter-container" part="filter-container">
-  <input class="filter-input" part="filter-input" type="text" placeholder="Filter..." bind:value={filterValue} onkeydown={keydownHandler} />
+<div class={partNamesContainer} part={partNamesContainer}>
+  <input
+    class={partNamesInput}
+    part={partNamesInput}
+    type="text"
+    placeholder="Filter..."
+    bind:value={filterValue}
+    onkeydown={keydownHandler}
+  />
 </div>
 
 <style>
-  .filter-container {
+  .header-filter-container {
     width: 100%;
   }
 
-  .filter-input {
+  .header-filter-input {
     width: 100%;
   }
 </style>

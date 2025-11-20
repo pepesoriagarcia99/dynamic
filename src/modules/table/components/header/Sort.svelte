@@ -4,6 +4,10 @@
   import { sortStore, type SortOrder } from '../../store/sort-store.svelte';
   import type { StoreComponent } from '../../../core/models/StoreComponent';
 
+  import sortIcon from '../../../../assets/svg/sort.svg';
+  import sortTopIcon from '../../../../assets/svg/sort-top.svg';
+  import sortBottomIcon from '../../../../assets/svg/sort-bottom.svg';
+
   interface FilterProps {
     column: Column;
   }
@@ -15,6 +19,10 @@
   /** Values */
   let sortDirection = $state<SortOrder | null>(null);
   let sortStoreComponent: StoreComponent<SortOrder> = sortStore.add(column.key, null);
+
+  const partNamesContainer: string = $derived(`sort-container sort-container-${column.key}`);
+  const partNamesButton: string = $derived(`sort-btn sort-btn-${column.key}`);
+  const partNamesIcon: string = $derived(`sort-icon sort-icon-${column.key}`);
 
   /** Methods */
   onMount(() => {
@@ -28,24 +36,31 @@
   }
 </script>
 
-<button
-  onclick={toggleSort}
-  style="display:flex;align-items:center;gap:4px;background:none;border:none;cursor:pointer;padding:2px;"
->
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<div class={partNamesContainer} part={partNamesContainer}>
+  <button onclick={toggleSort} aria-label="Sort" class={partNamesButton} part={partNamesButton}>
     {#if sortDirection === 'asc'}
-      <path d="M12 5l-7 7h14l-7-7Z" />
+      <img src={sortTopIcon} alt="sort ascending" class={partNamesIcon} part={partNamesIcon} />
     {:else if sortDirection === 'desc'}
-      <path d="M12 19l7-7H5l7 7Z" />
+      <img src={sortBottomIcon} alt="sort descending" class={partNamesIcon} part={partNamesIcon} />
     {:else}
-      <path d="M12 5l-7 7h14l-7-7Z" opacity="0.4" />
-      <path d="M12 19l7-7H5l7 7Z" opacity="0.4" />
+      <img src={sortIcon} alt="sort" class={partNamesIcon} part={partNamesIcon} />
     {/if}
-  </svg>
-</button>
+  </button>
+</div>
 
 <style>
-  button:hover svg {
-    color: var(--accent, #555);
+  .sort-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px;
+  }
+
+  .sort-icon {
+    width: 20px;
+    height: 20px;
   }
 </style>

@@ -12,8 +12,8 @@
   const { columns = [], tableConfiguration }: HeaderProps = $props();
 </script>
 
-<thead class="thead" part="thead">
-  <tr class="header" part="header">
+<thead class="header" part="header">
+  <tr class="header-tr" part="header-tr">
     {#each columns as column}
       <ColumnHeader {column} filterable={tableConfiguration.filterable} sortableType={tableConfiguration.sortableType} />
     {/each}
