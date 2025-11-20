@@ -45,7 +45,7 @@ export class StoreComponent<T> extends Subscription<StoreComponentData<T>> {
      * * Emite los cambios en el componente y en el store
      * @param value Valor a establecer
      */
-    setValue(value: T) {
+    setValue(value: T | null) {
         this.value = value;
 
         this.emit();

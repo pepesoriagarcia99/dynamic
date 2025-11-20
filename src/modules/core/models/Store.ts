@@ -37,7 +37,7 @@ export class Store<T> extends Subscription<StoreComponentData<T>[]> {
      * @param initialValue Valor inicial
      * @returns Componente de store creado
      */
-    add(key: string, initialValue: T): StoreComponent<T> {
+    add(key: string, initialValue: T | null): StoreComponent<T> {
         const configuration = { autoCommit: this.#configuration.autoCommit };
         const storeComponent = new StoreComponent(this, configuration, key, initialValue);
         this.elements.push(storeComponent);

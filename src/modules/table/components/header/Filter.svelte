@@ -18,15 +18,29 @@
   $effect(() => {
     filterStoreComponent?.setValue(filterValue);
   });
+
+  /** Methods */
+  function keydownHandler(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      onEnter();
+    }
+  }
+
+  function onEnter() {
+    filterStoreComponent?.setValue(filterValue);
+  }
 </script>
 
-<div>
-  <input type="text" placeholder="Filter..." bind:value={filterValue} />
+<div class="filter-container" part="filter-container">
+  <input class="filter-input" part="filter-input" type="text" placeholder="Filter..." bind:value={filterValue} onkeydown={keydownHandler} />
 </div>
 
 <style>
-  input {
+  .filter-container {
     width: 100%;
-    padding: 4px 4px 4px 4px;
+  }
+
+  .filter-input {
+    width: 100%;
   }
 </style>

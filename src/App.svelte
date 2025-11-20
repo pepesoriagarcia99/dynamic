@@ -8,10 +8,11 @@
   import type { RowEvent } from './modules/table/models/TableEvents';
   import type { SelectionEvent } from './modules/table/models/SelectionEvent';
   import type { FilterEvent } from './modules/table/models/FilterEvent';
+  import type { SortEvent } from './modules/table/models/SortEvent';
 
   let columns: Column[] = [
-    { key: 'name', name: 'Name', type: String, filterable: true },
-    { key: 'url', name: 'URL', type: String }
+    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
+    { key: 'url', name: 'URL', type: String, filterable: true, sortable: true }
   ];
 
   let data: any[] = [];
@@ -44,6 +45,10 @@
   function onFilterChange(event: any & { detail: FilterEvent }) {
     console.log('FILTERED: ', event.detail);
   }
+
+  function onSortChange(event: any & { detail: SortEvent }) {
+    console.log('SORTED: ', event.detail);
+  }
 </script>
 
 <main>
@@ -51,7 +56,17 @@
     <h1>🎨 Dynamic Table - Desarrollo</h1>
 
     <div class="table-container">
-      <dyn-table {loading} {columns} {data} filterable={true} selectableType="multiple" on:rowClick={onRowClick} on:selection={onRowSelect} on:filterChange={onFilterChange}
+      <dyn-table
+        {loading}
+        {columns}
+        {data}
+        filterable={true}
+        selectableType="multiple"
+        sortableType="single"
+        on:rowClick={onRowClick}
+        on:selection={onRowSelect}
+        on:filterChange={onFilterChange}
+        on:sortChange={onSortChange}
       ></dyn-table>
     </div>
   </div>

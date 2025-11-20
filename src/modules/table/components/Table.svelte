@@ -21,7 +21,9 @@
   import type { FilterEvent } from '../models/FilterEvent';
   import type { StoreComponentData } from '../../core/models/StoreComponent';
   import type { SelectionEvent } from '../models/SelectionEvent';
+  import { sortStore, type SortOrder } from '../store/sort-store.svelte';
 
+  
   interface TableProps {
     columns?: Column[];
     loading?: boolean;
@@ -105,6 +107,18 @@
         })
       );
     });
+
+    sortStore.init(tableConfiguration);
+    sortStore.subscribe((sorts: StoreComponentData<SortOrder>[]) => {
+      console.log("🚀 ~ sorts:", sorts)
+      // el.dispatchEvent(
+      //   new CustomEvent('sortChange', {
+      //     detail: sorts as SortEvent[],
+      //     bubbles: true,
+      //     composed: true
+      //   })
+      // );
+    });
   });
 
   function onRowClick(event: RowEvent) {
@@ -126,6 +140,8 @@
 <!-- slot de loading -->
 <!-- slot de not data -->
 <!-- slot: menu contextual -->
+<!-- slot: paginacion -->
+<!-- slot: filter -->
 
 <table bind:this={el} class="table" part="table">
   <Header {columns} {tableConfiguration} />

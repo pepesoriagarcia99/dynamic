@@ -15,7 +15,7 @@
 <thead class="thead" part="thead">
   <tr class="header" part="header">
     {#each columns as column}
-      <ColumnHeader {column} filterable={tableConfiguration.filterable} />
+      <ColumnHeader {column} filterable={tableConfiguration.filterable} sortableType={tableConfiguration.sortableType} />
     {/each}
   </tr>
 </thead>

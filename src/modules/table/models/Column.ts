@@ -1,54 +1,54 @@
 import { ColumnType } from './column-types/ColumnType';
 
-interface ColumnStyle {
-  [key: string]: string | number;
-}
+// interface ColumnStyle {
+//   [key: string]: string | number;
+// }
 
-export interface ColumnConfiguration {
+// export interface ColumnConfiguration {
 
-  /**
-   * Configuración para mostrar un valor con color según un rango definido.
-   * 
-   * Ejemplo:
-   * showValueInRangeColor: [
-   *  { range: { min: 0, max: 50 }, color: 'danger' },
-   *  { range: { min: 51, max: 80 }, color: 'warn' },
-   *  { range: { min: 81, max: 100 }, color: 'success' }
-   *  ]
-   * 
-   * Esto aplicaría un color 'danger' para valores entre 0 y 50, 'warn' para valores entre 51 y 80, y 'success' para valores entre 81 y 100.
-   * 
-   * Tambien se puede asignar por valor especifico:
-   * showValueInRangeColor: [
-   *  { value: 'active', color: 'success' },
-   *  { value: 'inactive', color: 'danger' }
-   * ]
-   */
-  showValueInRangeColor?: {
-    range?: {
-      min: number;
-      max: number;
-    }
-    value?: string;
-    severity: 'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contrast';
-  }[]
-}
+//   /**
+//    * Configuración para mostrar un valor con color según un rango definido.
+//    * 
+//    * Ejemplo:
+//    * showValueInRangeColor: [
+//    *  { range: { min: 0, max: 50 }, color: 'danger' },
+//    *  { range: { min: 51, max: 80 }, color: 'warn' },
+//    *  { range: { min: 81, max: 100 }, color: 'success' }
+//    *  ]
+//    * 
+//    * Esto aplicaría un color 'danger' para valores entre 0 y 50, 'warn' para valores entre 51 y 80, y 'success' para valores entre 81 y 100.
+//    * 
+//    * Tambien se puede asignar por valor especifico:
+//    * showValueInRangeColor: [
+//    *  { value: 'active', color: 'success' },
+//    *  { value: 'inactive', color: 'danger' }
+//    * ]
+//    */
+//   showValueInRangeColor?: {
+//     range?: {
+//       min: number;
+//       max: number;
+//     }
+//     value?: string;
+//     severity: 'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contrast';
+//   }[]
+// }
 
-export interface ColumnBooleanConfiguration extends ColumnConfiguration {
-  /**
-   * Configuración para mostrar un icono en lugar de texto para valores booleanos (true/false).
-   * 
-   * * Si no se configura, se mostrará "true" o "false" como texto.
-   */
-  showValueInIconMode?: {
-    trueValue: string;
-    falseValue: string;
-  };
-}
+// export interface ColumnBooleanConfiguration extends ColumnConfiguration {
+//   /**
+//    * Configuración para mostrar un icono en lugar de texto para valores booleanos (true/false).
+//    * 
+//    * * Si no se configura, se mostrará "true" o "false" como texto.
+//    */
+//   showValueInIconMode?: {
+//     trueValue: string;
+//     falseValue: string;
+//   };
+// }
 
-export interface ColumnDateConfiguration extends ColumnConfiguration {
-  format?: string; // Formato de fecha, por ejemplo 'dd/MM/yyyy'
-}
+// export interface ColumnDateConfiguration extends ColumnConfiguration {
+//   format?: string; // Formato de fecha, por ejemplo 'dd/MM/yyyy'
+// }
 
 /**
  * Modelo de Columna de tabla.
@@ -79,7 +79,7 @@ export interface Column {
   /**
    * Estilo personalizado para la columna.
    */
-  style?: ColumnStyle;
+  // style?: ColumnStyle;
 
   /**
    * Indica si la columna es ordenable.
@@ -95,7 +95,7 @@ export interface Column {
    * Configuracion dinamica para las columnas
    * TODO: tengo dudas de sobreesto, quizas este mejor dentro de un FIlterStrategy dentro del ColumnType
    */
-  configuration?: ColumnDateConfiguration | ColumnBooleanConfiguration;
+  // configuration?: ColumnDateConfiguration | ColumnBooleanConfiguration;
 
   // TODO: pensar----------------------------------------------------------
   // ejemplo:
