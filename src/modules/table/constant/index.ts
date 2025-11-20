@@ -4,6 +4,7 @@ export const DEFAULT_SELECTABLE_TYPE = 'none';
 export const DEFAULT_SELECT_ALL = false;
 export const DEFAULT_FILTERABLE = false;
 export const DEFAULT_SORTABLE = 'none';
+export const DEFAULT_PAGINABLE = false;
 
 export const VALID_SELECTABLE_TYPES = ['none', 'single', 'multiple'];
 

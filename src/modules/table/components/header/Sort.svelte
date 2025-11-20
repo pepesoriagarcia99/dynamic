@@ -14,7 +14,6 @@
 
   /** Inputs */
   let { column }: FilterProps = $props();
-  console.log(column);
 
   /** Values */
   let sortDirection = $state<SortOrder | null>(null);

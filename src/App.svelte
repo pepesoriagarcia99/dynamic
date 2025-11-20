@@ -15,20 +15,25 @@
     { key: 'url', name: 'URL', type: String, filterable: true, sortable: true }
   ];
 
-  let data: any[] = [];
-
-  let loading = true;
+  let loading = $state(false);
+  let count = $state<number | undefined>(undefined);
+  let data = $state<any[]>([]);
 
   function loadPokemon() {
     loading = true;
     fetch('https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0')
       .then((res) => res.json())
       .then((res) => {
-        data = res.results;
+        setTimeout(() => {
+          count = res.count;
+          data = res.results;
+        }, 2000);
       })
       .catch(console.error)
       .finally(() => {
-        loading = false;
+        setTimeout(() => {
+          loading = false;
+        }, 2000);
       });
   }
 
@@ -59,14 +64,16 @@
       <dyn-table
         {loading}
         {columns}
+        {count}
         {data}
         filterable={true}
+        paginable={true}
         selectableType="multiple"
         sortableType="single"
-        on:rowClick={onRowClick}
-        on:selection={onRowSelect}
-        on:filterChange={onFilterChange}
-        on:sortChange={onSortChange}
+        onrowClick={onRowClick}
+        onselection={onRowSelect}
+        onfilterChange={onFilterChange}
+        onsortChange={onSortChange}
       ></dyn-table>
     </div>
   </div>

@@ -12,13 +12,23 @@
   const { columns = [], tableConfiguration }: HeaderProps = $props();
 </script>
 
-<thead class="header" part="header">
-  <tr class="header-tr" part="header-tr">
+<thead class="thead" part="thead">
+  <tr class="thead-tr" part="thead-tr">
     {#each columns as column}
-      <ColumnHeader {column} filterable={tableConfiguration.filterable} sortableType={tableConfiguration.sortableType} />
+      <ColumnHeader
+        {column}
+        filterable={tableConfiguration.filterable}
+        sortableType={tableConfiguration.sortableType}
+      />
     {/each}
   </tr>
 </thead>
 
 <style>
+  .thead {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: #ffffff;
+  }
 </style>
