@@ -1,9 +1,9 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import type { Column } from '../models/Column';
-  import type { TableConfiguration } from '../models/configuration/TableConfiguration';
-  import type { RowData, RowEvent, RowEventType } from '../models/TableEvents';
-  import { selectionStore } from '../store/selection-store.svelte';
+  import type { Column } from '../../models/Column';
+  import type { TableConfiguration } from '../../models/configuration/TableConfiguration';
+  import type { RowData, RowEvent, RowEventType } from '../../models/TableEvents';
+  import { selectionStore } from '../../store/selection-store.svelte';
   import ColumnValue from './ColumnValue.svelte';
 
   interface RowProps {

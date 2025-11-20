@@ -1,6 +1,6 @@
 <script lang="ts">
   import Filter from './Filter.svelte';
-  import type { Column } from '../models/Column';
+  import type { Column } from '../../models/Column';
 
   interface ColumnHeaderProps {
     column: Column;

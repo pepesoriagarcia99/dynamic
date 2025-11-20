@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { Column } from '../models/Column';
-  import { filterStore } from '../store/filter-store.svelte';
-  import type { StoreComponent } from '../../core/models/StoreComponent';
+  import type { Column } from '../../models/Column';
+  import { filterStore } from '../../store/filter-store.svelte';
+  import type { StoreComponent } from '../../../core/models/StoreComponent';
 
   interface FilterProps {
     column: Column;

@@ -16,8 +16,8 @@
   import { selectionStore } from '../store/selection-store.svelte';
   import { filterStore } from '../store/filter-store.svelte';
 
-  import Header from './Header.svelte';
-  import Row from './Row.svelte';
+  import Header from './header/Header.svelte';
+  import Row from './body/Row.svelte';
   import type { FilterEvent } from '../models/FilterEvent';
   import type { StoreComponentData } from '../../core/models/StoreComponent';
   import type { SelectionEvent } from '../models/SelectionEvent';

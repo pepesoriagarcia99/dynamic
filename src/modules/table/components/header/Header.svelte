@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { Column } from '../models/Column';
-  import type { TableConfiguration } from '../models/configuration/TableConfiguration';
+  import type { Column } from '../../models/Column';
+  import type { TableConfiguration } from '../../models/configuration/TableConfiguration';
   import ColumnHeader from './ColumnHeader.svelte';
 
   interface HeaderProps {
