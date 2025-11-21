@@ -4,6 +4,7 @@
   import { onMount } from 'svelte';
   import {
     DEFAULT_FILTERABLE,
+    DEFAULT_PAGE_SIZE_OPTIONS,
     DEFAULT_PAGINABLE,
     DEFAULT_SELECT_ALL,
     DEFAULT_SELECTABLE_TYPE,
@@ -37,6 +38,7 @@
     filterable?: boolean;
     sortableType?: SortableType;
     paginable?: boolean;
+    pageSizeOptions?: number[];
   }
 
   let el: HTMLElement;
@@ -45,13 +47,14 @@
   let {
     columns = [],
     loading = false,
-    count,
+    count = 0,
     data = [],
     selectableType = DEFAULT_SELECTABLE_TYPE,
     selectAll = DEFAULT_SELECT_ALL,
     filterable = DEFAULT_FILTERABLE,
     sortableType = DEFAULT_SORTABLE,
-    paginable = DEFAULT_PAGINABLE
+    paginable = DEFAULT_PAGINABLE,
+    pageSizeOptions = DEFAULT_PAGE_SIZE_OPTIONS
   }: TableProps = $props();
 
   /** Checks */
@@ -174,7 +177,7 @@
   </table>
   <div class="pagination" part="pagination">
     {#if paginable === true}
-      <Pagination />
+      <Pagination {count} {pageSizeOptions} />
     {/if}
   </div>
 </div>
