@@ -3,6 +3,9 @@
   import lastPageIcon from '../../../assets/svg/arrow-to-right.svg';
   import nextPageIcon from '../../../assets/svg/left-arrow.svg';
   import previousPageIcon from '../../../assets/svg/right-arrow.svg';
+  import SelectorControl from './header/inputs/SelectorControl.svelte';
+
+  type PageActions = 'first' | 'last' | 'next' | 'previous';
 
   interface PaginationProps {
     count: number;
@@ -14,7 +17,7 @@
   //   let currentPage = 0;
 
   let currentPage = 1;
-  let pageSize
+  let pageSize;
 
   let totalPages = $state(Math.ceil(count / pageSize));
   let showPages: number[] = $state(Array.from({ length: totalPages }, (_, i) => i + 1));
@@ -22,11 +25,15 @@
   console.log('🚀 ~ pageSizeOptions:', pageSizeOptions);
   console.log('🚀 ~ count:', count);
 
-  function handlerAction() {}
-
-  function gotoPage(pageNumber: number) {
-
+  function handlerAction(action: PageActions) {
+    if (action === 'next') {
+    } else if (action === 'previous') {
+    } else if (action === 'first') {
+    } else if (action === 'last') {
+    }
   }
+
+  function gotoPage(pageNumber: number) {}
 
   function calculatePages() {
     //   const totalPages = Math.ceil(count / pageSize);
@@ -38,7 +45,7 @@
 
 <div class="pagination-content" part="pagination-content">
   <button
-    onclick={handlerAction}
+    onclick={() => handlerAction('first')}
     aria-label="first-page"
     class="pagination-btn first-page-btn"
     part="pagination-btn first-page-btn"
@@ -47,7 +54,7 @@
   </button>
 
   <button
-    onclick={handlerAction}
+    onclick={() => handlerAction('next')}
     aria-label="next-page"
     class="pagination-btn next-page-btn"
     part="pagination-btn next-page-btn"
@@ -56,16 +63,16 @@
   </button>
   {#each showPages as n}
     <button
-    onclick={handlerAction}
-    aria-label="next-page"
-    class="pagination-btn next-page-btn"
-    part="pagination-btn next-page-btn"
-  >
-    <span class="pagination-page-number" part="pagination-page-number">{n}</span>
-  </button>
+      onclick={() => gotoPage(n)}
+      aria-label="page-number"
+      class={`pagination-btn page-${n}-btn`}
+      part={`pagination-btn page-${n}-btn`}
+    >
+      <span class={`page-number-${n}`} part={`page-number-${n}`}>{n}</span>
+    </button>
   {/each}
   <button
-    onclick={handlerAction}
+    onclick={() => handlerAction('previous')}
     aria-label="previous-page"
     class="pagination-btn previous-page-btn"
     part="pagination-btn previous-page-btn"
@@ -73,13 +80,14 @@
     <img src={previousPageIcon} alt="previous page" class="previous-page-icon" part="previous-page-icon" />
   </button>
   <button
-    onclick={handlerAction}
+    onclick={() => handlerAction('last')}
     aria-label="last-page"
     class="pagination-btn last-page-btn"
     part="pagination-btn last-page-btn"
   >
     <img src={lastPageIcon} alt="last page" class="last-page-icon" part="last-page-icon" />
   </button>
+  <SelectorControl options={}  />
 </div>
 
 <style>
