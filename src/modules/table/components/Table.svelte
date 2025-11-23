@@ -9,28 +9,30 @@
     DEFAULT_SELECT_ALL,
     DEFAULT_SELECTABLE_TYPE,
     DEFAULT_SORTABLE,
-    VALID_SELECTABLE_TYPES
+    VALID_SELECTABLE_TYPES,
+    DEFAULT_PAGE_SIZE
   } from '../constant';
   import type { Column } from '../models/Column';
-  import type { RowData, RowEvent } from '../models/TableEvents';
+  import type { RowData, RowEvent } from '../models/event/RowEvent';
   import type { SelectableType, SortableType, TableConfiguration } from '../models/configuration/TableConfiguration';
-  import type { FilterEvent } from '../models/FilterEvent';
+  import type { FilterEvent } from '../models/event/FilterEvent';
+  import type { SortEvent } from '../models/event/SortEvent';
+  import type { PageEvent } from '../models/event/PageEvent';
   import type { StoreComponentData } from '../../core/models/StoreComponent';
-  import type { SelectionEvent } from '../models/SelectionEvent';
-  import { sortStore, type SortOrder } from '../store/sort-store.svelte';
+  import type { SelectionEvent } from '../models/event/SelectionEvent';
+  import { sortStore, type SortOrder } from '../store/sort-store';
+  import type { PaginationApi } from '../models/public-api/PaginationApi';
+  import type { SelectionApi } from '../models/public-api/SelectionApi';
+  import type { FilterApi } from '../models/public-api/FilterApi';
 
-  import { selectionStore } from '../store/selection-store.svelte';
-  import { filterStore } from '../store/filter-store.svelte';
+  import { selectionStore } from '../store/selection-store';
+  import { filterStore } from '../store/filter-store';
 
   import Header from './header/Header.svelte';
   import Row from './body/Row.svelte';
 
   import Pagination from './Pagination.svelte';
-  import type { SortEvent } from '../models/SortEvent';
-  import type { PageEvent } from '../models/PageEvent';
-  import type { PaginationApi } from '../models/public-api/PaginationApi';
-  import type { SelectionApi } from '../models/public-api/SelectionApi';
-  import type { FilterApi } from '../models/public-api/FilterApi';
+  import type { TableEvent } from '../models/event/TableEvent';
 
   interface TableProps {
     columns?: Column[];
@@ -43,10 +45,11 @@
     sortableType?: SortableType;
     pageable?: boolean;
     pageSizeOptions?: number[];
+    pageSize?: number;
   }
 
   let el: HTMLElement;
-  let paginationRef: any;
+  let paginationRef: Pagination | null = $state(null);
 
   /** Inputs */
   let {
@@ -59,7 +62,8 @@
     filterable = DEFAULT_FILTERABLE,
     sortableType = DEFAULT_SORTABLE,
     pageable = DEFAULT_PAGEABLE,
-    pageSizeOptions = DEFAULT_PAGE_SIZE_OPTIONS
+    pageSizeOptions = DEFAULT_PAGE_SIZE_OPTIONS,
+    pageSize = DEFAULT_PAGE_SIZE
   }: TableProps = $props();
 
   /** Checks */
@@ -139,13 +143,7 @@
       );
     });
 
-    el.dispatchEvent(new CustomEvent('ready', { bubbles: true, composed: true }));
-  });
-
-  $effect(() => {
-    if (paginationRef) {
-      publicApi();
-    }
+    emitReady();
   });
 
   function onRowClick(event: RowEvent) {
@@ -172,9 +170,20 @@
     );
   }
 
+  function emitReady() {
+    const event: TableEvent = {
+      filter: filterStore.state() as FilterEvent[],
+      page: paginationRef?.getState()!,
+      sort: sortStore.state() as SortEvent[]
+    };
+
+    el.dispatchEvent(new CustomEvent('ready', { detail: event, bubbles: true, composed: true }));
+  }
+
   function paginationApi(): PaginationApi {
     return {
-      setPage: (n: number) => paginationRef?.setPage(n)
+      setPage: (n: number) => paginationRef?.setPage(n),
+      resetPage: () => paginationRef?.resetPage()
     };
   }
 
@@ -193,9 +202,9 @@
   function publicApi() {
     if (!el) return;
 
-    const host = (el?.getRootNode() as ShadowRoot)?.host
+    const host = (el?.getRootNode() as ShadowRoot)?.host;
     if (!host) return;
-    
+
     (host as any).pagination = paginationApi();
     (host as any).selection = selectionApi();
     (host as any).filter = filterApi();
@@ -231,7 +240,7 @@
   </table>
   <div class="pagination" part="pagination">
     {#if pageable === true}
-      <Pagination bind:this={paginationRef} {count} {pageSizeOptions} onChange={onPageChange} />
+      <Pagination bind:this={paginationRef} {count} {pageSizeOptions} {pageSize} onChange={onPageChange} />
     {/if}
   </div>
 </div>

@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Column } from '../../models/Column';
-  import { filterStore } from '../../store/filter-store.svelte';
+  import { filterStore } from '../../store/filter-store';
   import type { StoreComponent, StoreComponentData } from '../../../core/models/StoreComponent';
 
   interface FilterProps {
@@ -20,10 +20,6 @@
   /** Effects */
   const partNamesContainer: string = $derived(`filter-container filter-container-${column.key}`);
   const partNamesInput: string = $derived(`filter-input filter-input-${column.key}`);
-
-  // $effect(() => {
-  //   filterStoreComponent?.setValue(filterValue);
-  // });
 
   /** Methods */
   function keydownHandler(event: KeyboardEvent) {

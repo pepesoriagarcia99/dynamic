@@ -5,12 +5,13 @@
   import Table from './modules/table/components/Table.svelte';
 
   import { onMount } from 'svelte';
-  import type { RowEvent } from './modules/table/models/TableEvents';
-  import type { SelectionEvent } from './modules/table/models/SelectionEvent';
-  import type { FilterEvent } from './modules/table/models/FilterEvent';
-  import type { SortEvent } from './modules/table/models/SortEvent';
-  import type { PageEvent } from './modules/table/models/PageEvent';
+  import type { RowEvent } from './modules/table/models/event/RowEvent';
+  import type { SelectionEvent } from './modules/table/models/event/SelectionEvent';
+  import type { FilterEvent } from './modules/table/models/event/FilterEvent';
+  import type { SortEvent } from './modules/table/models/event/SortEvent';
+  import type { PageEvent } from './modules/table/models/event/PageEvent';
   import type { PublicApi } from './modules/table/models/public-api/PublicApi';
+  import type { TableEvent } from './modules/table/models/event/TableEvent';
 
   let columns: Column[] = [
     { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
@@ -23,9 +24,11 @@
 
   let tableEl: (HTMLElement & PublicApi) | null;
 
-  function loadPokemon() {
+  function loadPokemon(page: number, pageSize: number) {
     loading = true;
-    fetch('https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0')
+
+    const offset = (page - 1) * pageSize;
+    fetch(`https://pokeapi.co/api/v2/pokemon?limit=${pageSize}&offset=${offset}`)
       .then((res) => res.json())
       .then((res) => {
         setTimeout(() => {
@@ -43,8 +46,6 @@
 
   onMount(() => {
     tableEl = document.getElementById('main-table') as HTMLElement & PublicApi;
-
-    loadPokemon();
   });
 
   function onRowClick(event: any & { detail: RowEvent }) {
@@ -58,7 +59,7 @@
   function onFilterChange(event: any & { detail: FilterEvent }) {
     console.log('FILTERED: ', event.detail);
 
-    tableEl?.pagination.setPage(1)
+    tableEl?.pagination.resetPage();
   }
 
   function onSortChange(event: any & { detail: SortEvent }) {
@@ -67,10 +68,14 @@
 
   function onPageChange(event: any & { detail: PageEvent }) {
     console.log('PAGE: ', event.detail);
+    const { page, pageSize } = event.detail.page;
+    loadPokemon(page, pageSize);
   }
 
-  function onReady() {
-    console.log('READY');
+  function onReady(event: any & { detail: TableEvent }) {
+    console.log('READY: ', event.detail);
+    const { page, pageSize } = event.detail.page;
+    loadPokemon(page, pageSize);
   }
 </script>
 
@@ -89,6 +94,8 @@
         pageable={true}
         selectableType="multiple"
         sortableType="single"
+        pageSizeOptions={[25, 50, 100, 200]}
+        pageSize={50}
         onready={onReady}
         onrowClick={onRowClick}
         onselection={onRowSelect}

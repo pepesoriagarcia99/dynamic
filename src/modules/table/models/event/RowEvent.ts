@@ -1,4 +1,4 @@
-import type { Column } from "./Column";
+import type { Column } from "../Column";
 
 export type RowEventType = 'leftclick' | 'rightclick' | 'doubleclick';
 export type RowData = {

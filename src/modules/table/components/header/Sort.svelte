@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import type { Column } from '../../models/Column';
-  import { sortStore, type SortOrder } from '../../store/sort-store.svelte';
+  import { sortStore, type SortOrder } from '../../store/sort-store';
   import type { StoreComponent } from '../../../core/models/StoreComponent';
 
   import sortIcon from '../../../../assets/svg/sort.svg';

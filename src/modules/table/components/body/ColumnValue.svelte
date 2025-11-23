@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Column } from '../../models/Column';
-  import type { RowEvent, RowEventType } from '../../models/TableEvents';
+  import type { RowEvent, RowEventType } from '../../models/event/RowEvent';
 
   interface ColumnValueProps {
     column: Column;

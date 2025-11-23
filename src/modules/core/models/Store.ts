@@ -48,4 +48,12 @@ export class Store<T> extends Subject<StoreComponentData<T>[]> {
   clear() {
     this.elements.forEach((el) => el.setValue(null));
   }
+
+  /**
+   * Recupera el estado actual de la Store
+   * @returns Lista de StoreComponentData
+   */
+  state(): StoreComponentData<T>[] {
+    return this.elements.map(el => el.getValue());
+  }
 }

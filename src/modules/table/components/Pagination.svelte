@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { PageEvent } from '../models/PageEvent';
+  import type { PageEvent } from '../models/event/PageEvent';
 
   import firstPageIcon from '../../../assets/svg/arrow-to-left.svg';
   import lastPageIcon from '../../../assets/svg/arrow-to-right.svg';
@@ -13,14 +13,13 @@
   interface PaginationProps {
     count: number;
     pageSizeOptions: number[];
+    pageSize: number;
     onChange?: (event: PageEvent) => void;
   }
 
-  let { count, pageSizeOptions, onChange = () => {} }: PaginationProps = $props();
+  let { count, pageSizeOptions, pageSize, onChange = () => {} }: PaginationProps = $props();
 
   let currentPage: number = $state(1);
-  let pageSize: number = $state(pageSizeOptions[0]);
-
   let totalPages: number = $derived(Math.ceil(count / pageSize));
 
   let showPageNumbers: number[] = $state([]);
@@ -48,11 +47,6 @@
     emitChange();
   }
 
-  function setPage(pageNumber: number) {
-    currentPage = pageNumber;
-    emitChange();
-  }
-
   function onChangePageSize() {
     currentPage = 1;
     emitChange();
@@ -77,8 +71,20 @@
       .join(' ');
   }
 
+  export function setPage(pageNumber: number) {
+    currentPage = pageNumber;
+    emitChange();
+  }
+
   export function resetPage() {
-    setPage(1);
+    currentPage = 1
+  }
+
+  export function getState() {
+    return {
+      page: currentPage,
+      pageSize
+    };
   }
 </script>
 
