@@ -1,8 +1,11 @@
 <script lang="ts">
+  import type { PageEvent } from '../models/PageEvent';
+
   import firstPageIcon from '../../../assets/svg/arrow-to-left.svg';
   import lastPageIcon from '../../../assets/svg/arrow-to-right.svg';
-  import nextPageIcon from '../../../assets/svg/left-arrow.svg';
-  import previousPageIcon from '../../../assets/svg/right-arrow.svg';
+  import previousPageIcon from '../../../assets/svg/left-arrow.svg';
+  import nextPageIcon from '../../../assets/svg/right-arrow.svg';
+
   import SelectorControl from './header/inputs/SelectorControl.svelte';
 
   type PageActions = 'first' | 'last' | 'next' | 'previous';
@@ -10,42 +13,75 @@
   interface PaginationProps {
     count: number;
     pageSizeOptions: number[];
+    onChange?: (event: PageEvent) => void;
   }
 
-  let { count, pageSizeOptions }: PaginationProps = $props();
-  //   let pageSize = pageSizeOptions[0];
-  //   let currentPage = 0;
+  let { count, pageSizeOptions, onChange = () => {} }: PaginationProps = $props();
 
-  let currentPage = 1;
-  let pageSize;
+  let currentPage: number = $state(1);
+  let pageSize: number = $state(pageSizeOptions[0]);
 
-  let totalPages = $state(Math.ceil(count / pageSize));
-  let showPages: number[] = $state(Array.from({ length: totalPages }, (_, i) => i + 1));
+  let totalPages: number = $derived(Math.ceil(count / pageSize));
 
-  console.log('🚀 ~ pageSizeOptions:', pageSizeOptions);
-  console.log('🚀 ~ count:', count);
+  let showPageNumbers: number[] = $state([]);
+  $effect(() => {
+    if (totalPages <= 5) {
+      showPageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
+      return;
+    }
+
+    if (currentPage <= 3) {
+      showPageNumbers = [1, 2, 3, 4, 5];
+    } else if (currentPage >= totalPages - 2) {
+      showPageNumbers = [totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+    } else {
+      showPageNumbers = [currentPage - 2, currentPage - 1, currentPage, currentPage + 1, currentPage + 2];
+    }
+  });
 
   function handlerAction(action: PageActions) {
-    if (action === 'next') {
-    } else if (action === 'previous') {
-    } else if (action === 'first') {
-    } else if (action === 'last') {
-    }
+    if (action === 'next' && currentPage < totalPages) currentPage++;
+    else if (action === 'previous' && currentPage > 1) currentPage--;
+    else if (action === 'first') currentPage = 1;
+    else if (action === 'last') currentPage = totalPages;
+
+    emitChange();
   }
 
-  function gotoPage(pageNumber: number) {}
+  function gotoPage(pageNumber: number) {
+    currentPage = pageNumber;
+    emitChange();
+  }
 
-  function calculatePages() {
-    //   const totalPages = Math.ceil(count / pageSize);
-    //   showPages = [];
-    //   for (let i = 1; i <= totalPages; i++) {
-    //     showPages.push(i);
+  function onChangePageSize() {
+    currentPage = 1;
+    emitChange();
+  }
+
+  function emitChange() {
+    onChange({
+      page: currentPage,
+      pageSize: pageSize
+    })
+  }
+
+  function getPartPageNumber(n: number) {
+    return ['pagination-page', `pagination-page-${n}`, currentPage === n ? 'pagination-page-selected' : null]
+      .filter(Boolean)
+      .join(' ');
+  }
+
+  function getPartPageNumberBtn(n: number) {
+    return ['pagination-btn', `pagination-btn-${n}`, currentPage === n ? 'pagination-btn-selected' : null]
+      .filter(Boolean)
+      .join(' ');
   }
 </script>
 
 <div class="pagination-content" part="pagination-content">
   <button
     onclick={() => handlerAction('first')}
+    disabled={currentPage === 0}
     aria-label="first-page"
     class="pagination-btn first-page-btn"
     part="pagination-btn first-page-btn"
@@ -54,30 +90,30 @@
   </button>
 
   <button
-    onclick={() => handlerAction('next')}
-    aria-label="next-page"
-    class="pagination-btn next-page-btn"
-    part="pagination-btn next-page-btn"
-  >
-    <img src={nextPageIcon} alt="next page" class="next-page-icon" part="next-page-icon" />
-  </button>
-  {#each showPages as n}
-    <button
-      onclick={() => gotoPage(n)}
-      aria-label="page-number"
-      class={`pagination-btn page-${n}-btn`}
-      part={`pagination-btn page-${n}-btn`}
-    >
-      <span class={`page-number-${n}`} part={`page-number-${n}`}>{n}</span>
-    </button>
-  {/each}
-  <button
     onclick={() => handlerAction('previous')}
     aria-label="previous-page"
     class="pagination-btn previous-page-btn"
     part="pagination-btn previous-page-btn"
   >
     <img src={previousPageIcon} alt="previous page" class="previous-page-icon" part="previous-page-icon" />
+  </button>
+  {#each showPageNumbers as n}
+    <button
+      onclick={() => gotoPage(n)}
+      aria-label="page-number"
+      class={getPartPageNumberBtn(n)}
+      part={getPartPageNumberBtn(n)}
+    >
+      <span class={getPartPageNumber(n)} part={getPartPageNumber(n)}>{n}</span>
+    </button>
+  {/each}
+  <button
+    onclick={() => handlerAction('next')}
+    aria-label="next-page"
+    class="pagination-btn next-page-btn"
+    part="pagination-btn next-page-btn"
+  >
+    <img src={nextPageIcon} alt="next page" class="next-page-icon" part="next-page-icon" />
   </button>
   <button
     onclick={() => handlerAction('last')}
@@ -87,7 +123,7 @@
   >
     <img src={lastPageIcon} alt="last page" class="last-page-icon" part="last-page-icon" />
   </button>
-  <SelectorControl options={}  />
+  <SelectorControl options={pageSizeOptions} bind:value={pageSize} onChange={onChangePageSize} />
 </div>
 
 <style>
@@ -101,7 +137,11 @@
     gap: 0.5rem;
   }
 
-  .pagination-page-number:hover {
+  .pagination-page-selected {
+    font-weight: 800;
+  }
+
+  .pagination-page:hover {
     cursor: pointer;
     text-decoration: underline;
   }

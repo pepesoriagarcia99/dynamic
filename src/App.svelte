@@ -9,6 +9,7 @@
   import type { SelectionEvent } from './modules/table/models/SelectionEvent';
   import type { FilterEvent } from './modules/table/models/FilterEvent';
   import type { SortEvent } from './modules/table/models/SortEvent';
+  import type { PageEvent } from './modules/table/models/PageEvent';
 
   let columns: Column[] = [
     { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
@@ -54,6 +55,10 @@
   function onSortChange(event: any & { detail: SortEvent }) {
     console.log('SORTED: ', event.detail);
   }
+
+  function onPageChange(event: any & { detail: PageEvent }) {
+    console.log('PAGE: ', event.detail);
+  }
 </script>
 
 <main>
@@ -67,13 +72,14 @@
         {count}
         {data}
         filterable={true}
-        paginable={true}
+        pageable={true}
         selectableType="multiple"
         sortableType="single"
         onrowClick={onRowClick}
         onselection={onRowSelect}
         onfilterChange={onFilterChange}
         onsortChange={onSortChange}
+        onpageChange={onPageChange}
       ></dyn-table>
     </div>
   </div>

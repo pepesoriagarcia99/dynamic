@@ -8,7 +8,7 @@ export interface Subscriber<T> {
 /**
  * Clase base para manejar suscripciones y emitir eventos
  */
-export class Subscription<T> {
+export class Subject<T> {
     private subscribers: Subscriber<T>[] = [];
 
     constructor() { }

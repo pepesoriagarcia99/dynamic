@@ -1,5 +1,5 @@
 import type { Store } from "./Store";
-import { Subscription } from "./Subscription";
+import { Subject } from "./Subject";
 
 export interface StoreComponentData<T> {
     key: string;
@@ -13,7 +13,7 @@ export interface StoreComponentConfiguration {
 /**
  * Componente de un Store que maneja su propio estado y notifica cambios
  */
-export class StoreComponent<T> extends Subscription<StoreComponentData<T>> {
+export class StoreComponent<T> extends Subject<StoreComponentData<T>> {
 
     key: string;
 

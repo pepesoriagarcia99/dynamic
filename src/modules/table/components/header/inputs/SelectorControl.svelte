@@ -1,30 +1,15 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-
   interface SelectorProps {
-    label: string;
+    label?: string;
     options: any[];
     value: any;
-    configuration: {
-      firstSelected: boolean;
-      firstBlank: boolean;
-    };
     onChange?: (change: string) => void;
   }
 
-  let { label, options, value, configuration, onChange = () => {} }: SelectorProps = $props();
-
-  let showOptions = $derived(configuration.firstBlank ? ['', ...options] : options);
-  let selected = $state(value);
-
-  onMount(() => {
-    if (configuration.firstSelected === true && !value) {
-      selected = showOptions[0];
-    }
-  });
+  let { label, options, value = $bindable(undefined), onChange = () => {} }: SelectorProps = $props();
 
   function onSelectChange() {
-    onChange(selected);
+    onChange(value);
   }
 </script>
 
@@ -34,7 +19,7 @@
   {/if}
   <select
     id="selector-control"
-    bind:value={selected}
+    bind:value={value}
     onchange={onSelectChange}
     class="selector"
     part="selector"

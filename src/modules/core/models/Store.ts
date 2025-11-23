@@ -1,5 +1,5 @@
 import { StoreComponent, type StoreComponentData } from "./StoreComponent";
-import { Subscription } from "./Subscription";
+import { Subject } from "./Subject";
 
 export interface StoreConfiguration {
     autoCommit: boolean; // Si es true emite cambios al Store automaticamente al cambiar un StoreComponent
@@ -9,7 +9,7 @@ export interface StoreConfiguration {
 /**
  * Clase base para manejar un Store que contiene múltiples StoreComponents
  */
-export class Store<T> extends Subscription<StoreComponentData<T>[]> {
+export class Store<T> extends Subject<StoreComponentData<T>[]> {
 
     protected elements: StoreComponent<T>[] = [];
 

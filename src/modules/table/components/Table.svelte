@@ -5,7 +5,7 @@
   import {
     DEFAULT_FILTERABLE,
     DEFAULT_PAGE_SIZE_OPTIONS,
-    DEFAULT_PAGINABLE,
+    DEFAULT_PAGEABLE,
     DEFAULT_SELECT_ALL,
     DEFAULT_SELECTABLE_TYPE,
     DEFAULT_SORTABLE,
@@ -27,6 +27,7 @@
 
   import Pagination from './Pagination.svelte';
   import type { SortEvent } from '../models/SortEvent';
+  import type { PageEvent } from '../models/PageEvent';
 
   interface TableProps {
     columns?: Column[];
@@ -37,7 +38,7 @@
     selectAll?: boolean;
     filterable?: boolean;
     sortableType?: SortableType;
-    paginable?: boolean;
+    pageable?: boolean;
     pageSizeOptions?: number[];
   }
 
@@ -53,7 +54,7 @@
     selectAll = DEFAULT_SELECT_ALL,
     filterable = DEFAULT_FILTERABLE,
     sortableType = DEFAULT_SORTABLE,
-    paginable = DEFAULT_PAGINABLE,
+    pageable = DEFAULT_PAGEABLE,
     pageSizeOptions = DEFAULT_PAGE_SIZE_OPTIONS
   }: TableProps = $props();
 
@@ -83,8 +84,8 @@
     }
 
     // si se activa la paginacion, count debe ser un numero mayor a 0
-    if (paginable === true && count !== undefined && count <= 0) {
-      throw new Error('The "count" property must be a number greater than 0 when "paginable" is true.');
+    if (pageable === true && loading === false && count !== undefined && count <= 0) {
+      throw new Error('The "count" property must be a number greater than 0 when "pageable" is true.');
     }
   });
 
@@ -95,7 +96,7 @@
     selectAll,
     filterable,
     sortableType,
-    paginable
+    pageable
   });
 
   /** Methods */
@@ -140,7 +141,17 @@
 
     el.dispatchEvent(
       new CustomEvent('rowClick', {
-        detail: event,
+        detail: event as RowEvent,
+        bubbles: true,
+        composed: true
+      })
+    );
+  }
+
+  function onPageChange(event: PageEvent) {
+    el.dispatchEvent(
+      new CustomEvent('pageChange', {
+        detail: event as PageEvent,
         bubbles: true,
         composed: true
       })
@@ -176,8 +187,8 @@
     </tbody>
   </table>
   <div class="pagination" part="pagination">
-    {#if paginable === true}
-      <Pagination {count} {pageSizeOptions} />
+    {#if pageable === true}
+      <Pagination {count} {pageSizeOptions} onChange={onPageChange} />
     {/if}
   </div>
 </div>
