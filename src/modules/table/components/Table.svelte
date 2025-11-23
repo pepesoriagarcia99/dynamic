@@ -28,6 +28,9 @@
   import Pagination from './Pagination.svelte';
   import type { SortEvent } from '../models/SortEvent';
   import type { PageEvent } from '../models/PageEvent';
+  import type { PaginationApi } from '../models/public-api/PaginationApi';
+  import type { SelectionApi } from '../models/public-api/SelectionApi';
+  import type { FilterApi } from '../models/public-api/FilterApi';
 
   interface TableProps {
     columns?: Column[];
@@ -43,6 +46,7 @@
   }
 
   let el: HTMLElement;
+  let paginationRef: any;
 
   /** Inputs */
   let {
@@ -101,6 +105,8 @@
 
   /** Methods */
   onMount(() => {
+    publicApi();
+
     selectionStore.init(tableConfiguration);
     selectionStore.subscribe((selection: StoreComponentData<boolean>[]) => {
       el.dispatchEvent(
@@ -132,6 +138,14 @@
         })
       );
     });
+
+    el.dispatchEvent(new CustomEvent('ready', { bubbles: true, composed: true }));
+  });
+
+  $effect(() => {
+    if (paginationRef) {
+      publicApi();
+    }
   });
 
   function onRowClick(event: RowEvent) {
@@ -156,6 +170,35 @@
         composed: true
       })
     );
+  }
+
+  function paginationApi(): PaginationApi {
+    return {
+      setPage: (n: number) => paginationRef?.setPage(n)
+    };
+  }
+
+  function selectionApi(): SelectionApi {
+    return {
+      reset: () => selectionStore.clear()
+    };
+  }
+
+  function filterApi(): FilterApi {
+    return {
+      reset: () => filterStore.clear()
+    };
+  }
+
+  function publicApi() {
+    if (!el) return;
+
+    const host = (el?.getRootNode() as ShadowRoot)?.host
+    if (!host) return;
+    
+    (host as any).pagination = paginationApi();
+    (host as any).selection = selectionApi();
+    (host as any).filter = filterApi();
   }
 </script>
 
@@ -188,7 +231,7 @@
   </table>
   <div class="pagination" part="pagination">
     {#if pageable === true}
-      <Pagination {count} {pageSizeOptions} onChange={onPageChange} />
+      <Pagination bind:this={paginationRef} {count} {pageSizeOptions} onChange={onPageChange} />
     {/if}
   </div>
 </div>

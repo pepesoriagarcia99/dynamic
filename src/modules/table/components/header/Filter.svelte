@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Column } from '../../models/Column';
   import { filterStore } from '../../store/filter-store.svelte';
-  import type { StoreComponent } from '../../../core/models/StoreComponent';
+  import type { StoreComponent, StoreComponentData } from '../../../core/models/StoreComponent';
 
   interface FilterProps {
     column: Column;
@@ -13,14 +13,17 @@
 
   /** Values */
   let filterStoreComponent: StoreComponent<string> = filterStore.add(column.key, filterValue);
+  filterStoreComponent.subscribe((change: StoreComponentData<string>) => {
+    filterValue = change.value ?? ''
+  });
 
   /** Effects */
   const partNamesContainer: string = $derived(`filter-container filter-container-${column.key}`);
   const partNamesInput: string = $derived(`filter-input filter-input-${column.key}`);
 
-  $effect(() => {
-    filterStoreComponent?.setValue(filterValue);
-  });
+  // $effect(() => {
+  //   filterStoreComponent?.setValue(filterValue);
+  // });
 
   /** Methods */
   function keydownHandler(event: KeyboardEvent) {

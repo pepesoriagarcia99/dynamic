@@ -48,7 +48,7 @@
     emitChange();
   }
 
-  function gotoPage(pageNumber: number) {
+  function setPage(pageNumber: number) {
     currentPage = pageNumber;
     emitChange();
   }
@@ -62,7 +62,7 @@
     onChange({
       page: currentPage,
       pageSize: pageSize
-    })
+    });
   }
 
   function getPartPageNumber(n: number) {
@@ -75,6 +75,10 @@
     return ['pagination-btn', `pagination-btn-${n}`, currentPage === n ? 'pagination-btn-selected' : null]
       .filter(Boolean)
       .join(' ');
+  }
+
+  export function resetPage() {
+    setPage(1);
   }
 </script>
 
@@ -99,7 +103,7 @@
   </button>
   {#each showPageNumbers as n}
     <button
-      onclick={() => gotoPage(n)}
+      onclick={() => setPage(n)}
       aria-label="page-number"
       class={getPartPageNumberBtn(n)}
       part={getPartPageNumberBtn(n)}

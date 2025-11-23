@@ -10,6 +10,7 @@
   import type { FilterEvent } from './modules/table/models/FilterEvent';
   import type { SortEvent } from './modules/table/models/SortEvent';
   import type { PageEvent } from './modules/table/models/PageEvent';
+  import type { PublicApi } from './modules/table/models/public-api/PublicApi';
 
   let columns: Column[] = [
     { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
@@ -19,6 +20,8 @@
   let loading = $state(false);
   let count = $state<number | undefined>(undefined);
   let data = $state<any[]>([]);
+
+  let tableEl: (HTMLElement & PublicApi) | null;
 
   function loadPokemon() {
     loading = true;
@@ -38,7 +41,11 @@
       });
   }
 
-  onMount(loadPokemon);
+  onMount(() => {
+    tableEl = document.getElementById('main-table') as HTMLElement & PublicApi;
+
+    loadPokemon();
+  });
 
   function onRowClick(event: any & { detail: RowEvent }) {
     console.log('CLICKED: ', event.detail);
@@ -50,6 +57,8 @@
 
   function onFilterChange(event: any & { detail: FilterEvent }) {
     console.log('FILTERED: ', event.detail);
+
+    tableEl?.pagination.setPage(1)
   }
 
   function onSortChange(event: any & { detail: SortEvent }) {
@@ -59,6 +68,10 @@
   function onPageChange(event: any & { detail: PageEvent }) {
     console.log('PAGE: ', event.detail);
   }
+
+  function onReady() {
+    console.log('READY');
+  }
 </script>
 
 <main>
@@ -67,6 +80,7 @@
 
     <div class="table-container">
       <dyn-table
+        id="main-table"
         {loading}
         {columns}
         {count}
@@ -75,6 +89,7 @@
         pageable={true}
         selectableType="multiple"
         sortableType="single"
+        onready={onReady}
         onrowClick={onRowClick}
         onselection={onRowSelect}
         onfilterChange={onFilterChange}
