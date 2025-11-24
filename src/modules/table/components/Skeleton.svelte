@@ -2,6 +2,8 @@
 	export let width: string = "100%";
 	export let height: string = "16px";
 	export let borderRadius: string = "4px";
+
+	
 </script>
 
 <div class="skeleton" style="width: {width}; height: {height}; border-radius: {borderRadius};">

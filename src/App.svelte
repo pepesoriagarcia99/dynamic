@@ -31,16 +31,16 @@
     fetch(`https://pokeapi.co/api/v2/pokemon?limit=${pageSize}&offset=${offset}`)
       .then((res) => res.json())
       .then((res) => {
-        // setTimeout(() => {
-        //   count = res.count;
-        //   data = res.results;
-        // }, 2000);
+        setTimeout(() => {
+          count = res.count;
+          data = res.results;
+        }, 4000);
       })
       .catch(console.error)
       .finally(() => {
-        // setTimeout(() => {
-        //   loading = false;
-        // }, 2000);
+        setTimeout(() => {
+          loading = false;
+        }, 4000);
       });
   }
 

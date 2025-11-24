@@ -114,17 +114,21 @@
   >
     <img src={previousPageIcon} alt="previous page" class="previous-page-icon" part="previous-page-icon" />
   </button>
-  {#each showPageNumbers as n}
-    <button
-      onclick={() => setPage(n)}
-      disabled={loading}
-      aria-label="page-number"
-      class={getPartPageNumberBtn(n)}
-      part={getPartPageNumberBtn(n)}
-    >
-      <span class={getPartPageNumber(n)} part={getPartPageNumber(n)}>{n}</span>
-    </button>
-  {/each}
+  {#if loading === true && showPageNumbers.length === 0}
+    <span class="loading">...</span>
+  {:else}
+    {#each showPageNumbers as n}
+      <button
+        onclick={() => setPage(n)}
+        disabled={loading}
+        aria-label="page-number"
+        class={getPartPageNumberBtn(n)}
+        part={getPartPageNumberBtn(n)}
+      >
+        <span class={getPartPageNumber(n)} part={getPartPageNumber(n)}>{n}</span>
+      </button>
+    {/each}
+  {/if}
   <button
     onclick={() => handlerAction('next')}
     disabled={currentPage === totalPages || loading}
@@ -143,14 +147,12 @@
   >
     <img src={lastPageIcon} alt="last page" class="last-page-icon" part="last-page-icon" />
   </button>
-  {#if !loading}
-    <SelectorControl options={pageSizeOptions} bind:value={pageSize} onChange={onChangePageSize} />
-  {/if}
+  <SelectorControl options={pageSizeOptions} bind:value={pageSize} onChange={onChangePageSize} disabled={loading} />
 </div>
 
 <style>
   .pagination-content {
-    background-color: rgb(202, 202, 202);
+    background-color: rgb(228, 228, 228);
     width: 100%;
     height: 35px;
     display: flex;
@@ -159,34 +161,53 @@
     gap: 0.5rem;
   }
 
+  .pagination-btn-selected {
+    background: rgb(59, 59, 59) !important;
+    border-radius: 35px;
+  }
+
   .pagination-page-selected {
-    font-weight: 800;
+    color: white;
+  }
+
+  .pagination-page {
+    font-size: large;
   }
 
   .pagination-page:hover {
     cursor: pointer;
-    text-decoration: underline;
   }
 
   .pagination-btn {
-    display: flex;
-    align-items: center;
-    gap: 4px;
     background: none;
     border: none;
     cursor: pointer;
-    padding: 2px;
+  }
+
+  .pagination-btn:disabled {
+    opacity: 0.5;
+  }
+
+  .pagination-btn:hover {
+    background: rgb(212, 212, 212);
+    border-radius: 30px;
+  }
+
+  .loading {
+    cursor: not-allowed;
+    opacity: 0.5;
   }
 
   .first-page-icon,
   .last-page-icon {
-    width: 26px;
-    height: 26px;
+    width: 24px;
+    height: 24px;
   }
 
   .next-page-icon,
   .previous-page-icon {
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
+    margin: 4px 4px 4px 4px;
   }
 </style>

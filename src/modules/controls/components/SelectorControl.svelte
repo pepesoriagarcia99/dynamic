@@ -3,10 +3,11 @@
     label?: string;
     options: any[];
     value: any;
+    disabled?: boolean;
     onChange?: (change: string) => void;
   }
 
-  let { label, options, value = $bindable(undefined), onChange = () => {} }: SelectorProps = $props();
+  let { label, options, value = $bindable(undefined), disabled = false, onChange = () => {} }: SelectorProps = $props();
 
   function onSelectChange() {
     onChange(value);
@@ -24,6 +25,7 @@
     class="selector"
     part="selector"
     aria-label="selector"
+    disabled={disabled}
   >
     {#each options as opt}
       <option value={opt}>{opt}</option>
