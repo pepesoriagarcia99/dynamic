@@ -6,7 +6,7 @@
   import previousPageIcon from '../../../assets/svg/left-arrow.svg';
   import nextPageIcon from '../../../assets/svg/right-arrow.svg';
 
-  import SelectorControl from './header/inputs/SelectorControl.svelte';
+  import SelectorControl from '../../controls/components/SelectorControl.svelte';
   import { loadingState } from '../store/loading-state';
 
   type PageActions = 'first' | 'last' | 'next' | 'previous';
