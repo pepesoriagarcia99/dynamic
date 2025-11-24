@@ -1,6 +1,6 @@
 import { Store } from "../../core/models/Store";
 import type { TableConfiguration } from "../models/configuration/TableConfiguration";
-import type { EventContext, RowEvent } from "../models/TableEvents";
+import type { EventContext, RowEvent } from "../models/event/RowEvent";
 
 
 /**

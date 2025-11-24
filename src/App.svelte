@@ -31,16 +31,16 @@
     fetch(`https://pokeapi.co/api/v2/pokemon?limit=${pageSize}&offset=${offset}`)
       .then((res) => res.json())
       .then((res) => {
-        setTimeout(() => {
-          count = res.count;
-          data = res.results;
-        }, 2000);
+        // setTimeout(() => {
+        //   count = res.count;
+        //   data = res.results;
+        // }, 2000);
       })
       .catch(console.error)
       .finally(() => {
-        setTimeout(() => {
-          loading = false;
-        }, 2000);
+        // setTimeout(() => {
+        //   loading = false;
+        // }, 2000);
       });
   }
 
@@ -112,9 +112,11 @@
     margin: 2rem;
   }
   .table-container {
-    max-height: 500px;
+    height: 500px;
     overflow-x: auto;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
   }
 
   h1 {

@@ -7,6 +7,7 @@
   import nextPageIcon from '../../../assets/svg/right-arrow.svg';
 
   import SelectorControl from './header/inputs/SelectorControl.svelte';
+  import { loadingState } from '../store/loading-state';
 
   type PageActions = 'first' | 'last' | 'next' | 'previous';
 
@@ -21,6 +22,7 @@
 
   let currentPage: number = $state(1);
   let totalPages: number = $derived(Math.ceil(count / pageSize));
+  let loading = $state(false);
 
   let showPageNumbers: number[] = $state([]);
   $effect(() => {
@@ -36,6 +38,10 @@
     } else {
       showPageNumbers = [currentPage - 2, currentPage - 1, currentPage, currentPage + 1, currentPage + 2];
     }
+  });
+
+  loadingState.subscribe((state) => {
+    loading = state;
   });
 
   function handlerAction(action: PageActions) {
@@ -77,7 +83,7 @@
   }
 
   export function resetPage() {
-    currentPage = 1
+    currentPage = 1;
   }
 
   export function getState() {
@@ -91,7 +97,7 @@
 <div class="pagination-content" part="pagination-content">
   <button
     onclick={() => handlerAction('first')}
-    disabled={currentPage === 0}
+    disabled={currentPage === 0 || loading}
     aria-label="first-page"
     class="pagination-btn first-page-btn"
     part="pagination-btn first-page-btn"
@@ -101,6 +107,7 @@
 
   <button
     onclick={() => handlerAction('previous')}
+    disabled={currentPage === 0 || loading}
     aria-label="previous-page"
     class="pagination-btn previous-page-btn"
     part="pagination-btn previous-page-btn"
@@ -110,6 +117,7 @@
   {#each showPageNumbers as n}
     <button
       onclick={() => setPage(n)}
+      disabled={loading}
       aria-label="page-number"
       class={getPartPageNumberBtn(n)}
       part={getPartPageNumberBtn(n)}
@@ -119,6 +127,7 @@
   {/each}
   <button
     onclick={() => handlerAction('next')}
+    disabled={currentPage === totalPages || loading}
     aria-label="next-page"
     class="pagination-btn next-page-btn"
     part="pagination-btn next-page-btn"
@@ -127,13 +136,16 @@
   </button>
   <button
     onclick={() => handlerAction('last')}
+    disabled={currentPage === totalPages || loading}
     aria-label="last-page"
     class="pagination-btn last-page-btn"
     part="pagination-btn last-page-btn"
   >
     <img src={lastPageIcon} alt="last page" class="last-page-icon" part="last-page-icon" />
   </button>
-  <SelectorControl options={pageSizeOptions} bind:value={pageSize} onChange={onChangePageSize} />
+  {#if !loading}
+    <SelectorControl options={pageSizeOptions} bind:value={pageSize} onChange={onChangePageSize} />
+  {/if}
 </div>
 
 <style>

@@ -24,15 +24,16 @@
   import type { PaginationApi } from '../models/public-api/PaginationApi';
   import type { SelectionApi } from '../models/public-api/SelectionApi';
   import type { FilterApi } from '../models/public-api/FilterApi';
+  import type { TableEvent } from '../models/event/TableEvent';
 
   import { selectionStore } from '../store/selection-store';
   import { filterStore } from '../store/filter-store';
+  import { loadingState } from '../store/loading-state';
 
   import Header from './header/Header.svelte';
   import Row from './body/Row.svelte';
-
   import Pagination from './Pagination.svelte';
-  import type { TableEvent } from '../models/event/TableEvent';
+  import Skeleton from './Skeleton.svelte';
 
   interface TableProps {
     columns?: Column[];
@@ -48,9 +49,6 @@
     pageSize?: number;
   }
 
-  let el: HTMLElement;
-  let paginationRef: Pagination | null = $state(null);
-
   /** Inputs */
   let {
     columns = [],
@@ -65,6 +63,11 @@
     pageSizeOptions = DEFAULT_PAGE_SIZE_OPTIONS,
     pageSize = DEFAULT_PAGE_SIZE
   }: TableProps = $props();
+
+  /** Values */
+  let el: HTMLElement;
+  let paginationRef: Pagination | null = $state(null);
+  let skeletonData = Array.from({ length: 200 }, (_, i) => i);
 
   /** Checks */
   // Static checks
@@ -97,7 +100,7 @@
     }
   });
 
-  /** Computed */
+  /** States */
   const keyedData: RowData[] = $derived(data.map((r) => (r.__key ? r : { ...r, __key: crypto.randomUUID() })));
   const tableConfiguration: TableConfiguration = $derived({
     selectableType,
@@ -105,6 +108,10 @@
     filterable,
     sortableType,
     pageable
+  });
+
+  $effect(() => {
+    loadingState.emit(loading);
   });
 
   /** Methods */
@@ -146,8 +153,11 @@
     emitReady();
   });
 
+  /**
+   * EVENTS
+   */
   function onRowClick(event: RowEvent) {
-    if (selectableType !== 'none') {
+    if (selectableType !== 'none' && event.type === 'leftclick') {
       selectionStore.onSelectToggle(event);
     }
 
@@ -180,6 +190,9 @@
     el.dispatchEvent(new CustomEvent('ready', { detail: event, bubbles: true, composed: true }));
   }
 
+  /**
+   * PUBLIC API
+   */
   function paginationApi(): PaginationApi {
     return {
       setPage: (n: number) => paginationRef?.setPage(n),
@@ -224,12 +237,20 @@
 
     <tbody class="tbody" part="tbody">
       {#if loading === true}
-        <tr>
-          <td colspan={columns.length} style="text-align: center; padding: 16px;"> Loading... </td>
-        </tr>
+        {#each skeletonData as row}
+          <tr id={row.toString()} style="height: 50px;">
+            {#each columns}
+              <td>
+                <Skeleton />
+              </td>
+            {/each}
+          </tr>
+        {/each}
       {:else if data.length === 0 && loading === false}
         <tr>
-          <td colspan={columns.length} style="text-align: center; padding: 16px;"> No data available. </td>
+          <td colspan={columns.length} style="text-align: center; padding: 16px; vertical-align: top;">
+            No data available.
+          </td>
         </tr>
       {:else}
         {#each keyedData as row, i}
@@ -246,14 +267,26 @@
 </div>
 
 <style>
+  :host {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
   .table-root {
     width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
   }
 
   .table {
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
+    flex: 1 1 auto;
+    overflow: hidden;
   }
 
   .pagination {

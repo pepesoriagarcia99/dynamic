@@ -1,7 +1,10 @@
 <script lang="ts">
   import type { Column } from '../../models/Column';
-  import { filterStore } from '../../store/filter-store';
   import type { StoreComponent, StoreComponentData } from '../../../core/models/StoreComponent';
+
+  import { filterStore } from '../../store/filter-store';
+  import { loadingState } from '../../store/loading-state';
+  import Skeleton from '../Skeleton.svelte';
 
   interface FilterProps {
     column: Column;
@@ -11,15 +14,20 @@
   /** Inputs */
   let { column, filterValue = $bindable<string>('') }: FilterProps = $props();
 
-  /** Values */
-  let filterStoreComponent: StoreComponent<string> = filterStore.add(column.key, filterValue);
-  filterStoreComponent.subscribe((change: StoreComponentData<string>) => {
-    filterValue = change.value ?? ''
-  });
-
-  /** Effects */
+  /** States */
   const partNamesContainer: string = $derived(`filter-container filter-container-${column.key}`);
   const partNamesInput: string = $derived(`filter-input filter-input-${column.key}`);
+  let loading = $state(false);
+
+  /** Values */
+  const filterStoreComponent: StoreComponent<string> = filterStore.add(column.key, filterValue);
+  filterStoreComponent.subscribe((change: StoreComponentData<string>) => {
+    filterValue = change.value ?? '';
+  });
+
+  loadingState.subscribe((state) => {
+    loading = state;
+  });
 
   /** Methods */
   function keydownHandler(event: KeyboardEvent) {
@@ -34,14 +42,19 @@
 </script>
 
 <div class={partNamesContainer} part={partNamesContainer}>
-  <input
-    class={partNamesInput}
-    part={partNamesInput}
-    type="text"
-    placeholder="Filter..."
-    bind:value={filterValue}
-    onkeydown={keydownHandler}
-  />
+  {#if loading === true}
+    <Skeleton />
+  {:else}
+    <input
+      class={partNamesInput}
+      part={partNamesInput}
+      type="text"
+      placeholder="Filter..."
+      bind:value={filterValue}
+      onkeydown={keydownHandler}
+      disabled={loading}
+    />
+  {/if}
 </div>
 
 <style>

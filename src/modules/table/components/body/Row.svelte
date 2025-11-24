@@ -68,4 +68,8 @@
   .cursor-pointer {
     cursor: pointer;
   }
+
+  .row {
+    height: 50px;
+  }
 </style>
