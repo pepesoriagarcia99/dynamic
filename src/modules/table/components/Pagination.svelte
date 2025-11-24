@@ -97,7 +97,7 @@
 <div class="pagination-content" part="pagination-content">
   <button
     onclick={() => handlerAction('first')}
-    disabled={currentPage === 0 || loading}
+    disabled={currentPage === 1 || loading}
     aria-label="first-page"
     class="pagination-btn first-page-btn"
     part="pagination-btn first-page-btn"
@@ -107,7 +107,7 @@
 
   <button
     onclick={() => handlerAction('previous')}
-    disabled={currentPage === 0 || loading}
+    disabled={currentPage === 1 || loading}
     aria-label="previous-page"
     class="pagination-btn previous-page-btn"
     part="pagination-btn previous-page-btn"

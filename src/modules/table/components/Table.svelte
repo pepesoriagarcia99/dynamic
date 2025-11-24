@@ -182,9 +182,9 @@
 
   function emitReady() {
     const event: TableEvent = {
-      filter: filterStore.state() as FilterEvent[],
+      filter: filterStore.state().filter(e => e.value) as FilterEvent[],
       page: paginationRef?.getState()!,
-      sort: sortStore.state() as SortEvent[]
+      sort: sortStore.state().filter(e => e.value) as SortEvent[]
     };
 
     el.dispatchEvent(new CustomEvent('ready', { detail: event, bubbles: true, composed: true }));

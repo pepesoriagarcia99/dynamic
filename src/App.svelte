@@ -24,16 +24,49 @@
 
   let tableEl: (HTMLElement & PublicApi) | null;
 
-  function loadPokemon(page: number, pageSize: number) {
+  let tableFilter: TableEvent;
+
+  function loadPokemon() {
     loading = true;
 
-    const offset = (page - 1) * pageSize;
-    fetch(`https://pokeapi.co/api/v2/pokemon?limit=${pageSize}&offset=${offset}`)
+    // page: number, pageSize: number
+    // const offset = (page - 1) * pageSize;
+    // ?limit=${pageSize}&offset=${offset}
+
+    fetch(`https://pokeapi.co/api/v2/pokemon?limit=1000000000&offset=0`)
       .then((res) => res.json())
       .then((res) => {
         setTimeout(() => {
-          count = res.count;
-          data = res.results;
+          const page = tableFilter?.page?.page || 1;
+          const pageSize = tableFilter?.page?.pageSize || 50;
+          const offset = (page - 1) * pageSize;
+
+          let prevData = res.results.slice(offset, offset + pageSize);
+
+          tableFilter.filter.forEach((filter) => {
+            prevData = prevData.filter((item: any) =>
+              item[filter.key]?.toLowerCase().includes(filter.value?.toLocaleLowerCase())
+            );
+          });
+
+          prevData = prevData.sort((a: any, b: any) => {
+            for (const sortItem of tableFilter.sort) {
+              const aValue = a[sortItem.key];
+              const bValue = b[sortItem.key];
+
+              if (aValue < bValue) return sortItem.value === 'asc' ? -1 : 1;
+              if (aValue > bValue) return sortItem.value === 'asc' ? 1 : -1;
+            }
+            return 0;
+          });
+
+          if (tableFilter.sort.length > 0 || tableFilter.filter.length > 0) {
+            count = prevData.length;
+          } else {
+            count = res.count;
+          }
+
+          data = prevData;
         }, 4000);
       })
       .catch(console.error)
@@ -60,22 +93,29 @@
     console.log('FILTERED: ', event.detail);
 
     tableEl?.pagination.resetPage();
+    tableFilter.filter = event.detail;
+    loadPokemon();
   }
 
   function onSortChange(event: any & { detail: SortEvent }) {
     console.log('SORTED: ', event.detail);
+
+    tableFilter.sort = event.detail;
+    loadPokemon();
   }
 
   function onPageChange(event: any & { detail: PageEvent }) {
     console.log('PAGE: ', event.detail);
-    const { page, pageSize } = event.detail.page;
-    loadPokemon(page, pageSize);
+
+    tableFilter.page = event.detail;
+    loadPokemon();
   }
 
   function onReady(event: any & { detail: TableEvent }) {
     console.log('READY: ', event.detail);
-    const { page, pageSize } = event.detail.page;
-    loadPokemon(page, pageSize);
+
+    tableFilter = event.detail;
+    loadPokemon();
   }
 </script>
 
