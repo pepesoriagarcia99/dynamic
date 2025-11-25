@@ -19,10 +19,18 @@
 
   /** Values */
   let isSelected = $state<boolean>(false);
+  let isSelectableRow = $derived<boolean>(tableConfiguration.selectableType !== 'none');
 
   /** Computed */
   const partNames: string = $derived(
-    ['row', index % 2 === 0 ? 'row-even' : 'row-odd', isSelected ? 'row-selected' : null].filter(Boolean).join(' ')
+    [
+      'row',
+      index % 2 === 0 ? 'row-even' : 'row-odd',
+      isSelected ? 'row-selected' : null,
+      isSelectableRow ? 'row-selectable' : null
+    ]
+      .filter(Boolean)
+      .join(' ')
   );
 
   /** Methods */
@@ -52,7 +60,6 @@
 </script>
 
 <tr
-  class:cursor-pointer={tableConfiguration.selectableType !== 'none'}
   part={partNames}
   class={partNames}
   onclick={(e) => onRowClick('leftclick', e)}
@@ -65,11 +72,13 @@
 </tr>
 
 <style>
-  .cursor-pointer {
-    cursor: pointer;
-  }
-
   .row {
     height: 50px;
+  }
+
+  /* SOLO SI ES SELECTABLE */
+  .row-selectable:hover {
+    cursor: pointer;
+    background: var(--gray-light-5);
   }
 </style>

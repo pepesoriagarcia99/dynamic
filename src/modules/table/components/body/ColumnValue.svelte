@@ -11,7 +11,6 @@
   /** Inputs */
   const { column, row, onClick = () => {} }: ColumnValueProps = $props();
 
-
   /** Methods */
   function onCellClick(event: MouseEvent, type: RowEventType) {
     event.stopPropagation();
@@ -31,9 +30,13 @@
 <td
   onclick={(event) => onCellClick(event, 'leftclick')}
   oncontextmenu={(event) => onCellClick(event, 'rightclick')}
-  ondblclick={(event) => onCellClick(event, 'doubleclick')}>
+  ondblclick={(event) => onCellClick(event, 'doubleclick')}
+>
   {row[column.key]}
 </td>
 
 <style>
+  td {
+    border-bottom: 1px solid #ddd;
+  }
 </style>

@@ -185,17 +185,17 @@
     cursor: pointer;
   }
 
-  dyn-table::part(row):hover {
+  /* dyn-table::part(row):hover {
     background: rgb(196, 196, 196);
-  }
+  } */
 
-  dyn-table::part(row-even) {
+  /* dyn-table::part(row-even) {
     background: #ffffff;
   }
 
   dyn-table::part(row-odd) {
     background: #b9ccffa2;
-  }
+  } */
 
   dyn-table::part(row-selected) {
     background: #d8e24a !important;
