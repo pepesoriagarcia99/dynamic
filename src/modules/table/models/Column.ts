@@ -56,6 +56,12 @@ import { ColumnType } from './column-types/ColumnType';
  * Define las propiedades y configuraciones de una columna en una tabla.
  */
 export interface Column {
+
+  /**
+   * Identificador unico de la columna.
+   */
+  id?: string;
+
   /**
    * Clave unica de la columna.
    * Debe ser el nombre real de la columna o un valor mapeado en back con el valor de la columna para generar la query.

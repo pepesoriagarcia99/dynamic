@@ -85,13 +85,13 @@
           }
 
           data = prevData;
-        }, 4000);
+        }, 1);
       })
       .catch(console.error)
       .finally(() => {
         setTimeout(() => {
           loading = false;
-        }, 4000);
+        }, 1);
       });
   }
 

@@ -1,25 +1,28 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import type { Column } from '../../models/Column';
-  import { sortStore, type SortOrder } from '../../store/sort-store';
   import type { StoreComponent } from '../../../core/models/StoreComponent';
+  import type { SortOrder } from '../../models/event/SortEvent';
 
   import sortIcon from '../../../../assets/svg/sort.svg';
   import sortTopIcon from '../../../../assets/svg/sort-top.svg';
   import sortBottomIcon from '../../../../assets/svg/sort-bottom.svg';
   import { loadingState } from '../../store/loading-state';
+  import { sortStore } from '../../store/sort-store';
+
   import Skeleton from '../Skeleton.svelte';
 
-  interface FilterProps {
+  interface SortProps {
     column: Column;
   }
 
   /** Inputs */
-  let { column }: FilterProps = $props();
+  let { column }: SortProps = $props();
 
   /** Values */
   let sortDirection = $state<SortOrder | null>(null);
-  let sortStoreComponent: StoreComponent<SortOrder> = sortStore.add(column.key, null);
+  const sortStoreComponent: StoreComponent<SortOrder> = sortStore.add(column.id!, null);
+  
   let loading = $state(false);
 
   const partNamesContainer: string = $derived(`sort-container sort-container-${column.key}`);
@@ -38,7 +41,7 @@
   });
 
   function toggleSort() {
-    sortStore.onSortToggle(column.key);
+    sortStore.onSortToggle(column.id!);
   }
 </script>
 
@@ -72,5 +75,11 @@
   .sort-icon {
     width: 20px;
     height: 20px;
+    transition: transform 180ms ease-in-out;
+    transform-origin: center;
+  }
+
+  .sort-icon:hover {
+    transform: scale(1.3);
   }
 </style>

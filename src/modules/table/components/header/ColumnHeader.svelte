@@ -32,7 +32,7 @@
   {/if}
 </th>
 
-<style>
+<style>  
   th {
     text-align: left;
   }

@@ -1,7 +1,6 @@
 import { Store } from "../../core/models/Store";
 import type { TableConfiguration } from "../models/configuration/TableConfiguration";
-
-export type SortOrder = 'asc' | 'desc';
+import type { SortOrder } from "../models/event/SortEvent";
 
 /**
  * Store para gestionar la ordenacion de columnas en la tabla
@@ -24,9 +23,9 @@ class SortStore extends Store<SortOrder> {
         this.configuration = configuration;
     }
 
-    simpleChange(columnKey: string) {
+    simpleChange(id: string) {
         this.elements.forEach(el => {
-            if (el.key === columnKey) {
+            if (el.key === id) {
                 const newValue = this.getValue(el.value);
                 el.setValue(newValue);
             } else if (el.value !== null) {
@@ -35,16 +34,16 @@ class SortStore extends Store<SortOrder> {
         });
     }
 
-    multipleChange(columnKey: string) {
-        const element = this.elements.find(el => el.key === columnKey);
+    multipleChange(id: string) {
+        const element = this.elements.find(el => el.key === id);
         element?.setValue(this.getValue(element.value));
     }
 
-    onSortToggle(columnKey: string) {
+    onSortToggle(id: string) {
         if (this.configuration!.sortableType === 'single') {
-            this.simpleChange(columnKey);
+            this.simpleChange(id);
         } else if (this.configuration!.sortableType === 'multiple') {
-            this.multipleChange(columnKey);
+            this.multipleChange(id);
         }
 
         this.emit();

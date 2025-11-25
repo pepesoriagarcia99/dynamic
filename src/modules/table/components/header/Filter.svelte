@@ -50,6 +50,7 @@
       class={partNamesInput}
       part={partNamesInput}
       type="text"
+      placeholder="Enter key to search"
       bind:value={filterValue}
       onkeydown={keydownHandler}
       disabled={loading}
@@ -58,19 +59,14 @@
 </div>
 
 <style>
-  .header-filter-container {
-    width: 100%;
-    margin: 12px 12px 12px 12px;
-    /* padding: 4px 4px 4px 4px; */
-  }
-
-  .header-filter-input {
-    width: 100%;
+  .filter-container {
+    margin: 6px 6px 6px 6px;
   }
 
   .filter-input {
     width: 100%;
-    /* margin: 4px 4px 4px 4px; */
-    /* padding: 4px 4px 4px 4px; */
+    height: 25px;
+    border-radius: 6px;
+    border-color: darkgrey;
   }
 </style>

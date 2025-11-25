@@ -1,5 +1,4 @@
-import type { SortOrder } from "../store/sort-store.svelte";
-
+export type SortOrder = 'asc' | 'desc';
 
 export interface SortEvent {
     key: string;

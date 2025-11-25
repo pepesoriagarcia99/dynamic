@@ -16,11 +16,10 @@
   import type { RowData, RowEvent } from '../models/event/RowEvent';
   import type { SelectableType, SortableType, TableConfiguration } from '../models/configuration/TableConfiguration';
   import type { FilterEvent } from '../models/event/FilterEvent';
-  import type { SortEvent } from '../models/event/SortEvent';
+  import type { SortEvent, SortOrder } from '../models/event/SortEvent';
   import type { PageEvent } from '../models/event/PageEvent';
   import type { StoreComponentData } from '../../core/models/StoreComponent';
   import type { SelectionEvent } from '../models/event/SelectionEvent';
-  import { sortStore, type SortOrder } from '../store/sort-store';
   import type { PaginationApi } from '../models/public-api/PaginationApi';
   import type { SelectionApi } from '../models/public-api/SelectionApi';
   import type { FilterApi } from '../models/public-api/FilterApi';
@@ -29,6 +28,7 @@
   import { selectionStore } from '../store/selection-store';
   import { filterStore } from '../store/filter-store';
   import { loadingState } from '../store/loading-state';
+  import { sortStore } from '../store/sort-store';
 
   import Header from './header/Header.svelte';
   import Row from './body/Row.svelte';
@@ -101,6 +101,7 @@
   });
 
   /** States */
+  const identifierColumns: Column[] = $derived(columns.map((c) => (c.id ? c : { ...c, id: crypto.randomUUID() })));
   const keyedData: RowData[] = $derived(data.map((r) => (r.__key ? r : { ...r, __key: crypto.randomUUID() })));
   const tableConfiguration: TableConfiguration = $derived({
     selectableType,
@@ -141,9 +142,20 @@
 
     sortStore.init(tableConfiguration);
     sortStore.subscribe((sorts: StoreComponentData<SortOrder>[]) => {
+
+      const eventDetail = sorts.map((sort) => {
+        const { key, value } = sort;
+
+        const column = columns.find((col) => col.id === key);
+        return {
+          key: column?.key || key,
+          value
+        } as SortEvent;
+      });
+
       el.dispatchEvent(
         new CustomEvent('sortChange', {
-          detail: sorts as SortEvent[],
+          detail: eventDetail as SortEvent[],
           bubbles: true,
           composed: true
         })
@@ -234,13 +246,13 @@
 <div class="table-root" part="table-root" bind:this={el}>
   <div class="table-scroll" part="table-scroll">
     <table class="table" part="table">
-      <Header {columns} {tableConfiguration} />
+      <Header columns={identifierColumns} {tableConfiguration} />
 
       <tbody class="tbody" part="tbody">
         {#if loading === true}
           {#each skeletonData as row}
             <tr id={row.toString()} style="height: 50px;">
-              {#each columns}
+              {#each identifierColumns}
                 <td>
                   <Skeleton />
                 </td>
@@ -249,13 +261,13 @@
           {/each}
         {:else if data.length === 0 && loading === false}
           <tr>
-            <td colspan={columns.length} style="text-align: center; padding: 16px; vertical-align: top;">
+            <td colspan={identifierColumns.length} style="text-align: center; padding: 16px; vertical-align: top;">
               No data available.
             </td>
           </tr>
         {:else}
           {#each keyedData as row, i}
-            <Row index={i} {columns} {row} {tableConfiguration} onClick={(event) => onRowClick(event)} />
+            <Row index={i} columns={identifierColumns} {row} {tableConfiguration} onClick={(event) => onRowClick(event)} />
           {/each}
         {/if}
       </tbody>
