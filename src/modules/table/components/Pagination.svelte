@@ -72,7 +72,7 @@
   }
 
   function getPartPageNumberBtn(n: number) {
-    return ['pagination-btn', `pagination-btn-${n}`, currentPage === n ? 'pagination-btn-selected' : null]
+    return ['pagination-page-btn', `pagination-page-btn-${n}`, currentPage === n ? 'pagination-page-btn-selected' : null]
       .filter(Boolean)
       .join(' ');
   }
@@ -161,9 +161,10 @@
     gap: 0.5rem;
   }
 
-  .pagination-btn-selected {
+  .pagination-page-btn-selected {
     background: rgb(59, 59, 59) !important;
     border-radius: 35px;
+    margin-top: 1px;
   }
 
   .pagination-page-selected {
@@ -178,7 +179,7 @@
     cursor: pointer;
   }
 
-  .pagination-btn {
+  .pagination-btn, .pagination-page-btn {
     background: none;
     border: none;
     cursor: pointer;
