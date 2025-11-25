@@ -182,9 +182,9 @@
 
   function emitReady() {
     const event: TableEvent = {
-      filter: filterStore.state().filter(e => e.value) as FilterEvent[],
+      filter: filterStore.state().filter((e) => e.value) as FilterEvent[],
       page: paginationRef?.getState()!,
-      sort: sortStore.state().filter(e => e.value) as SortEvent[]
+      sort: sortStore.state().filter((e) => e.value) as SortEvent[]
     };
 
     el.dispatchEvent(new CustomEvent('ready', { detail: event, bubbles: true, composed: true }));
@@ -232,33 +232,35 @@
 <!-- slot: filter -->
 
 <div class="table-root" part="table-root" bind:this={el}>
-  <table class="table" part="table">
-    <Header {columns} {tableConfiguration} />
+  <div class="table-scroll" part="table-scroll">
+    <table class="table" part="table">
+      <Header {columns} {tableConfiguration} />
 
-    <tbody class="tbody" part="tbody">
-      {#if loading === true}
-        {#each skeletonData as row}
-          <tr id={row.toString()} style="height: 50px;">
-            {#each columns}
-              <td>
-                <Skeleton />
-              </td>
-            {/each}
+      <tbody class="tbody" part="tbody">
+        {#if loading === true}
+          {#each skeletonData as row}
+            <tr id={row.toString()} style="height: 50px;">
+              {#each columns}
+                <td>
+                  <Skeleton />
+                </td>
+              {/each}
+            </tr>
+          {/each}
+        {:else if data.length === 0 && loading === false}
+          <tr>
+            <td colspan={columns.length} style="text-align: center; padding: 16px; vertical-align: top;">
+              No data available.
+            </td>
           </tr>
-        {/each}
-      {:else if data.length === 0 && loading === false}
-        <tr>
-          <td colspan={columns.length} style="text-align: center; padding: 16px; vertical-align: top;">
-            No data available.
-          </td>
-        </tr>
-      {:else}
-        {#each keyedData as row, i}
-          <Row index={i} {columns} {row} {tableConfiguration} onClick={(event) => onRowClick(event)} />
-        {/each}
-      {/if}
-    </tbody>
-  </table>
+        {:else}
+          {#each keyedData as row, i}
+            <Row index={i} {columns} {row} {tableConfiguration} onClick={(event) => onRowClick(event)} />
+          {/each}
+        {/if}
+      </tbody>
+    </table>
+  </div>
   <div class="pagination" part="pagination">
     {#if pageable === true}
       <Pagination bind:this={paginationRef} {count} {pageSizeOptions} {pageSize} onChange={onPageChange} />
@@ -281,12 +283,17 @@
     box-sizing: border-box;
   }
 
+  .table-scroll {
+    flex: 1 1 auto;
+    overflow-x: auto;
+    overflow-y: auto;
+  }
+
   .table {
-    width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
-    flex: 1 1 auto;
-    overflow: hidden;
+    width: max-content;
+    min-width: 100%;
   }
 
   .pagination {

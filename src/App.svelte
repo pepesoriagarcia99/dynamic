@@ -15,6 +15,24 @@
 
   let columns: Column[] = [
     { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
+    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
+    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
+    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
+    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
+    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
+    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
+    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
+    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
+    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
+    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
+    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
+    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
+    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
+    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
+    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
+    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
+    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
+    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
     { key: 'url', name: 'URL', type: String, filterable: true, sortable: true }
   ];
 

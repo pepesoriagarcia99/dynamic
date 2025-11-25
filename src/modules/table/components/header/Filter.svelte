@@ -46,10 +46,10 @@
     <Skeleton />
   {:else}
     <input
+      id="filter-input-{column.key}"
       class={partNamesInput}
       part={partNamesInput}
       type="text"
-      placeholder="Filter..."
       bind:value={filterValue}
       onkeydown={keydownHandler}
       disabled={loading}
@@ -60,9 +60,17 @@
 <style>
   .header-filter-container {
     width: 100%;
+    margin: 12px 12px 12px 12px;
+    /* padding: 4px 4px 4px 4px; */
   }
 
   .header-filter-input {
     width: 100%;
+  }
+
+  .filter-input {
+    width: 100%;
+    /* margin: 4px 4px 4px 4px; */
+    /* padding: 4px 4px 4px 4px; */
   }
 </style>
