@@ -304,21 +304,38 @@
 
     --hover: #e2e8f0;
     --selected: #020617;
+    --selected-text: #ffffff;
+    --border: #d1d1d1;
 
     --table-border-color: var(--dyn-table-border-color, #e2e8f0);
+    --table-header-background: var(--dyn-table-header-background, #ffffff);
+
+    --table-header-border-top-color: var(--dyn-table-header-border-top-color);
+    --table-header-border-left-color: var(--dyn-table-header-border-left-color);
+    --table-header-border-right-color: var(--dyn-table-header-border-right-color);
+    --table-header-border-bottom-color: var(--dyn-table-header-border-bottom-color, var(--border));
+
+    --table-filter-header-border-top-color: var(--dyn-table-filter-header-border-top-color);
+    --table-filter-header-border-left-color: var(--dyn-table-filter-header-border-left-color);
+    --table-filter-header-border-right-color: var(--dyn-table-filter-header-border-right-color);
+    --table-filter-header-border-bottom-color: var(--dyn-table-filter-header-border-bottom-color, var(--border));
+
+    --table-header-height: var(--dyn-table-header-height, 56px);
+    --table-row-height: var(--dyn-table-row-height, 50px);
 
     --select-color: var(--dyn-table-select-color, var(--selected));
+    --select-text-color: var(--dyn-table-select-text-color, var(--selected-text));
     --select-hover-color: var(--dyn-table-select-hover-color, var(--hover));
 
     --row-border-top-color: var(--dyn-table-border-top-color);
     --row-border-left-color: var(--dyn-table-border-left-color);
     --row-border-right-color: var(--dyn-table-border-right-color);
-    --row-border-bottom-color: var(--dyn-table-border-bottom-color, #d1d1d1);
+    --row-border-bottom-color: var(--dyn-table-border-bottom-color, var(--border));
 
     --pagination-background: var(--dyn-table-pagination-background, #ffffff);
     --pagination-height: var(--dyn-table-pagination-height, 50px);
     --pagination-page-num-btn-selected: var(--dyn-table-pagination-page-num-btn-selected, var(--selected));
-    --pagination-page-num-text-selected: var(--dyn-table-pagination-page-num-text-selected, #ffffff);
+    --pagination-page-num-text-selected: var(--dyn-table-pagination-page-num-text-selected, var(--selected-text));
     --pagination-page-num-btn-hover: var(--dyn-table-pagination-page-num-btn-hover, var(--hover));
     --pagination-action-btn-hover: var(--dyn-table-pagination-action-btn-hover, var(--hover));
   }
@@ -333,7 +350,7 @@
     border-color: var(--table-border-color);
     border-width: 1px;
     border-style: solid;
-    border-radius: 18px;
+    border-radius: 12px;
   }
 
   .table-scroll {
@@ -345,7 +362,8 @@
   }
 
   .table {
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     table-layout: fixed;
     width: max-content;
     min-width: 100%;

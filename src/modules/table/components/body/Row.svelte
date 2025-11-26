@@ -72,12 +72,12 @@
 
 <style>
   .row {
-    height: 50px;
+    height: var(--table-row-height);
   }
 
   .row-selected {
     background: var(--select-color);
-    color: white;
+    color: var(--select-text-color);
   }
 
   .row-selectable:hover {

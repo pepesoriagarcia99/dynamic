@@ -2,6 +2,7 @@
   import type { Column } from '../../models/Column';
   import type { TableConfiguration } from '../../models/configuration/TableConfiguration';
   import ColumnHeader from './ColumnHeader.svelte';
+  import Filter from './Filter.svelte';
 
   interface HeaderProps {
     columns: Column[];
@@ -22,13 +23,22 @@
       />
     {/each}
   </tr>
+
+  {#if tableConfiguration.filterable}
+    <Filter {columns} />
+  {/if}
 </thead>
 
 <style>
   .thead {
+    background: var(--table-header-background);
+  }
+
+  .thead-tr {
+    height: var(--table-header-height);
     position: sticky;
     top: 0;
     z-index: 5;
-    background: #ffffff;
+    background: var(--table-header-background);
   }
 </style>
