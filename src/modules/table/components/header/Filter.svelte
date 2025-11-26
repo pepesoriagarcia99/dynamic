@@ -1,8 +1,5 @@
 <script lang="ts">
   import type { Column } from '../../models/Column';
-  // import type { StoreComponent, StoreComponentData } from '../../../core/models/StoreComponent';
-
-  // import { filterStore } from '../../store/filter-store';
   import { loadingState } from '../../store/loading-state';
   import Skeleton from '../Skeleton.svelte';
   import BasicControl from '../../../controls/components/BasicControl.svelte';
@@ -16,30 +13,12 @@
   let { columns }: FilterProps = $props();
 
   /** States */
-  // const partNamesContainer: string = $derived(`filter-container filter-container-${column.key}`);
-  // const partNamesInput: string = $derived(`filter-input filter-input-${column.key}`);
   let loading = $state(false);
 
   /** Values */
-  // const filterStoreComponent: StoreComponent<string> = filterStore.add(column.key, filterValue);
-  // filterStoreComponent.subscribe((change: StoreComponentData<string>) => {
-  //   filterValue = change.value ?? '';
-  // });
-
   loadingState.subscribe((state) => {
     loading = state;
   });
-
-  /** Methods */
-  // function keydownHandler(event: KeyboardEvent) {
-  //   if (event.key === 'Enter') {
-  //     onEnter();
-  //   }
-  // }
-
-  // function onEnter() {
-  //   filterStoreComponent?.setValue(filterValue);
-  // }
 </script>
 
 <tr class="filter-thead-tr" part="filter-thead-tr">
@@ -49,17 +28,6 @@
         <Skeleton />
       {:else}
         <BasicControl />
-
-        <!-- <input
-      id="filter-input-{column.key}"
-      class={partNamesInput}
-      part={partNamesInput}
-      type="text"
-      placeholder="Enter key to search"
-      bind:value={filterValue}
-      onkeydown={keydownHandler}
-      disabled={loading}
-    /> -->
       {/if}
     </th>
   {/each}
