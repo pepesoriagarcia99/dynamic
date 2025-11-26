@@ -66,7 +66,7 @@
 
   /** Values */
   let el: HTMLElement;
-  let paginationRef: Pagination | null = $state(null);
+  let paginationRef: Pagination | null = $state<Pagination | null>(null);
   let skeletonData = Array.from({ length: 200 }, (_, i) => i);
 
   /** Checks */
@@ -142,16 +142,7 @@
 
     sortStore.init(tableConfiguration);
     sortStore.subscribe((sorts: StoreComponentData<SortOrder>[]) => {
-      const eventDetail = sorts.map((sort) => {
-        const { key, value } = sort;
-
-        const column = columns.find((col) => col.id === key);
-        return {
-          key: column?.key || key,
-          value
-        } as SortEvent;
-      });
-
+      const eventDetail = mapSortEvent(sorts);
       el.dispatchEvent(
         new CustomEvent('sortChange', {
           detail: eventDetail as SortEvent[],
@@ -172,6 +163,18 @@
   /**
    * EVENTS
    */
+  function mapSortEvent(sorts: StoreComponentData<SortOrder>[]): SortEvent[] {
+      return sorts.map((sort) => {
+        const { key, value } = sort;
+
+        const column = identifierColumns.find((col) => col.id === key);
+        return {
+          key: column?.key || key,
+          value
+        } as SortEvent;
+      });
+  }
+
   function onRowClick(event: RowEvent) {
     if (selectableType !== 'none' && event.type === 'leftclick') {
       selectionStore.onSelectToggle(event);
@@ -200,7 +203,7 @@
     const event: TableEvent = {
       filter: filterStore.state().filter((e) => e.value) as FilterEvent[],
       page: paginationRef?.getState()!,
-      sort: sortStore.state().filter((e) => e.value) as SortEvent[]
+      sort: mapSortEvent(sortStore.state().filter((e) => e.value))
     };
 
     el.dispatchEvent(new CustomEvent('ready', { detail: event, bubbles: true, composed: true }));
@@ -310,18 +313,23 @@
     --table-border-color: var(--dyn-table-border-color, #e2e8f0);
     --table-header-background: var(--dyn-table-header-background, #ffffff);
 
+    --table-header-height: var(--dyn-table-header-height, 56px);
+    --table-row-height: var(--dyn-table-row-height, 50px);
+
     --table-header-border-top-color: var(--dyn-table-header-border-top-color);
     --table-header-border-left-color: var(--dyn-table-header-border-left-color);
     --table-header-border-right-color: var(--dyn-table-header-border-right-color);
     --table-header-border-bottom-color: var(--dyn-table-header-border-bottom-color, var(--border));
 
-    --table-filter-header-border-top-color: var(--dyn-table-filter-header-border-top-color);
-    --table-filter-header-border-left-color: var(--dyn-table-filter-header-border-left-color);
-    --table-filter-header-border-right-color: var(--dyn-table-filter-header-border-right-color);
-    --table-filter-header-border-bottom-color: var(--dyn-table-filter-header-border-bottom-color, var(--border));
+    --table-header-sortable-hover-background: var(--dyn-table-sortable-hover-background, var(--hover));
+    --table-header-sorted-background: var(--dyn-table-header-sorted-background, var(--selected));
+    --table-header-sorted-text-color: var(--dyn-table-header-sorted-text-color, var(--selected-text));
+    --table-header-sorted-icon-color: var(--dyn-table-header-sorted-icon-color, var(--selected-text));
 
-    --table-header-height: var(--dyn-table-header-height, 56px);
-    --table-row-height: var(--dyn-table-row-height, 50px);
+    --table-header-filter-border-top-color: var(--dyn-table-header-filter-border-top-color);
+    --table-header-filter-border-left-color: var(--dyn-table-header-filter-border-left-color);
+    --table-header-filter-border-right-color: var(--dyn-table-header-filter-border-right-color);
+    --table-header-filter-border-bottom-color: var(--dyn-table-header-filter-border-bottom-color, var(--border));
 
     --select-color: var(--dyn-table-select-color, var(--selected));
     --select-text-color: var(--dyn-table-select-text-color, var(--selected-text));

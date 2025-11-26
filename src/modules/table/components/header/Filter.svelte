@@ -75,9 +75,9 @@
   }
 
   .column-filter-th {
-    border-bottom: 1px solid var(--table-filter-header-border-bottom-color);
-    border-top: 1px solid var(--table-filter-header-border-top-color);
-    border-left: 1px solid var(--table-filter-header-border-left-color);
-    border-right: 1px solid var(--table-filter-header-border-right-color);
+    border-bottom: 1px solid var(--table-header-filter-border-bottom-color);
+    border-top: 1px solid var(--table-header-filter-border-top-color);
+    border-left: 1px solid var(--table-header-filter-border-left-color);
+    border-right: 1px solid var(--table-header-filter-border-right-color);
   }
 </style>

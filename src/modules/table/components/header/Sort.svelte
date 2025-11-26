@@ -22,12 +22,16 @@
   /** Values */
   let sortDirection = $state<SortOrder | null>(null);
   const sortStoreComponent: StoreComponent<SortOrder> = sortStore.add(column.id!, null);
-  
+
   let loading = $state(false);
 
   const partNamesContainer: string = $derived(`sort-container sort-container-${column.key}`);
   const partNamesButton: string = $derived(`sort-btn sort-btn-${column.key}`);
-  const partNamesIcon: string = $derived(`sort-icon sort-icon-${column.key}`);
+  const partNamesIcon: string = $derived(
+    ['sort-icon', sortDirection !== null ? 'sort-icon-active' : null, `sort-icon-${column.key}`]
+      .filter(Boolean)
+      .join(' ')
+  );
 
   loadingState.subscribe((state) => {
     loading = state;
@@ -40,8 +44,13 @@
     });
   });
 
-  function toggleSort() {
+  export function toggleSort(event?: MouseEvent) {
+    event?.stopPropagation();
     sortStore.onSortToggle(column.id!);
+  }
+
+  export function getSortDirection(): SortOrder | null {
+    return sortDirection;
   }
 </script>
 
@@ -49,7 +58,7 @@
   {#if loading === true}
     <Skeleton width="20px" height="20px" />
   {:else}
-    <button onclick={toggleSort} aria-label="Sort" class={partNamesButton} part={partNamesButton}>
+    <button onclick={(e) => toggleSort(e)} aria-label="Sort" class={partNamesButton} part={partNamesButton}>
       {#if sortDirection === 'asc'}
         <img src={sortTopIcon} alt="sort ascending" class={partNamesIcon} part={partNamesIcon} />
       {:else if sortDirection === 'desc'}
@@ -73,13 +82,21 @@
   }
 
   .sort-icon {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
+    transform: scale(1.2);
     transition: transform 180ms ease-in-out;
     transform-origin: center;
   }
 
   .sort-icon:hover {
     transform: scale(1.3);
+  }
+
+  .sort-icon-active {
+    width: 22px;
+    height: 22px;
+    filter: invert(1) drop-shadow(0 0 0 var(--table-header-sorted-icon-color)) drop-shadow(0 0 0 var(--table-header-sorted-icon-color));
+    transform: scale(1.2);
   }
 </style>

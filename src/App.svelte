@@ -151,7 +151,7 @@
         filterable={true}
         pageable={true}
         selectableType="multiple"
-        sortableType="single"
+        sortableType="multiple"
         pageSizeOptions={[25, 50, 100, 200]}
         pageSize={50}
         onready={onReady}
