@@ -302,9 +302,25 @@
     width: 100%;
     height: 100%;
 
-    --select-color: var(--dyn-table-select-color, #020617);
-    --select-hover-color: var(--dyn-table-select-hover-color, #e2e8f0);
-    --border-bottom-color: var(--dyn-table-border-color, #e5e7eb);
+    --hover: #e2e8f0;
+    --selected: #020617;
+
+    --table-border-color: var(--dyn-table-border-color, #e2e8f0);
+
+    --select-color: var(--dyn-table-select-color, var(--selected));
+    --select-hover-color: var(--dyn-table-select-hover-color, var(--hover));
+
+    --row-border-top-color: var(--dyn-table-border-top-color);
+    --row-border-left-color: var(--dyn-table-border-left-color);
+    --row-border-right-color: var(--dyn-table-border-right-color);
+    --row-border-bottom-color: var(--dyn-table-border-bottom-color, #d1d1d1);
+
+    --pagination-background: var(--dyn-table-pagination-background, #ffffff);
+    --pagination-height: var(--dyn-table-pagination-height, 50px);
+    --pagination-page-num-btn-selected: var(--dyn-table-pagination-page-num-btn-selected, var(--selected));
+    --pagination-page-num-text-selected: var(--dyn-table-pagination-page-num-text-selected, #ffffff);
+    --pagination-page-num-btn-hover: var(--dyn-table-pagination-page-num-btn-hover, var(--hover));
+    --pagination-action-btn-hover: var(--dyn-table-pagination-action-btn-hover, var(--hover));
   }
 
   .table-root {
@@ -313,12 +329,19 @@
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
+
+    border-color: var(--table-border-color);
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 18px;
   }
 
   .table-scroll {
     flex: 1 1 auto;
     overflow-x: auto;
     overflow-y: auto;
+
+    margin: 22px 22px 12px 22px;
   }
 
   .table {
@@ -332,6 +355,6 @@
     position: sticky;
     bottom: 0;
     background: #ffffff;
-    padding: 4px 0;
+    margin-bottom: 22px;
   }
 </style>

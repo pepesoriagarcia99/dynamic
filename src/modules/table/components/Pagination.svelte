@@ -66,13 +66,21 @@
   }
 
   function getPartPageNumber(n: number) {
-    return ['pagination-page', `pagination-page-${n}`, currentPage === n ? 'pagination-page-selected' : null]
+    return [
+      'pagination-page-num',
+      `pagination-page-num-${n}`,
+      currentPage === n ? 'pagination-page-num-selected' : null
+    ]
       .filter(Boolean)
       .join(' ');
   }
 
   function getPartPageNumberBtn(n: number) {
-    return ['pagination-page-btn', `pagination-page-btn-${n}`, currentPage === n ? 'pagination-page-btn-selected' : null]
+    return [
+      'pagination-page-num-btn',
+      `pagination-page-num-btn-${n}`,
+      currentPage === n ? 'pagination-page-num-btn-selected' : null
+    ]
       .filter(Boolean)
       .join(' ');
   }
@@ -99,8 +107,8 @@
     onclick={() => handlerAction('first')}
     disabled={currentPage === 1 || loading}
     aria-label="first-page"
-    class="pagination-btn first-page-btn"
-    part="pagination-btn first-page-btn"
+    class="pagination-action-btn first-page-btn"
+    part="pagination-action-btn first-page-btn"
   >
     <img src={firstPageIcon} alt="first page" class="first-page-icon" part="first-page-icon" />
   </button>
@@ -109,13 +117,13 @@
     onclick={() => handlerAction('previous')}
     disabled={currentPage === 1 || loading}
     aria-label="previous-page"
-    class="pagination-btn previous-page-btn"
-    part="pagination-btn previous-page-btn"
+    class="pagination-action-btn previous-page-btn"
+    part="pagination-action-btn previous-page-btn"
   >
     <img src={previousPageIcon} alt="previous page" class="previous-page-icon" part="previous-page-icon" />
   </button>
   {#if loading === true && showPageNumbers.length === 0}
-    <span class="loading">...</span>
+    <span class="pagination-page-num-loading" part="pagination-page-num-loading">...</span>
   {:else}
     {#each showPageNumbers as n}
       <button
@@ -133,8 +141,8 @@
     onclick={() => handlerAction('next')}
     disabled={currentPage === totalPages || loading}
     aria-label="next-page"
-    class="pagination-btn next-page-btn"
-    part="pagination-btn next-page-btn"
+    class="pagination-action-btn next-page-btn"
+    part="pagination-action-btn next-page-btn"
   >
     <img src={nextPageIcon} alt="next page" class="next-page-icon" part="next-page-icon" />
   </button>
@@ -142,8 +150,8 @@
     onclick={() => handlerAction('last')}
     disabled={currentPage === totalPages || loading}
     aria-label="last-page"
-    class="pagination-btn last-page-btn"
-    part="pagination-btn last-page-btn"
+    class="pagination-action-btn last-page-btn"
+    part="pagination-action-btn last-page-btn"
   >
     <img src={lastPageIcon} alt="last page" class="last-page-icon" part="last-page-icon" />
   </button>
@@ -152,51 +160,74 @@
 
 <style>
   .pagination-content {
-    background-color: rgb(228, 228, 228);
+    background-color: var(--pagination-background);
     width: 100%;
-    height: 35px;
+    height: var(--pagination-height);
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
   }
 
-  .pagination-page-btn-selected {
-    background: rgb(59, 59, 59) !important;
-    border-radius: 35px;
-    margin-top: 1px;
+  .pagination-page-num-loading {
+    cursor: default;
+    opacity: 0.5;
   }
 
-  .pagination-page-selected {
-    color: white;
-  }
-
-  .pagination-page {
-    font-size: large;
-  }
-
-  .pagination-page:hover {
-    cursor: pointer;
-  }
-
-  .pagination-btn, .pagination-page-btn {
+  /** Estilos botones */
+  .pagination-action-btn,
+  .pagination-page-num-btn {
     background: none;
     border: none;
     cursor: pointer;
   }
 
-  .pagination-btn:disabled {
-    opacity: 0.5;
+  /** Estilos numeros de pagina */
+
+  .pagination-page-num-btn {
+    width: 35px;
+    height: 35px;
   }
 
-  .pagination-btn:hover {
-    background: rgb(212, 212, 212);
+  .pagination-page-num-btn:not(.pagination-page-num-btn-selected):hover {
+    background: var(--pagination-page-num-btn-hover) !important;
+    border-radius: 35px;
+    margin-top: 1px;
+  }
+
+  .pagination-page-num-btn-selected {
+    background: var(--pagination-page-num-btn-selected) !important;
+    border-radius: 35px;
+    margin-top: 1px;
+  }
+
+  .pagination-page-num-selected {
+    color: var(--pagination-page-num-text-selected);
+  }
+
+  .pagination-page-num {
+    font-size: large;
+  }
+
+  .pagination-page-num:hover {
+    cursor: pointer;
+  }
+
+  /** Estilos botones acciones */
+
+  .pagination-action-btn {
+    width: 35px;
+    height: 35px;
+  }
+
+  .pagination-action-btn:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+
+  .pagination-action-btn:not(:disabled):hover {
+    background: var(--pagination-action-btn-hover) !important;
     border-radius: 30px;
-  }
-
-  .loading {
-    cursor: not-allowed;
-    opacity: 0.5;
   }
 
   .first-page-icon,

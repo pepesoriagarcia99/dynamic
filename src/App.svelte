@@ -170,7 +170,7 @@
     margin: 2rem;
   }
   .table-container {
-    height: 500px;
+    height: 800px;
     overflow-x: auto;
     overflow-y: auto;
     display: flex;

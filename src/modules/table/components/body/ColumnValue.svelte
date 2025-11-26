@@ -28,15 +28,24 @@
 </script>
 
 <td
+  class="column"
+  part="column"
   onclick={(event) => onCellClick(event, 'leftclick')}
   oncontextmenu={(event) => onCellClick(event, 'rightclick')}
   ondblclick={(event) => onCellClick(event, 'doubleclick')}
 >
-  {row[column.key]}
+  <span class="column-value" part="column-value">{row[column.key]}</span>
 </td>
 
 <style>
-  td {
-    border-bottom: 1px solid var(--border-color);
+  .column {
+    border-bottom: 1px solid var(--row-border-bottom-color);
+    border-top: 1px solid var(--row-border-top-color);
+    border-left: 1px solid var(--row-border-left-color);
+    border-right: 1px solid var(--row-border-right-color);
+  }
+
+  .column-value {
+    margin-left: 6px;
   }
 </style>
