@@ -142,7 +142,6 @@
 
     sortStore.init(tableConfiguration);
     sortStore.subscribe((sorts: StoreComponentData<SortOrder>[]) => {
-
       const eventDetail = sorts.map((sort) => {
         const { key, value } = sort;
 
@@ -162,7 +161,12 @@
       );
     });
 
+    window.addEventListener('keydown', handleKeyDown);
+
     emitReady();
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   });
 
   /**
@@ -200,6 +204,12 @@
     };
 
     el.dispatchEvent(new CustomEvent('ready', { detail: event, bubbles: true, composed: true }));
+  }
+
+  function handleKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Escape') {
+      selectionStore.clear();
+    }
   }
 
   /**
@@ -267,7 +277,13 @@
           </tr>
         {:else}
           {#each keyedData as row, i}
-            <Row index={i} columns={identifierColumns} {row} {tableConfiguration} onClick={(event) => onRowClick(event)} />
+            <Row
+              index={i}
+              columns={identifierColumns}
+              {row}
+              {tableConfiguration}
+              onClick={(event) => onRowClick(event)}
+            />
           {/each}
         {/if}
       </tbody>
@@ -285,6 +301,10 @@
     display: block;
     width: 100%;
     height: 100%;
+
+    --select-color: var(--dyn-table-select-color, #020617);
+    --select-hover-color: var(--dyn-table-select-hover-color, #e2e8f0);
+    --border-bottom-color: var(--dyn-table-border-color, #e5e7eb);
   }
 
   .table-root {

@@ -37,6 +37,6 @@
 
 <style>
   td {
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--border-color);
   }
 </style>

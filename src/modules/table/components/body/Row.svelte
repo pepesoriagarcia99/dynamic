@@ -26,8 +26,7 @@
     [
       'row',
       index % 2 === 0 ? 'row-even' : 'row-odd',
-      isSelected ? 'row-selected' : null,
-      isSelectableRow ? 'row-selectable' : null
+      isSelected ? 'row-selected' : isSelectableRow ? 'row-selectable' : null
     ]
       .filter(Boolean)
       .join(' ')
@@ -76,9 +75,13 @@
     height: 50px;
   }
 
-  /* SOLO SI ES SELECTABLE */
+  .row-selected {
+    background: var(--select-color);
+    color: white;
+  }
+
   .row-selectable:hover {
     cursor: pointer;
-    background: var(--gray-light-5);
+    background: var(--select-hover-color);
   }
 </style>

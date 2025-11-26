@@ -181,9 +181,9 @@
     margin-bottom: 20px;
   }
 
-  dyn-table::part(row) {
+  /* dyn-table::part(row) {
     cursor: pointer;
-  }
+  } */
 
   /* dyn-table::part(row):hover {
     background: rgb(196, 196, 196);
@@ -197,7 +197,7 @@
     background: #b9ccffa2;
   } */
 
-  dyn-table::part(row-selected) {
+  /* dyn-table::part(row-selected) {
     background: #d8e24a !important;
-  }
+  } */
 </style>

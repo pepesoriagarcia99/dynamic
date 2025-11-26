@@ -47,6 +47,7 @@ export class Store<T> extends Subject<StoreComponentData<T>[]> {
    */
   clear() {
     this.elements.forEach((el) => el.setValue(null));
+    this.emit();
   }
 
   /**
