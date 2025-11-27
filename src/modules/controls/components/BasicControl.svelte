@@ -41,4 +41,8 @@
 </div>
 
 <style>
+
+  .basic-control-container .basic-control-input {
+    height: var(--control-height);
+  }
 </style>

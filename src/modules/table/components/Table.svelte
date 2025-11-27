@@ -164,15 +164,15 @@
    * EVENTS
    */
   function mapSortEvent(sorts: StoreComponentData<SortOrder>[]): SortEvent[] {
-      return sorts.map((sort) => {
-        const { key, value } = sort;
+    return sorts.map((sort) => {
+      const { key, value } = sort;
 
-        const column = identifierColumns.find((col) => col.id === key);
-        return {
-          key: column?.key || key,
-          value
-        } as SortEvent;
-      });
+      const column = identifierColumns.find((col) => col.id === key);
+      return {
+        key: column?.key || key,
+        value
+      } as SortEvent;
+    });
   }
 
   function onRowClick(event: RowEvent) {
@@ -305,6 +305,8 @@
     width: 100%;
     height: 100%;
 
+    /** TABLE*/
+
     --hover: #e2e8f0;
     --selected: #020617;
     --selected-text: #ffffff;
@@ -346,6 +348,16 @@
     --pagination-page-num-text-selected: var(--dyn-table-pagination-page-num-text-selected, var(--selected-text));
     --pagination-page-num-btn-hover: var(--dyn-table-pagination-page-num-btn-hover, var(--hover));
     --pagination-action-btn-hover: var(--dyn-table-pagination-action-btn-hover, var(--hover));
+
+    /** Controls */
+
+    --control-text-color: var(--dyn-table-control-color, #495057);
+    --control-background-color: var(--dyn-table-control-background, #ffffff);
+    --control-background-disabled-color: var(--dyn-table-control-disabled-background-color, #e9ecef);
+    --control-border-color: var(--dyn-table-control-border-color, #cbd5e1);
+    --control-border-hover-color: var(--dyn-table-control-border-hover-color, #94a3b8);
+    --control-border-focus-color: var(--dyn-table-control-border-hover-color, #020617);
+    --control-height: var(--dyn-table-control-height, 34px);
   }
 
   .table-root {
