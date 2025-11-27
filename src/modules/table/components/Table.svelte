@@ -358,6 +358,7 @@
     --control-border-hover-color: var(--dyn-table-control-border-hover-color, #94a3b8);
     --control-border-focus-color: var(--dyn-table-control-border-hover-color, #020617);
     --control-height: var(--dyn-table-control-height, 34px);
+    --control-border-radius: var(--dyn-table-control-border-radius, 6px);
   }
 
   .table-root {

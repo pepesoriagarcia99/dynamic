@@ -1,0 +1,43 @@
+.control-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 0.5rem;
+    height: var(--control-height);
+}
+
+.control-item {
+    height: var(--control-height);
+    padding: 0.5rem 2.5rem 0.5rem 0.75rem;
+    font-size: 1rem;
+    color: var(--control-text-color);
+    background: var(--control-background-color);
+    border: 1px solid var(--control-border-color);
+    border-radius: var(--control-border-radius);
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s;
+    appearance: none;
+}
+
+.control-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--control-text-color);
+}
+
+.control-item:hover:not(:disabled):not(:focus) {
+    border-color: var(--control-border-hover-color);
+}
+
+.control-item:focus {
+    outline: none;
+    border-color: var(--control-border-focus-color);
+    box-shadow: 0 0 0 0.05rem var(--control-border-focus-color);
+}
+
+.control-item:disabled {
+    background-color: var(--control-background-disabled-color);
+    opacity: 0.6;
+    cursor: default;
+}
