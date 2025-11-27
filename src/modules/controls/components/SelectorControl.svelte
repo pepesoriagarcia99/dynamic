@@ -35,12 +35,12 @@
   {/if}
   <select
     id={inputId}
-    aria-label="selector-control-{id}"
-    bind:value
-    onchange={onSelectChange}
+    aria-label={inputId}
     class={partNamesInput}
     part={partNamesInput}
     {disabled}
+    bind:value
+    onchange={onSelectChange}
   >
     {#each options as opt}
       <option value={opt}>{opt}</option>

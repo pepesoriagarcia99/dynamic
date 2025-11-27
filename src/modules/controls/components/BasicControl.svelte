@@ -1,4 +1,6 @@
 <script lang="ts">
+  import type { StoreComponent, StoreComponentData } from '../../core/models/StoreComponent';
+  import { filterStore } from '../../table/store/filter-store';
   import type { CommonControlProp } from '../models/CommonControlProp';
 
   interface BasicControlProps extends CommonControlProp {}
@@ -7,6 +9,7 @@
   let {
     id = crypto.randomUUID(),
     label,
+    placeholder = 'Enter key to search',
     value = $bindable(undefined),
     disabled = false,
     onChange = () => {}
@@ -20,10 +23,10 @@
   const partNamesLabel: string = $derived(`control-label basic-control-label basic-control-label-${id}`);
 
   /** Methods */
-  // const filterStoreComponent: StoreComponent<string> = filterStore.add(column.key, filterValue);
-  // filterStoreComponent.subscribe((change: StoreComponentData<string>) => {
-  //   filterValue = change.value ?? '';
-  // });
+  const filterStoreComponent: StoreComponent<string> = filterStore.add(id, value);
+  filterStoreComponent.subscribe((change: StoreComponentData<string>) => {
+    value = change.value ?? '';
+  });
 
   function keydownHandler(event: KeyboardEvent) {
     if (event.key === 'Enter') {
@@ -32,7 +35,7 @@
   }
 
   function onEnter() {
-    // filterStoreComponent?.setValue(filterValue);
+    filterStoreComponent?.setValue(value);
     onChange(value);
   }
 </script>
@@ -43,10 +46,11 @@
   {/if}
   <input
     id={inputId}
+    aria-label={inputId}
     class={partNamesInput}
     part={partNamesInput}
     type="text"
-    placeholder="Enter key to search"
+    placeholder={placeholder}
     bind:value
     onkeydown={keydownHandler}
     {disabled}

@@ -274,7 +274,7 @@
           {/each}
         {:else if data.length === 0 && loading === false}
           <tr>
-            <td colspan={identifierColumns.length} style="text-align: center; padding: 16px; vertical-align: top;">
+            <td colspan={identifierColumns.length} style="text-align: left; padding: 16px; vertical-align: top;">
               No data available.
             </td>
           </tr>
@@ -306,7 +306,6 @@
     height: 100%;
 
     /** TABLE*/
-
     --hover: #e2e8f0;
     --selected: #020617;
     --selected-text: #ffffff;
@@ -350,7 +349,6 @@
     --pagination-action-btn-hover: var(--dyn-table-pagination-action-btn-hover, var(--hover));
 
     /** Controls */
-
     --control-text-color: var(--dyn-table-control-color, #495057);
     --control-background-color: var(--dyn-table-control-background, #ffffff);
     --control-background-disabled-color: var(--dyn-table-control-disabled-background-color, #e9ecef);
