@@ -101,7 +101,7 @@
   });
 
   /** States */
-  const identifierColumns: Column[] = $derived(columns.map((c) => (c.id ? c : { ...c, id: crypto.randomUUID() })));
+  const indexColumns: Column[] = $derived(columns.map((c, index) => (c.index ? c : { ...c, index })));
   const keyedData: RowData[] = $derived(data.map((r) => (r.__key ? r : { ...r, __key: crypto.randomUUID() })));
   const tableConfiguration: TableConfiguration = $derived({
     selectableType,
@@ -131,9 +131,10 @@
     });
 
     filterStore.subscribe((filters: StoreComponentData<string>[]) => {
+      const eventDetail = mapColumnKey<FilterEvent>(filters);
       el.dispatchEvent(
         new CustomEvent('filterChange', {
-          detail: filters as FilterEvent[],
+          detail: eventDetail as FilterEvent[],
           bubbles: true,
           composed: true
         })
@@ -142,7 +143,7 @@
 
     sortStore.init(tableConfiguration);
     sortStore.subscribe((sorts: StoreComponentData<SortOrder>[]) => {
-      const eventDetail = mapSortEvent(sorts);
+      const eventDetail = mapColumnKey<SortEvent>(sorts);
       el.dispatchEvent(
         new CustomEvent('sortChange', {
           detail: eventDetail as SortEvent[],
@@ -163,15 +164,15 @@
   /**
    * EVENTS
    */
-  function mapSortEvent(sorts: StoreComponentData<SortOrder>[]): SortEvent[] {
-    return sorts.map((sort) => {
-      const { key, value } = sort;
+  function mapColumnKey<T>(storeEvent: StoreComponentData<any>[]): T[] {
+    return storeEvent.map((event) => {
+      const { key, value } = event;
 
-      const column = identifierColumns.find((col) => col.id === key);
+      const column = indexColumns.find((col) => String(col.index) === key);
       return {
         key: column?.key || key,
         value
-      } as SortEvent;
+      } as T;
     });
   }
 
@@ -201,9 +202,9 @@
 
   function emitReady() {
     const event: TableEvent = {
-      filter: filterStore.state().filter((e) => e.value) as FilterEvent[],
+      filter: mapColumnKey<FilterEvent>(filterStore.state().filter((e) => e.value) as FilterEvent[]),
       page: paginationRef?.getState()!,
-      sort: mapSortEvent(sortStore.state().filter((e) => e.value))
+      sort: mapColumnKey<SortEvent>(sortStore.state().filter((e) => e.value))
     };
 
     el.dispatchEvent(new CustomEvent('ready', { detail: event, bubbles: true, composed: true }));
@@ -259,13 +260,13 @@
 <div class="table-root" part="table-root" bind:this={el}>
   <div class="table-scroll" part="table-scroll">
     <table class="table" part="table">
-      <Header columns={identifierColumns} {tableConfiguration} />
+      <Header columns={indexColumns} {tableConfiguration} />
 
       <tbody class="tbody" part="tbody">
         {#if loading === true}
           {#each skeletonData as row}
             <tr id={row.toString()} style="height: 50px;">
-              {#each identifierColumns}
+              {#each indexColumns}
                 <td>
                   <Skeleton />
                 </td>
@@ -274,7 +275,7 @@
           {/each}
         {:else if data.length === 0 && loading === false}
           <tr>
-            <td colspan={identifierColumns.length} style="text-align: left; padding: 16px; vertical-align: top;">
+            <td colspan={indexColumns.length} style="text-align: left; padding: 16px; vertical-align: top;">
               No data available.
             </td>
           </tr>
@@ -282,7 +283,7 @@
           {#each keyedData as row, i}
             <Row
               index={i}
-              columns={identifierColumns}
+              columns={indexColumns}
               {row}
               {tableConfiguration}
               onClick={(event) => onRowClick(event)}
@@ -316,6 +317,7 @@
 
     --table-header-height: var(--dyn-table-header-height, 56px);
     --table-row-height: var(--dyn-table-row-height, 50px);
+    --table-row-value-color: var(--dyn-table-row-value-color, #495057);
 
     --table-header-border-top-color: var(--dyn-table-header-border-top-color);
     --table-header-border-left-color: var(--dyn-table-header-border-left-color);

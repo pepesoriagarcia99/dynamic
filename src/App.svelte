@@ -12,91 +12,70 @@
   import type { PageEvent } from './modules/table/models/event/PageEvent';
   import type { PublicApi } from './modules/table/models/public-api/PublicApi';
   import type { TableEvent } from './modules/table/models/event/TableEvent';
+  import Image from './modules/table/models/column-types/Image';
 
   let columns: Column[] = [
-    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
-    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
-    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
-    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
-    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
-    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
-    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
-    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
-    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
-    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
-    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
-    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
-    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
-    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
-    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
-    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
-    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
-    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
-    { key: 'name', name: 'Name', type: String, filterable: true, sortable: true },
-    { key: 'url', name: 'URL', type: String, filterable: true, sortable: true }
+    { key: 'flags.png', name: 'Bandera', type: Image, style: { width: '50px' } },
+    { key: 'name.common', name: 'Nombre', type: String, filterable: true },
+    { key: 'region', name: 'Region', type: String, sortable: true },
+    { key: 'subregion', name: 'Subregion', type: String, filterable: true },
+    { key: 'capital.[0]', name: 'Capital', type: String, filterable: true },
+    { key: 'population', name: 'Poblacion', type: String, sortable: true }
   ];
 
-  let loading = $state(false);
-  let count = $state<number | undefined>(undefined);
-  let data = $state<any[]>([]);
+  let loading: boolean = $state(false);
+  let count: number | undefined = $state<number | undefined>(undefined);
+  let data: any[] = $state<any[]>([]);
+  let filteredData: any[] = $state<any[]>([]);
 
   let tableEl: (HTMLElement & PublicApi) | null;
 
   let tableFilter: TableEvent;
 
-  function loadPokemon() {
-    loading = true;
-
-    // page: number, pageSize: number
-    // const offset = (page - 1) * pageSize;
-    // ?limit=${pageSize}&offset=${offset}
-
-    fetch(`https://pokeapi.co/api/v2/pokemon?limit=1000000000&offset=0`)
+  function getCountries() {
+    return fetch('https://restcountries.com/v3.1/independent?status=true')
       .then((res) => res.json())
       .then((res) => {
-        setTimeout(() => {
-          const page = tableFilter?.page?.page || 1;
-          const pageSize = tableFilter?.page?.pageSize || 50;
-          const offset = (page - 1) * pageSize;
-
-          let prevData = res.results.slice(offset, offset + pageSize);
-
-          tableFilter.filter.forEach((filter) => {
-            prevData = prevData.filter((item: any) =>
-              item[filter.key]?.toLowerCase().includes(filter.value?.toLocaleLowerCase())
-            );
-          });
-
-          prevData = prevData.sort((a: any, b: any) => {
-            for (const sortItem of tableFilter.sort) {
-              const aValue = a[sortItem.key];
-              const bValue = b[sortItem.key];
-
-              if (aValue < bValue) return sortItem.value === 'asc' ? -1 : 1;
-              if (aValue > bValue) return sortItem.value === 'asc' ? 1 : -1;
-            }
-            return 0;
-          });
-
-          if (tableFilter.sort.length > 0 || tableFilter.filter.length > 0) {
-            count = prevData.length;
-          } else {
-            count = res.count;
-          }
-
-          data = prevData;
-        }, 1);
+        count = res.length;
+        data = res;
+        filteredData = res;
       })
       .catch(console.error)
       .finally(() => {
-        setTimeout(() => {
-          loading = false;
-        }, 1);
+        // loading = false;
       });
+  }
+
+  function filterValues() {
+    const filters = tableFilter.filter;
+
+    if(filters.length === 0) {
+      filteredData = data;
+      return;
+    }
+
+    filteredData = data.filter((row: any) => {
+      return filters.every(({ key, value }) => {
+        const cellValue = key.split('.').reduce((obj, k) => (obj && obj[k] !== 'undefined' ? obj[k] : undefined), row);
+        if (cellValue === undefined || cellValue === null) return false;
+        if (!value) return true;
+
+        return cellValue.toString().toLowerCase().includes(value.toString().toLowerCase());
+      });
+    });
+  }
+
+  function pageValues() {
+    const page = tableFilter.page;
+    const start = (page.page - 1) * page.pageSize;
+    const end = start + page.pageSize;
+
+    filteredData = data.slice(start, end);
   }
 
   onMount(() => {
     tableEl = document.getElementById('main-table') as HTMLElement & PublicApi;
+    getCountries();
   });
 
   function onRowClick(event: any & { detail: RowEvent }) {
@@ -112,28 +91,27 @@
 
     tableEl?.pagination.resetPage();
     tableFilter.filter = event.detail;
-    loadPokemon();
+
+    filterValues();
   }
 
   function onSortChange(event: any & { detail: SortEvent }) {
     console.log('SORTED: ', event.detail);
 
     tableFilter.sort = event.detail;
-    loadPokemon();
   }
 
   function onPageChange(event: any & { detail: PageEvent }) {
     console.log('PAGE: ', event.detail);
 
     tableFilter.page = event.detail;
-    loadPokemon();
+    pageValues();
   }
 
   function onReady(event: any & { detail: TableEvent }) {
     console.log('READY: ', event.detail);
 
     tableFilter = event.detail;
-    loadPokemon();
   }
 </script>
 
@@ -147,7 +125,7 @@
         {loading}
         {columns}
         {count}
-        {data}
+        data={filteredData}
         filterable={true}
         pageable={true}
         selectableType="multiple"
@@ -179,6 +157,11 @@
 
   h1 {
     margin-bottom: 20px;
+  }
+
+  dyn-table::part(column-value-0) {
+    width: 40px;
+    height: auto;
   }
 
   /* dyn-table::part(row) {

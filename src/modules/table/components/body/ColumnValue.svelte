@@ -1,5 +1,8 @@
 <script lang="ts">
+  import { styleTransformer } from '../../../../utils/style-transformer';
+  import { valueTransformer } from '../../../../utils/value-transformer';
   import type { Column } from '../../models/Column';
+  import Image from '../../models/column-types/Image';
   import type { RowEvent, RowEventType } from '../../models/event/RowEvent';
 
   interface ColumnValueProps {
@@ -10,6 +13,8 @@
 
   /** Inputs */
   const { column, row, onClick = () => {} }: ColumnValueProps = $props();
+  const columnPartNames: string = $derived(`column column-${column.index}`);
+  const columnValuePartNames: string = $derived(`column-value column-value-${column.index}`);
 
   /** Methods */
   function onCellClick(event: MouseEvent, type: RowEventType) {
@@ -25,16 +30,25 @@
       }
     });
   }
+
+  function getValue() {
+    return valueTransformer.getValue(column.key, row);
+  }
 </script>
 
 <td
-  class="column"
-  part="column"
+  class={columnPartNames}
+  part={columnPartNames}
+  style={styleTransformer.toString(column?.style)}
   onclick={(event) => onCellClick(event, 'leftclick')}
   oncontextmenu={(event) => onCellClick(event, 'rightclick')}
   ondblclick={(event) => onCellClick(event, 'doubleclick')}
 >
-  <span class="column-value" part="column-value">{row[column.key]}</span>
+  {#if column.type === Image}
+    <img src={getValue()} alt={`Image value ${column.name}`} class={columnValuePartNames} part={columnValuePartNames} />
+  {:else}
+    <span class={columnValuePartNames} part={columnValuePartNames}>{getValue()}</span>
+  {/if}
 </td>
 
 <style>

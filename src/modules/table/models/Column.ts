@@ -1,8 +1,8 @@
 import { ColumnType } from './column-types/ColumnType';
 
-// interface ColumnStyle {
-//   [key: string]: string | number;
-// }
+export interface ColumnStyle {
+  [key: string]: string | number;
+}
 
 // export interface ColumnConfiguration {
 
@@ -58,9 +58,9 @@ import { ColumnType } from './column-types/ColumnType';
 export interface Column {
 
   /**
-   * Identificador unico de la columna.
+   * Identificador numerico de la columna.
    */
-  id?: string;
+  index?: number;
 
   /**
    * Clave unica de la columna.
@@ -85,7 +85,7 @@ export interface Column {
   /**
    * Estilo personalizado para la columna.
    */
-  // style?: ColumnStyle;
+  style?: ColumnStyle;
 
   /**
    * Indica si la columna es ordenable.

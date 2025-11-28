@@ -61,6 +61,6 @@
   @import '../styles/control.css';
 
   .basic-control-input {
-    margin: 0px 12px 0px 12px;
+    margin: 0px 4px 0px 4px;
   }
 </style>

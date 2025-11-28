@@ -1,8 +1,7 @@
 <script lang="ts">
+  import { styleTransformer } from '../../../../utils/style-transformer';
   import type { Column } from '../../models/Column';
   import type { SortableType } from '../../models/configuration/TableConfiguration';
-
-  // import Filter from './Filter.svelte';
   import Sort from './Sort.svelte';
 
   interface ColumnHeaderProps {
@@ -17,20 +16,20 @@
   /** States */
   let sortRef: Sort | null = $state<Sort | null>(null);
   const isSortable: boolean = $derived(column.sortable === true && sortableType !== 'none');
-  const isSorted: boolean = $derived(sortRef?.getSortDirection() !== null && sortableType !== 'none');
+  const isSorted: boolean = $derived(sortRef?.getSortDirection() !== null && isSortable);
 
   const partNamesTh: string = $derived(
     [
       'column-header-th',
-      `column-header-th-${column.key}`,
+      `column-header-th-${column.index}`,
       isSorted ? 'column-header-th-sorted' : isSortable ? 'column-header-th-sortable' : null
     ]
       .filter(Boolean)
       .join(' ')
   );
-  const partNamesContent: string = $derived(`column-header-content column-header-content-${column.key}`);
+  const partNamesContent: string = $derived(`column-header-content column-header-content-${column.index}`);
   const partNamesName: string = $derived(
-    ['header-column-name', isSorted ? 'header-column-name-sorted' : null, `header-column-name-${column.key}`]
+    ['header-column-name', isSorted ? 'header-column-name-sorted' : null, `header-column-name-${column.index}`]
       .filter(Boolean)
       .join(' ')
   );
@@ -42,14 +41,7 @@
   }
 </script>
 
-<th class={partNamesTh} part={partNamesTh}>
-  <!-- <div class={partNamesContent} part={partNamesContent}>
-    <span class={partNamesName} part={partNamesName}>{column?.name}</span>
-    {#if isSortable}
-      <Sort bind:this={sortComponent} {column} />
-    {/if}
-  </div> -->
-
+<th class={partNamesTh} part={partNamesTh} style={styleTransformer.toString(column?.style)}>
   <button class="column-header-btn" onclick={(e) => handleHeaderClick(e)}>
     <div class={partNamesContent} part={partNamesContent}>
       <span class={partNamesName} part={partNamesName}>{column?.name}</span>

@@ -21,14 +21,14 @@
 
   /** Values */
   let sortDirection = $state<SortOrder | null>(null);
-  const sortStoreComponent: StoreComponent<SortOrder> = sortStore.add(column.id!, null);
+  const sortStoreComponent: StoreComponent<SortOrder> = sortStore.add(column.key, null);
 
   let loading = $state(false);
 
-  const partNamesContainer: string = $derived(`sort-container sort-container-${column.key}`);
-  const partNamesButton: string = $derived(`sort-btn sort-btn-${column.key}`);
+  const partNamesContainer: string = $derived(`sort-container sort-container-${column.index}`);
+  const partNamesButton: string = $derived(`sort-btn sort-btn-${column.index}`);
   const partNamesIcon: string = $derived(
-    ['sort-icon', sortDirection !== null ? 'sort-icon-active' : null, `sort-icon-${column.key}`]
+    ['sort-icon', sortDirection !== null ? 'sort-icon-active' : null, `sort-icon-${column.index}`]
       .filter(Boolean)
       .join(' ')
   );
@@ -46,7 +46,7 @@
 
   export function toggleSort(event?: MouseEvent) {
     event?.stopPropagation();
-    sortStore.onSortToggle(column.id!);
+    sortStore.onSortToggle(String(column.index));
   }
 
   export function getSortDirection(): SortOrder | null {

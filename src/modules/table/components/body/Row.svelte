@@ -75,6 +75,10 @@
     height: var(--table-row-height);
   }
 
+  .row:not(.row-selected) {
+    color: var(--table-row-value-color);
+  }
+
   .row-selected {
     background: var(--select-color);
     color: var(--select-text-color);
@@ -84,4 +88,5 @@
     cursor: pointer;
     background: var(--select-hover-color);
   }
+  
 </style>
