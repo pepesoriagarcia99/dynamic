@@ -44,7 +44,7 @@
   oncontextmenu={(event) => onCellClick(event, 'rightclick')}
   ondblclick={(event) => onCellClick(event, 'doubleclick')}
 >
-  {#if column.type === Image}
+  {#if column.type === Image || column.type instanceof Image}
     <img src={getValue()} alt={`Image value ${column.name}`} class={columnValuePartNames} part={columnValuePartNames} />
   {:else}
     <span class={columnValuePartNames} part={columnValuePartNames}>{getValue()}</span>
