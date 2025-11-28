@@ -46,7 +46,7 @@
 
   export function toggleSort(event?: MouseEvent) {
     event?.stopPropagation();
-    sortStore.onSortToggle(String(column.index));
+    sortStore.onSortToggle(column.key);
   }
 
   export function getSortDirection(): SortOrder | null {
