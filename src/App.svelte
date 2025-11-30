@@ -49,7 +49,7 @@
   function filterValues() {
     const filters = tableFilter.filter;
 
-    if(filters.length === 0) {
+    if (filters.length === 0) {
       filteredData = data;
       return;
     }
@@ -138,7 +138,20 @@
         onfilterChange={onFilterChange}
         onsortChange={onSortChange}
         onpageChange={onPageChange}
-      ></dyn-table>
+      >
+        <div slot="contextMenu" style="padding: 4px 0;">
+          <button
+            style="width: 100%; padding: 8px 16px; border: none; background: none; cursor: pointer; text-align: left;"
+          >
+            Editar
+          </button>
+          <button
+            style="width: 100%; padding: 8px 16px; border: none; background: none; cursor: pointer; text-align: left;"
+          >
+            Eliminar
+          </button>
+        </div>
+      </dyn-table>
     </div>
   </div>
 </main>

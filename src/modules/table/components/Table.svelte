@@ -34,6 +34,7 @@
   import Row from './body/Row.svelte';
   import Pagination from './Pagination.svelte';
   import Skeleton from './Skeleton.svelte';
+  import ContextMenu from './ContextMenu.svelte';
 
   interface TableProps {
     columns?: Column[];
@@ -68,6 +69,8 @@
   let el: HTMLElement;
   let paginationRef: Pagination | null = $state<Pagination | null>(null);
   let skeletonData = Array.from({ length: 200 }, (_, i) => i);
+  let contextMenuVisible = $state(false);
+  let contextMenuEvent = $state<RowEvent | undefined>(undefined);
 
   /** Checks */
   // Static checks
@@ -101,6 +104,7 @@
   });
 
   /** States */
+  let hasContextMenuSlot = $derived($$slots.contextMenu);
   const indexColumns: Column[] = $derived(columns.map((c, index) => (c.index ? c : { ...c, index })));
   const keyedData: RowData[] = $derived(data.map((r) => (r.__key ? r : { ...r, __key: crypto.randomUUID() })));
   const tableConfiguration: TableConfiguration = $derived({
@@ -177,8 +181,15 @@
   }
 
   function onRowClick(event: RowEvent) {
+    contextMenuVisible = false;
+
     if (selectableType !== 'none' && event.type === 'leftclick') {
       selectionStore.onSelectToggle(event);
+    }
+
+    if (event.type === 'rightclick') {
+      contextMenuVisible = true;
+      contextMenuEvent = event;
     }
 
     el.dispatchEvent(
@@ -213,6 +224,7 @@
   function handleKeyDown(event: KeyboardEvent) {
     if (event.key === 'Escape') {
       selectionStore.clear();
+      contextMenuVisible = false;
     }
   }
 
@@ -286,6 +298,7 @@
               columns={indexColumns}
               {row}
               {tableConfiguration}
+              contextMenu={hasContextMenuSlot}
               onClick={(event) => onRowClick(event)}
             />
           {/each}
@@ -298,6 +311,12 @@
       <Pagination bind:this={paginationRef} {count} {pageSizeOptions} {pageSize} onChange={onPageChange} />
     {/if}
   </div>
+
+  {#if hasContextMenuSlot}
+    <ContextMenu bind:visible={contextMenuVisible} bind:event={contextMenuEvent}>
+      <slot name="contextMenu" event={contextMenuEvent} />
+    </ContextMenu>
+  {/if}
 </div>
 
 <style>

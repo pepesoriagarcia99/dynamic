@@ -11,11 +11,19 @@
     columns?: Column[];
     row: RowData;
     tableConfiguration: TableConfiguration;
+    contextMenu: boolean;
     onClick?: (event: RowEvent) => void;
   }
 
   /** Inputs */
-  const { index = 0, columns = [], row, tableConfiguration, onClick = () => {} }: RowProps = $props();
+  const {
+    index = 0,
+    columns = [],
+    row,
+    tableConfiguration,
+    contextMenu = false,
+    onClick = () => {}
+  }: RowProps = $props();
 
   /** Values */
   let isSelected = $state<boolean>(false);
@@ -41,6 +49,10 @@
   });
 
   function onRowClick(type: RowEventType, event?: MouseEvent) {
+    if (contextMenu) {
+      event?.preventDefault();
+    }
+
     onClick({
       type,
       index,
@@ -48,6 +60,10 @@
       ctx: {
         CTRL: event ? event.ctrlKey || event.metaKey : false,
         SHIFT: event ? event.shiftKey : false
+      },
+      mouse: {
+        x: event?.clientX,
+        y: event?.clientY
       }
     });
   }
@@ -66,7 +82,7 @@
   ondblclick={() => onRowClick('doubleclick')}
 >
   {#each columns as column}
-    <ColumnValue {column} {row} onClick={(event) => onCellClick(event)} />
+    <ColumnValue {column} {row} {contextMenu} onClick={(event) => onCellClick(event)} />
   {/each}
 </tr>
 
@@ -88,5 +104,4 @@
     cursor: pointer;
     background: var(--select-hover-color);
   }
-  
 </style>

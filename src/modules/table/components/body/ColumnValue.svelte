@@ -8,17 +8,21 @@
   interface ColumnValueProps {
     column: Column;
     row: any;
+    contextMenu: boolean;
     onClick: (event: RowEvent) => void;
   }
 
   /** Inputs */
-  const { column, row, onClick = () => {} }: ColumnValueProps = $props();
+  const { column, row, contextMenu = false, onClick = () => {} }: ColumnValueProps = $props();
   const columnPartNames: string = $derived(`column column-${column.index}`);
   const columnValuePartNames: string = $derived(`column-value column-value-${column.index}`);
 
   /** Methods */
   function onCellClick(event: MouseEvent, type: RowEventType) {
     event.stopPropagation();
+    if (contextMenu) {
+      event?.preventDefault();
+    }
 
     onClick({
       type,
@@ -27,6 +31,10 @@
       ctx: {
         CTRL: event.ctrlKey || event.metaKey,
         SHIFT: event.shiftKey
+      },
+      mouse: {
+        x: event?.clientX,
+        y: event?.clientY
       }
     });
   }
