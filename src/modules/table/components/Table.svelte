@@ -46,6 +46,7 @@
     columns?: Column[];
     loading?: boolean;
     count?: number;
+    primaryKey?: string;
     data?: any[];
     selectableType?: SelectableType;
     selectAll?: boolean;
@@ -60,7 +61,8 @@
   let {
     columns = [],
     loading = false,
-    count = 0,
+    count,
+    primaryKey,
     data = [],
     selectableType = DEFAULT_SELECTABLE_TYPE,
     selectAll = DEFAULT_SELECT_ALL,
@@ -103,8 +105,12 @@
       throw new Error('The "selectAll" property cannot be true when "selectableType" is "none".');
     }
 
+    if(selectableType !== 'none' && !primaryKey) {
+      throw new Error('The "primaryKey" property must be defined when "selectableType" is not "none".');
+    }
+
     // si se activa la paginacion, count debe ser un numero mayor a 0
-    if (pageable === true && loading === false && count !== undefined && count <= 0) {
+    if (pageable === true && loading === false && count === undefined) {
       throw new Error('The "count" property must be a number greater than 0 when "pageable" is true.');
     }
   });
@@ -115,21 +121,39 @@
   const parameterizedData: RowData[] = $derived(data.map((r) => ({
     ...r,
     __ctx: {
-      key: crypto.randomUUID(),
       isSelected: false
     }
+    // getPrimaryKeyValue() {
+    //   return this[tableConfiguration.primaryKey!]
+    // }
   })));
+
   const tableConfiguration: TableConfiguration = $derived({
     selectableType,
     selectAll,
     filterable,
     sortableType,
-    pageable
+    pageable,
+    primaryKey
   });
 
   $effect(() => {
     loadingState.emit(loading);
   });
+
+  /**
+   * TODO: PAGINACION AUTOMATICA
+   * * Si el usuario activa la paginacion pero no la quiere gestionar el con los eventos
+  */
+  // $effect(() => {
+  //   if (pageable === true && parameterizedData.length > pageSize) {
+  //     transformedData = parameterizedData.slice((page - 1) * pageSize, page * pageSize);
+  //     console.log('PAGE CHANGE');
+      
+  //   } else {
+  //     transformedData = parameterizedData;
+  //   }
+  // });
 
   /** Methods */
   onMount(() => {
@@ -205,7 +229,7 @@
         const selectionState = selectionStore.state().filter((el) => el.value?.__ctx.isSelected === true);
         const selectionCount = selectionState.length;
 
-        const isRightclickHoverSelection = Boolean(selectionState.find((el) => el.key === event.row.__ctx.key));
+        const isRightclickHoverSelection = Boolean(selectionState.find((el) => el.key === event.row[primaryKey!]));
         if (selectionCount === 0) {
           selectionStore.onSelectToggle(event);
         } else if (isRightclickHoverSelection === false) {
@@ -318,7 +342,7 @@
             </td>
           </tr>
         {:else}
-          {#each parameterizedData as row, i}
+          {#each parameterizedData as row, i (row[primaryKey!])}
             <Row
               index={i}
               columns={indexColumns}
@@ -333,7 +357,7 @@
     </table>
   </div>
   <div class="pagination" part="pagination">
-    {#if pageable === true}
+    {#if pageable === true && count !== undefined}
       <Pagination bind:this={paginationRef} {count} {pageSizeOptions} {pageSize} onChange={onPageChange} />
     {/if}
   </div>

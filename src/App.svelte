@@ -25,7 +25,7 @@
   ];
 
   let loading: boolean = $state(false);
-  let count: number | undefined = $state<number | undefined>(undefined);
+  let count: number | undefined = $state<number | undefined>(0);
   let data: any[] = $state<any[]>([]);
   let filteredData: any[] = $state<any[]>([]);
 
@@ -34,39 +34,26 @@
   let tableFilter: TableEvent;
 
   function getCountries() {
+    loading = true;
     return fetch('https://restcountries.com/v3.1/independent?status=true')
       .then((res) => res.json())
       .then((res) => {
         count = res.length;
-        data = res;
-        filteredData = res;
+        data = res.map((item: any, index: number) => ({
+          ...item,
+          key: index.toString()
+        }));
+
+        transform();
       })
       .catch(console.error)
       .finally(() => {
-        // loading = false;
+        loading = false;
       });
   }
 
-  function filterValues() {
-    const filters = tableFilter.filter;
-
-    if (filters.length === 0) {
-      filteredData = data;
-      return;
-    }
-
-    filteredData = data.filter((row: any) => {
-      return filters.every(({ key, value }) => {
-        const cellValue = key.split('.').reduce((obj, k) => (obj && obj[k] !== 'undefined' ? obj[k] : undefined), row);
-        if (cellValue === undefined || cellValue === null) return false;
-        if (!value) return true;
-
-        return cellValue.toString().toLowerCase().includes(value.toString().toLowerCase());
-      });
-    });
-  }
-
-  function pageValues() {
+  function transform() {
+    // paginacion
     const page = tableFilter.page;
     const start = (page.page - 1) * page.pageSize;
     const end = start + page.pageSize;
@@ -74,9 +61,27 @@
     filteredData = data.slice(start, end);
   }
 
+  // function filterValues() {
+  //   const filters = tableFilter.filter;
+
+  //   if (filters.length === 0) {
+  //     filteredData = data;
+  //     return;
+  //   }
+
+  //   filteredData = data.filter((row: any) => {
+  //     return filters.every(({ key, value }) => {
+  //       const cellValue = key.split('.').reduce((obj, k) => (obj && obj[k] !== 'undefined' ? obj[k] : undefined), row);
+  //       if (cellValue === undefined || cellValue === null) return false;
+  //       if (!value) return true;
+
+  //       return cellValue.toString().toLowerCase().includes(value.toString().toLowerCase());
+  //     });
+  //   });
+  // }
+
   onMount(() => {
     tableEl = document.getElementById('main-table') as HTMLElement & PublicApi;
-    getCountries();
   });
 
   function onRowClick(event: any & { detail: RowEvent }) {
@@ -93,7 +98,7 @@
     tableEl?.pagination.resetPage();
     tableFilter.filter = event.detail;
 
-    filterValues();
+    // filterValues();
   }
 
   function onSortChange(event: any & { detail: SortEvent }) {
@@ -106,13 +111,14 @@
     console.log('PAGE: ', event.detail);
 
     tableFilter.page = event.detail;
-    pageValues();
+    transform();
   }
 
   function onReady(event: any & { detail: TableEvent }) {
     console.log('READY: ', event.detail);
 
     tableFilter = event.detail;
+    getCountries();
   }
 
   function onContextMenuEvent(event: any & { detail: ContextMenuEvent }) {
@@ -127,6 +133,7 @@
     <div class="table-container">
       <dyn-table
         id="main-table"
+        primaryKey="key"
         {loading}
         {columns}
         {count}
@@ -135,8 +142,8 @@
         pageable={true}
         selectableType="multiple"
         sortableType="multiple"
-        pageSizeOptions={[25, 50, 100, 200]}
-        pageSize={50}
+        pageSizeOptions={[5, 50, 100, 200]}
+        pageSize={5}
         onready={onReady}
         onrowClick={onRowClick}
         onselection={onRowSelect}

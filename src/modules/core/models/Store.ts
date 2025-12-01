@@ -43,6 +43,15 @@ export class Store<T> extends Subject<StoreComponentData<T>[]> {
   }
 
   /**
+   * Rescata un componente del store por su clave
+   * @param key 
+   * @returns  Componente de store o undefined si no existe
+   */
+  get(key: string): StoreComponent<T> | undefined {
+    return this.elements.find((el) => el.key === key);
+  }
+
+  /**
    * Vacia todos los valores
    */
   clear() {

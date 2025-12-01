@@ -44,10 +44,26 @@
 
   /** Methods */
   onMount(() => {
-    const selectionComponent = selectionStore.add(row.__ctx.key, row);
-    selectionComponent.subscribe((event) => {
-      isSelected = event.value?.__ctx.isSelected ?? false;
-    });
+    let subscribeId: string;
+    const key = row[tableConfiguration.primaryKey!];
+    let selectionComponent = selectionStore.get(key);
+    
+    
+    if (!selectionComponent) {
+      selectionComponent = selectionStore.add(key, row);
+      subscribeId = selectionComponent.subscribe((event) => {
+        isSelected = event.value?.__ctx.isSelected ?? false;
+      });
+    } else {
+      isSelected = selectionComponent.value?.__ctx.isSelected ?? false;
+      selectionComponent.subscribe((event) => {
+        isSelected = event.value?.__ctx.isSelected ?? false;
+      });
+    }
+
+    return () => {
+      selectionComponent.unsubscribe(subscribeId);
+    };
   });
 
   function onRowClick(type: RowEventType, event?: MouseEvent) {

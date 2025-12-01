@@ -22,7 +22,7 @@ class SelectionStore extends Store<RowData> {
    * @param key
    */
   private simpleSelect(event: RowEvent) {
-    const key = event.row.__ctx.key;
+    const key = event.row[this.configuration!.primaryKey!];
 
     this.elements.forEach((el) => {
       if (el.key === key) {
@@ -41,7 +41,7 @@ class SelectionStore extends Store<RowData> {
    * @param key
    */
   private multipleSelect(event: RowEvent) {
-    const key = event.row.__ctx.key;
+    const key = event.row[this.configuration!.primaryKey!];
     const eventContext: EventContext = event.ctx;
 
     if (eventContext.SHIFT && eventContext.CTRL) {

@@ -85,7 +85,7 @@
 
 {#if visible}
   <div class="context-menu" part="context-menu" bind:this={menuElement} style="left: {x}px; top: {y}px;">
-    <slot {event} />
+    <slot {event} {selection} />
   </div>
 {/if}
 
