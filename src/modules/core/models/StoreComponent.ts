@@ -61,28 +61,4 @@ export class StoreComponent<T> extends Subject<StoreComponentData<T>> {
     getValue(): StoreComponentData<T> {
         return { key: this.key, value: this.value };
     }
-
-
-    // emit() {
-    //     this.subscribers.forEach(subscriber => subscriber.callback({ id: this.id, value: this.value }));
-    // }
-
-    // subscribe(callback: (value: any) => void): string {
-    //     const subscribe = {
-    //         id: crypto.randomUUID(),
-    //         callback: callback
-    //     }
-
-    //     this.subscribers.push(subscribe);
-
-    //     return subscribe.id;
-    // }
-
-    // unsubscribe(id: string): void {
-    //     this.subscribers = this.subscribers.filter(sub => sub.id !== id);
-    // }
-
-    // clearSubscribers() {
-    //     this.subscribers = [];
-    // }
 }

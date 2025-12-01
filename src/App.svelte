@@ -13,6 +13,7 @@
   import type { PublicApi } from './modules/table/models/public-api/PublicApi';
   import type { TableEvent } from './modules/table/models/event/TableEvent';
   import Image from './modules/table/models/column-types/Image';
+  import type { ContextMenuEvent } from './modules/table/models/event/ContextMenuEvent';
 
   let columns: Column[] = [
     { key: 'flags.png', name: 'Bandera', type: Image, style: { width: '50px' } },
@@ -113,6 +114,10 @@
 
     tableFilter = event.detail;
   }
+
+  function onContextMenuEvent(event: any & { detail: ContextMenuEvent }) {
+    console.log('CONTEXT MENU EVENT: ', event.detail);
+  }
 </script>
 
 <main>
@@ -138,18 +143,11 @@
         onfilterChange={onFilterChange}
         onsortChange={onSortChange}
         onpageChange={onPageChange}
+        oncontextMenuEvent={onContextMenuEvent}
       >
-        <div slot="contextMenu" style="padding: 4px 0;">
-          <button
-            style="width: 100%; padding: 8px 16px; border: none; background: none; cursor: pointer; text-align: left;"
-          >
-            Editar
-          </button>
-          <button
-            style="width: 100%; padding: 8px 16px; border: none; background: none; cursor: pointer; text-align: left;"
-          >
-            Eliminar
-          </button>
+        <div slot="contextMenu" class="contextmenu">
+          <button class="contextmenu-btn"> Editar </button>
+          <button class="contextmenu-btn"> Eliminar </button>
         </div>
       </dyn-table>
     </div>
@@ -177,23 +175,20 @@
     height: auto;
   }
 
-  /* dyn-table::part(row) {
-    cursor: pointer;
-  } */
-
-  /* dyn-table::part(row):hover {
-    background: rgb(196, 196, 196);
-  } */
-
-  /* dyn-table::part(row-even) {
-    background: #ffffff;
+  .contextmenu {
+    padding: 4px 0;
   }
 
-  dyn-table::part(row-odd) {
-    background: #b9ccffa2;
-  } */
+  .contextmenu-btn {
+    width: 100%;
+    padding: 8px 16px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    text-align: left;
+  }
 
-  /* dyn-table::part(row-selected) {
-    background: #d8e24a !important;
-  } */
+  .contextmenu-btn:hover {
+    background: gainsboro;
+  }
 </style>

@@ -57,4 +57,20 @@ export class Store<T> extends Subject<StoreComponentData<T>[]> {
   state(): StoreComponentData<T>[] {
     return this.elements.map(el => el.getValue());
   }
+
+  /**
+   * Total de elementos con valor no nulo
+   * @returns Número de elementos con valor no nulo
+   */
+  count(): number {
+    return this.state().filter(el => !!el.value).length;
+  }
+
+  /**
+   * Indica si hay al menos un elemento con valor no nulo
+   * @returns Indica si hay al menos un elemento con valor no nulo
+   */
+  has(): boolean {
+    return this.count() > 0;
+  }
 }

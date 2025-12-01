@@ -2,7 +2,9 @@
   import { onMount } from 'svelte';
   import type { Column } from '../../models/Column';
   import type { TableConfiguration } from '../../models/configuration/TableConfiguration';
-  import type { RowData, RowEvent, RowEventType } from '../../models/event/RowEvent';
+  import type { RowEvent, RowEventType } from '../../models/event/RowEvent';
+  import type { RowData } from '../../models/RowData';
+
   import { selectionStore } from '../../store/selection-store';
   import ColumnValue from './ColumnValue.svelte';
 
@@ -42,9 +44,9 @@
 
   /** Methods */
   onMount(() => {
-    const selectionComponent = selectionStore.add(row.__key, false);
+    const selectionComponent = selectionStore.add(row.__ctx.key, row);
     selectionComponent.subscribe((event) => {
-      isSelected = event.value ?? false;
+      isSelected = event.value?.__ctx.isSelected ?? false;
     });
   });
 

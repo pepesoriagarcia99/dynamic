@@ -1,10 +1,7 @@
 import type { Column } from '../Column';
+import type { RowData } from '../RowData';
 
 export type RowEventType = 'leftclick' | 'rightclick' | 'doubleclick';
-export type RowData = {
-  __key: string; // Forma de identificar la fila de forma unica
-  [key: string]: any; // resto de datos de la fila
-};
 
 export interface EventContext {
   CTRL: boolean; // si se ha pulsado la tecla CTRL

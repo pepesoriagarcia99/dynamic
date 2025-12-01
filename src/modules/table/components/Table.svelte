@@ -10,10 +10,15 @@
     DEFAULT_SELECTABLE_TYPE,
     DEFAULT_SORTABLE,
     VALID_SELECTABLE_TYPES,
-    DEFAULT_PAGE_SIZE
+    DEFAULT_PAGE_SIZE,
+    ROW_CLICK_EVENT_NAME,
+    PAGE_CHANGE_EVENT_NAME,
+    SORT_EVENT_NAME,
+    FILTER_EVENT_NAME,
+    SELECTION_EVENT_NAME
   } from '../constant';
   import type { Column } from '../models/Column';
-  import type { RowData, RowEvent } from '../models/event/RowEvent';
+  import type { RowEvent } from '../models/event/RowEvent';
   import type { SelectableType, SortableType, TableConfiguration } from '../models/configuration/TableConfiguration';
   import type { FilterEvent } from '../models/event/FilterEvent';
   import type { SortEvent, SortOrder } from '../models/event/SortEvent';
@@ -35,6 +40,7 @@
   import Pagination from './Pagination.svelte';
   import Skeleton from './Skeleton.svelte';
   import ContextMenu from './ContextMenu.svelte';
+  import type { RowData } from '../models/RowData';
 
   interface TableProps {
     columns?: Column[];
@@ -80,16 +86,16 @@
 
   // Reactive checks
   $effect(() => {
+    // Valida que no se use la columna reservada "__ctx"
+    if (columns.findIndex((col) => col.key === '__ctx') !== -1) {
+      throw new Error('The column "__ctx" is reserved for internal functionality and cannot be used.');
+    }
+
     // Valida que el selectableType sea valido
     if (selectableType && !VALID_SELECTABLE_TYPES.includes(selectableType)) {
       throw new Error(
         `The "selectableType" property must be one of the following values: ${VALID_SELECTABLE_TYPES.join(', ')}.`
       );
-    }
-
-    // la columna __key no puede ser usada por el usuario si la tabla es seleccionable
-    if (selectableType !== 'none' && columns.findIndex((col) => col.key === '__key') !== -1) {
-      throw new Error('The column "__key" is reserved for selection functionality and cannot be used.');
     }
 
     // selectAll no puede ser true si selectableType es none
@@ -106,7 +112,13 @@
   /** States */
   let hasContextMenuSlot = $derived($$slots.contextMenu);
   const indexColumns: Column[] = $derived(columns.map((c, index) => (c.index ? c : { ...c, index })));
-  const keyedData: RowData[] = $derived(data.map((r) => (r.__key ? r : { ...r, __key: crypto.randomUUID() })));
+  const parameterizedData: RowData[] = $derived(data.map((r) => ({
+    ...r,
+    __ctx: {
+      key: crypto.randomUUID(),
+      isSelected: false
+    }
+  })));
   const tableConfiguration: TableConfiguration = $derived({
     selectableType,
     selectAll,
@@ -124,10 +136,10 @@
     publicApi();
 
     selectionStore.init(tableConfiguration);
-    selectionStore.subscribe((selection: StoreComponentData<boolean>[]) => {
+    selectionStore.subscribe((selection: StoreComponentData<RowData>[]) => {
       el.dispatchEvent(
-        new CustomEvent('selection', {
-          detail: selection as SelectionEvent[],
+        new CustomEvent(SELECTION_EVENT_NAME, {
+          detail: selection.filter((el) => el.value?.__ctx.isSelected === true) as SelectionEvent[],
           bubbles: true,
           composed: true
         })
@@ -137,7 +149,7 @@
     filterStore.subscribe((filters: StoreComponentData<string>[]) => {
       const eventDetail = mapColumnKey<FilterEvent>(filters);
       el.dispatchEvent(
-        new CustomEvent('filterChange', {
+        new CustomEvent(FILTER_EVENT_NAME, {
           detail: eventDetail as FilterEvent[],
           bubbles: true,
           composed: true
@@ -149,7 +161,7 @@
     sortStore.subscribe((sorts: StoreComponentData<SortOrder>[]) => {
       const eventDetail = mapColumnKey<SortEvent>(sorts);
       el.dispatchEvent(
-        new CustomEvent('sortChange', {
+        new CustomEvent(SORT_EVENT_NAME, {
           detail: eventDetail as SortEvent[],
           bubbles: true,
           composed: true
@@ -183,17 +195,31 @@
   function onRowClick(event: RowEvent) {
     contextMenuVisible = false;
 
-    if (selectableType !== 'none' && event.type === 'leftclick') {
-      selectionStore.onSelectToggle(event);
-    }
+    if (selectableType !== 'none') {
+      if (event.type === 'leftclick') {
+        selectionStore.onSelectToggle(event);
+      } else if (event.type === 'rightclick' && hasContextMenuSlot === true) {
+        /**
+         * Se procesa estado de la seleccion con el menucontextual activo
+         */
+        const selectionState = selectionStore.state().filter((el) => el.value?.__ctx.isSelected === true);
+        const selectionCount = selectionState.length;
 
-    if (event.type === 'rightclick') {
-      contextMenuVisible = true;
-      contextMenuEvent = event;
+        const isRightclickHoverSelection = Boolean(selectionState.find((el) => el.key === event.row.__ctx.key));
+        if (selectionCount === 0) {
+          selectionStore.onSelectToggle(event);
+        } else if (isRightclickHoverSelection === false) {
+          selectionStore.onSelectToggle(event);
+        }
+
+        // se muestra el menu contextual del usuario
+        contextMenuVisible = true;
+        contextMenuEvent = event; // este event es el concreto, usado calcular x e y del contextmenu
+      }
     }
 
     el.dispatchEvent(
-      new CustomEvent('rowClick', {
+      new CustomEvent(ROW_CLICK_EVENT_NAME, {
         detail: event as RowEvent,
         bubbles: true,
         composed: true
@@ -203,7 +229,7 @@
 
   function onPageChange(event: PageEvent) {
     el.dispatchEvent(
-      new CustomEvent('pageChange', {
+      new CustomEvent(PAGE_CHANGE_EVENT_NAME, {
         detail: event as PageEvent,
         bubbles: true,
         composed: true
@@ -292,7 +318,7 @@
             </td>
           </tr>
         {:else}
-          {#each keyedData as row, i}
+          {#each parameterizedData as row, i}
             <Row
               index={i}
               columns={indexColumns}
@@ -368,6 +394,10 @@
     --pagination-page-num-text-selected: var(--dyn-table-pagination-page-num-text-selected, var(--selected-text));
     --pagination-page-num-btn-hover: var(--dyn-table-pagination-page-num-btn-hover, var(--hover));
     --pagination-action-btn-hover: var(--dyn-table-pagination-action-btn-hover, var(--hover));
+
+    /** Context menu */
+    --context-menu-border-color: var(--dyn-table-context-menu-border-color, var(--table-border-color));
+    --context-menu-background: var(--dyn-table-context-menu-background, #ffffff);
 
     /** Controls */
     --control-text-color: var(--dyn-table-control-color, #495057);

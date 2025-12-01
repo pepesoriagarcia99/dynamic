@@ -1,13 +1,12 @@
-import { Store } from "../../core/models/Store";
-import type { TableConfiguration } from "../models/configuration/TableConfiguration";
-import type { EventContext, RowEvent } from "../models/event/RowEvent";
-
+import { Store } from '../../core/models/Store';
+import type { TableConfiguration } from '../models/configuration/TableConfiguration';
+import type { EventContext, RowEvent } from '../models/event/RowEvent';
+import type { RowData } from '../models/RowData';
 
 /**
  * Store para gestionar la seleccion de filas en la tabla
  */
-class SelectionStore extends Store<boolean> {
-
+class SelectionStore extends Store<RowData> {
   private configuration?: TableConfiguration;
 
   constructor() {
@@ -20,26 +19,29 @@ class SelectionStore extends Store<boolean> {
 
   /**
    * Sistema de seleccion simple (una sola fila)
-   * @param key 
+   * @param key
    */
   private simpleSelect(event: RowEvent) {
-    const key = event.row.__key;
+    const key = event.row.__ctx.key;
 
-    this.elements.forEach(el => {
+    this.elements.forEach((el) => {
       if (el.key === key) {
-        el.setValue(!el.value);
-      } else if (el.value === true) {
-        el.setValue(false);
+        const state = el.value?.__ctx.isSelected ?? false;
+        el.value!.__ctx.isSelected = !state;
+        el.setValue(el.value);
+      } else if (el.value?.__ctx.isSelected === true) {
+        el.value!.__ctx.isSelected = false;
+        el.setValue(el.value);
       }
     });
   }
 
   /**
- * Sistema de seleccion multiple (varias filas)
- * @param key 
- */
+   * Sistema de seleccion multiple (varias filas)
+   * @param key
+   */
   private multipleSelect(event: RowEvent) {
-    const key = event.row.__key;
+    const key = event.row.__ctx.key;
     const eventContext: EventContext = event.ctx;
 
     if (eventContext.SHIFT && eventContext.CTRL) {
@@ -47,9 +49,11 @@ class SelectionStore extends Store<boolean> {
        * TODO: Implementar seleccion multiple con SHIFT + CTRL
        */
     } else if (eventContext.CTRL) {
-      this.elements.forEach(el => {
+      this.elements.forEach((el) => {
         if (el.key === key) {
-          el.setValue(!el.value);
+          const state = el.value?.__ctx.isSelected ?? false;
+          el.value!.__ctx.isSelected = !state;
+          el.setValue(el.value);
         }
       });
     } else {
@@ -59,7 +63,7 @@ class SelectionStore extends Store<boolean> {
 
   /**
    * Maneja el evento de toggle de seleccion de fila
-   * 
+   *
    * @param event Evento de fila
    */
   onSelectToggle(event: RowEvent) {
@@ -77,8 +81,9 @@ class SelectionStore extends Store<boolean> {
    * @override
    */
   emit() {
-    const event = this.elements.filter(element => element.value);
-    super.emit(event.map(element => element.getValue()));
+    super.emit(
+      this.elements.filter((element) => element.value?.__ctx.isSelected === true).map((element) => element.getValue())
+    );
   }
 }
 
