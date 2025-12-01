@@ -98,6 +98,7 @@
   .row-selected {
     background: var(--select-color);
     color: var(--select-text-color);
+    cursor: pointer;
   }
 
   .row-selectable:hover {
