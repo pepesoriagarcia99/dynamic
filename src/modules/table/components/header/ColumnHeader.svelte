@@ -1,8 +1,11 @@
 <script lang="ts">
-  import { styleTransformer } from '../../../../utils/style-transformer';
   import type { Column } from '../../models/Column';
   import type { SortableType } from '../../models/configuration/TableConfiguration';
+
+  import { styleTransformer } from '../../../../utils/style-transformer';
   import Sort from './Sort.svelte';
+
+  import resizeIcon from '../../../../assets/svg/resize.svg';
 
   interface ColumnHeaderProps {
     column: Column;
@@ -15,6 +18,11 @@
 
   /** States */
   let sortRef: Sort | null = $state<Sort | null>(null);
+  let isResizing: boolean = $state(false);
+  let startX: number = $state(0);
+  let startWidth: number = $state(0);
+  let thElement: HTMLTableCellElement | null = $state(null);
+
   const isSortable: boolean = $derived(column.sortable === true && sortableType !== 'none');
   const isSorted: boolean = $derived(sortRef?.getSortDirection() !== null && isSortable);
 
@@ -27,9 +35,20 @@
       .filter(Boolean)
       .join(' ')
   );
+  const partNamesBtn: string = $derived(`column-header-btn column-header-btn-${column.index}`);
   const partNamesContent: string = $derived(`column-header-content column-header-content-${column.index}`);
   const partNamesName: string = $derived(
-    ['header-column-name', isSorted ? 'header-column-name-sorted' : null, `header-column-name-${column.index}`]
+    ['column-header-name', isSorted ? 'column-header-name-sorted' : null, `column-header-name-${column.index}`]
+      .filter(Boolean)
+      .join(' ')
+  );
+  const partNamesResize: string = $derived(`column-header-resize column-header-resize-${column.index}`);
+  const partNamesResizeIcon: string = $derived(
+    [
+      'column-header-resize-icon',
+      `column-header-resize-icon-${column.index}`,
+      isSorted ? 'column-header-resize-icon-sorted' : null
+    ]
       .filter(Boolean)
       .join(' ')
   );
@@ -39,10 +58,39 @@
     event.stopPropagation();
     sortRef?.toggleSort();
   }
+
+  function handleResizeMouseDown(event: MouseEvent) {
+    event.stopPropagation();
+    event.preventDefault();
+
+    if (!thElement) return;
+
+    isResizing = true;
+    startX = event.clientX;
+    startWidth = thElement.offsetWidth;
+
+    document.addEventListener('mousemove', handleResizeMouseMove);
+    document.addEventListener('mouseup', handleResizeMouseUp);
+  }
+
+  function handleResizeMouseMove(event: MouseEvent) {
+    if (!isResizing || !thElement) return;
+
+    const diff = event.clientX - startX;
+    const newWidth = Math.max(50, startWidth + diff); // Mínimo 50px
+    thElement.style.width = `${newWidth}px`;
+    thElement.style.minWidth = `${newWidth}px`;
+  }
+
+  function handleResizeMouseUp() {
+    isResizing = false;
+    document.removeEventListener('mousemove', handleResizeMouseMove);
+    document.removeEventListener('mouseup', handleResizeMouseUp);
+  }
 </script>
 
-<th class={partNamesTh} part={partNamesTh} style={styleTransformer.toString(column?.style)}>
-  <button class="column-header-btn" onclick={(e) => handleHeaderClick(e)}>
+<th bind:this={thElement} class={partNamesTh} part={partNamesTh} style={styleTransformer.toString(column?.style)}>
+  <button class={partNamesBtn} part={partNamesBtn} onclick={(e) => handleHeaderClick(e)}>
     <div class={partNamesContent} part={partNamesContent}>
       <span class={partNamesName} part={partNamesName}>{column?.name}</span>
       {#if isSortable}
@@ -50,6 +98,11 @@
       {/if}
     </div>
   </button>
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
+  <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+  <div class={partNamesResize} part={partNamesResize} onmousedown={handleResizeMouseDown} role="separator">
+    <img src={resizeIcon} class={partNamesResizeIcon} part={partNamesResizeIcon} alt="resize" />
+  </div>
 </th>
 
 <style>
@@ -69,6 +122,7 @@
     border-left: 1px solid var(--table-header-border-left-color);
     border-right: 1px solid var(--table-header-border-right-color);
     background: var(--table-header-background);
+    position: relative;
   }
 
   .column-header-btn {
@@ -78,6 +132,7 @@
 
     width: 100%;
     height: var(--table-header-height);
+    padding: 0 16px 0 0;
   }
 
   .column-header-btn {
@@ -94,7 +149,51 @@
     background: var(--table-header-sorted-background);
   }
 
-  .header-column-name-sorted {
+  .column-header-name-sorted {
     color: var(--table-header-sorted-text-color);
+  }
+
+  .resize-handle {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 8px;
+    cursor: col-resize;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+    user-select: none;
+  }
+
+  .column-header-resize:hover,
+  .column-header-th:hover .column-header-resize {
+    opacity: 1;
+  }
+
+  .column-header-resize {
+    cursor: ew-resize;
+    position: absolute;
+    right: 0.5px;
+    top: 0;
+    bottom: 0;
+    width: 0.5px;
+    display: flex;
+    align-items: end;
+    justify-content: end;
+
+    opacity: 0;
+  }
+
+  .column-header-resize-icon {
+    width: 22px;
+    height: 22px;
+  }
+
+  .column-header-resize-icon-sorted {
+    filter: invert(1) drop-shadow(0 0 0 var(--table-header-resized-icon-color))
+      drop-shadow(0 0 0 var(--table-header-resized-icon-color));
   }
 </style>

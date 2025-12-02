@@ -398,6 +398,8 @@
     --table-header-sorted-text-color: var(--dyn-table-header-sorted-text-color, var(--selected-text));
     --table-header-sorted-icon-color: var(--dyn-table-header-sorted-icon-color, var(--selected-text));
 
+    --table-header-resized-icon-color: var(--dyn-table-header-resized-icon-color, var(--selected-text));
+
     --table-header-filter-border-top-color: var(--dyn-table-header-filter-border-top-color);
     --table-header-filter-border-left-color: var(--dyn-table-header-filter-border-left-color);
     --table-header-filter-border-right-color: var(--dyn-table-header-filter-border-right-color);
