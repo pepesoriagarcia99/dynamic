@@ -128,8 +128,6 @@
 
 <main>
   <div class="content">
-    <h1>🎨 Dynamic Table - Desarrollo</h1>
-
     <div class="table-container">
       <dyn-table
         id="main-table"
@@ -164,18 +162,14 @@
 
 <style>
   .content {
-    margin: 2rem;
+    margin: 1rem;
   }
   .table-container {
-    height: 800px;
+    max-height: 95vh;
     overflow-x: auto;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-  }
-
-  h1 {
-    margin-bottom: 20px;
   }
 
   dyn-table::part(column-value-0) {
