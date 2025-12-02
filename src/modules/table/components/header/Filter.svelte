@@ -28,7 +28,7 @@
       <th
         class="column-filter-th column-filter-th-{column.index}"
         part="column-filter-th column-filter-th-{column.index}"
-        style={styleTransformer.toString(column?.style)}
+        style={`padding-top: 4px; ${styleTransformer.toString(column?.style)}`}
       >
         {#if loading === true}
           <Skeleton />

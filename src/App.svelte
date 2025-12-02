@@ -17,7 +17,12 @@
 
   let columns: Column[] = [
     { key: 'flags.png', name: 'Bandera', type: Image, style: { width: '50px' } },
-    { key: 'name.common', name: 'Nombre nombre de columna my largo para probar que se ve correctamente jajjajajaja mortal', type: String, filterable: true },
+    {
+      key: 'name.common',
+      name: 'Nombre nombre de columna my largo para probar que se ve correctamente jajjajajaja mortal',
+      type: String,
+      filterable: true
+    },
     { key: 'region', name: 'Region', type: String, sortable: true },
     { key: 'subregion', name: 'Subregion', type: String, filterable: true },
     { key: 'capital.[0]', name: 'Capital', type: String, filterable: true },
@@ -128,48 +133,47 @@
 
 <main>
   <div class="content">
-    <div class="table-container">
-      <dyn-table
-        id="main-table"
-        primaryKey="key"
-        {loading}
-        {columns}
-        {count}
-        data={filteredData}
-        filterable={true}
-        pageable={true}
-        resizable={true}
-        selectableType="multiple"
-        sortableType="multiple"
-        pageSizeOptions={[5, 50, 100, 200]}
-        pageSize={5}
-        onready={onReady}
-        onrowClick={onRowClick}
-        onselection={onRowSelect}
-        onfilterChange={onFilterChange}
-        onsortChange={onSortChange}
-        onpageChange={onPageChange}
-        oncontextMenuEvent={onContextMenuEvent}
-      >
-        <div slot="contextMenu" class="contextmenu">
-          <button class="contextmenu-btn"> Editar </button>
-          <button class="contextmenu-btn"> Eliminar </button>
-        </div>
-      </dyn-table>
-    </div>
+    <dyn-table
+      id="main-table"
+      primaryKey="key"
+      {loading}
+      {columns}
+      {count}
+      data={filteredData}
+      filterable={true}
+      pageable={true}
+      resizable={true}
+      selectableType="multiple"
+      sortableType="multiple"
+      pageSizeOptions={[5, 50, 100, 200]}
+      pageSize={100}
+      onready={onReady}
+      onrowClick={onRowClick}
+      onselection={onRowSelect}
+      onfilterChange={onFilterChange}
+      onsortChange={onSortChange}
+      onpageChange={onPageChange}
+      oncontextMenuEvent={onContextMenuEvent}
+    >
+      <div slot="contextMenu" class="contextmenu">
+        <button class="contextmenu-btn"> Editar </button>
+        <button class="contextmenu-btn"> Eliminar </button>
+      </div>
+    </dyn-table>
   </div>
 </main>
 
 <style>
   .content {
     margin: 1rem;
+    height: calc(100vh - 2rem);
+    width: calc(100vw - 2rem);
   }
-  .table-container {
-    max-height: 95vh;
-    overflow-x: auto;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
+
+  dyn-table {
+    display: block;
+    height: 100%;
+    width: 100%;
   }
 
   dyn-table::part(column-value-0) {

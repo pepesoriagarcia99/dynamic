@@ -335,46 +335,49 @@
 <!-- slot: filter -->
 
 <div class="table-root" part="table-root" bind:this={el}>
-  <div class="table-scroll" part="table-scroll">
-    <table class="table" part="table">
-      <Header columns={indexColumns} {tableConfiguration} />
+  <div class="table-container" part="table-container">
+    <div class="table-scroll" part="table-scroll">
+      <table class="table" part="table">
+        <Header columns={indexColumns} {tableConfiguration} />
 
-      <tbody class="tbody" part="tbody">
-        {#if loading === true}
-          {#each skeletonData as row}
-            <tr id={row.toString()} style="height: 50px;">
-              {#each indexColumns}
-                <td>
-                  <Skeleton />
-                </td>
-              {/each}
+        <tbody class="tbody" part="tbody">
+          {#if loading === true}
+            {#each skeletonData as row}
+              <tr id={row.toString()} style="height: 50px;">
+                {#each indexColumns}
+                  <td>
+                    <Skeleton />
+                  </td>
+                {/each}
+              </tr>
+            {/each}
+          {:else if data.length === 0 && loading === false}
+            <tr>
+              <td colspan={indexColumns.length} style="text-align: left; padding: 16px; vertical-align: top;">
+                No data available.
+              </td>
             </tr>
-          {/each}
-        {:else if data.length === 0 && loading === false}
-          <tr>
-            <td colspan={indexColumns.length} style="text-align: left; padding: 16px; vertical-align: top;">
-              No data available.
-            </td>
-          </tr>
-        {:else}
-          {#each parameterizedData as row, i (row[primaryKey!])}
-            <Row
-              index={i}
-              columns={indexColumns}
-              {row}
-              {tableConfiguration}
-              contextMenu={hasContextMenuSlot}
-              onClick={(event) => onRowClick(event)}
-            />
-          {/each}
-        {/if}
-      </tbody>
-    </table>
-  </div>
-  <div class="pagination" part="pagination">
-    {#if pageable === true && count !== undefined}
-      <Pagination bind:this={paginationRef} {count} {pageSizeOptions} {pageSize} onChange={onPageChange} />
-    {/if}
+          {:else}
+            {#each parameterizedData as row, i (row[primaryKey!])}
+              <Row
+                index={i}
+                columns={indexColumns}
+                {row}
+                {tableConfiguration}
+                contextMenu={hasContextMenuSlot}
+                onClick={(event) => onRowClick(event)}
+              />
+            {/each}
+          {/if}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pagination" part="pagination">
+      {#if pageable === true && count !== undefined}
+        <Pagination bind:this={paginationRef} {count} {pageSizeOptions} {pageSize} onChange={onPageChange} />
+      {/if}
+    </div>
   </div>
 
   {#if hasContextMenuSlot}
@@ -462,14 +465,24 @@
     border-width: 1px;
     border-style: solid;
     border-radius: 12px;
+
+    overflow: hidden;
+  }
+
+  .table-container {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    margin: 22px;
+    min-height: 0;
   }
 
   .table-scroll {
     flex: 1 1 auto;
     overflow-x: auto;
     overflow-y: auto;
-
-    margin: 22px 22px 12px 22px;
+    position: relative;
+    min-height: 0;
   }
 
   .table {
@@ -481,9 +494,9 @@
   }
 
   .pagination {
-    position: sticky;
-    bottom: 0;
-    background: #ffffff;
-    margin-bottom: 22px;
+    flex-shrink: 0;
+    background: var(--pagination-background);
+    margin-top: 12px;
+    height: var(--pagination-height);
   }
 </style>
