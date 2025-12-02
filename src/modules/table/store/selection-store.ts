@@ -24,16 +24,27 @@ class SelectionStore extends Store<RowData> {
   private simpleSelect(event: RowEvent) {
     const key = event.row[this.configuration!.primaryKey!];
 
+    let selectionCount = 0;
     this.elements.forEach((el) => {
       if (el.key === key) {
         const state = el.value?.__ctx.isSelected ?? false;
         el.value!.__ctx.isSelected = !state;
         el.setValue(el.value);
       } else if (el.value?.__ctx.isSelected === true) {
+        selectionCount++;
         el.value!.__ctx.isSelected = false;
         el.setValue(el.value);
       }
     });
+
+    // Caso: cuando haces click en una fila cuando ya tienes seleccionadas varias, todas deben deseleccionarse y quedarse solo la que has clickeado
+    if(selectionCount > 1) {
+      const element = this.elements.find((el) => el.key === key);
+      if(element) {
+        element.value!.__ctx.isSelected = true;
+        element.setValue(element.value);
+      }
+    }
   }
 
   /**
