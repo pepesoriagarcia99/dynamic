@@ -98,6 +98,11 @@ export interface Column {
   filterable?: boolean;
 
   /**
+   * Indica si la columna es redimensionable.
+   */
+  resizable?: boolean;
+
+  /**
    * Configuracion dinamica para las columnas
    * TODO: tengo dudas de sobreesto, quizas este mejor dentro de un FIlterStrategy dentro del ColumnType
    */

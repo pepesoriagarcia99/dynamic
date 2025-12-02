@@ -10,4 +10,5 @@ export interface TableConfiguration {
     sortableType: SortableType; // Si es diferente de none muestra iconos de ordenacion en cabecera, emite evento de ordenacion
     pageable: boolean; // Si esta activo muestra paginacion en la parte inferior de la tabla, emite evento de cambio de pagina
     primaryKey?: string; // Clave primaria de la fila
+    resizable: boolean; // Si esta activo permite redimensionar las columnas
 }

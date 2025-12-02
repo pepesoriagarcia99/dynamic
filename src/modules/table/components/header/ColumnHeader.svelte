@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Column } from '../../models/Column';
-  import type { SortableType } from '../../models/configuration/TableConfiguration';
+  import type { TableConfiguration } from '../../models/configuration/TableConfiguration';
 
   import { styleTransformer } from '../../../../utils/style-transformer';
   import Sort from './Sort.svelte';
@@ -9,13 +9,11 @@
 
   interface ColumnHeaderProps {
     column: Column;
-    filterable?: boolean;
-    sortableType?: SortableType;
+    tableConfiguration: TableConfiguration;
   }
 
   /** Inputs */
-  const { column, sortableType = 'none' }: ColumnHeaderProps = $props();
-
+  const { column, tableConfiguration }: ColumnHeaderProps = $props();
   /** States */
   let sortRef: Sort | null = $state<Sort | null>(null);
   let isResizing: boolean = $state(false);
@@ -23,7 +21,7 @@
   let startWidth: number = $state(0);
   let thElement: HTMLTableCellElement | null = $state(null);
 
-  const isSortable: boolean = $derived(column.sortable === true && sortableType !== 'none');
+  const isSortable: boolean = $derived(column.sortable === true && tableConfiguration.sortableType !== 'none');
   const isSorted: boolean = $derived(sortRef?.getSortDirection() !== null && isSortable);
 
   const partNamesTh: string = $derived(
@@ -100,9 +98,11 @@
   </button>
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-  <div class={partNamesResize} part={partNamesResize} onmousedown={handleResizeMouseDown} role="separator">
-    <img src={resizeIcon} class={partNamesResizeIcon} part={partNamesResizeIcon} alt="resize" />
-  </div>
+  {#if tableConfiguration.resizable === true && column.resizable === true}
+    <div class={partNamesResize} part={partNamesResize} onmousedown={handleResizeMouseDown} role="separator">
+      <img src={resizeIcon} class={partNamesResizeIcon} part={partNamesResizeIcon} alt="resize" />
+    </div>
+  {/if}
 </th>
 
 <style>

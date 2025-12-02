@@ -15,7 +15,8 @@
     PAGE_CHANGE_EVENT_NAME,
     SORT_EVENT_NAME,
     FILTER_EVENT_NAME,
-    SELECTION_EVENT_NAME
+    SELECTION_EVENT_NAME,
+    DEFAULT_RESIZABLE
   } from '../constant';
   import type { Column } from '../models/Column';
   import type { RowEvent } from '../models/event/RowEvent';
@@ -55,6 +56,7 @@
     pageable?: boolean;
     pageSizeOptions?: number[];
     pageSize?: number;
+    resizable?: boolean;
   }
 
   /** Inputs */
@@ -70,7 +72,8 @@
     sortableType = DEFAULT_SORTABLE,
     pageable = DEFAULT_PAGEABLE,
     pageSizeOptions = DEFAULT_PAGE_SIZE_OPTIONS,
-    pageSize = DEFAULT_PAGE_SIZE
+    pageSize = DEFAULT_PAGE_SIZE,
+    resizable = DEFAULT_RESIZABLE
   }: TableProps = $props();
 
   /** Values */
@@ -105,7 +108,7 @@
       throw new Error('The "selectAll" property cannot be true when "selectableType" is "none".');
     }
 
-    if(selectableType !== 'none' && !primaryKey) {
+    if (selectableType !== 'none' && !primaryKey) {
       throw new Error('The "primaryKey" property must be defined when "selectableType" is not "none".');
     }
 
@@ -117,16 +120,27 @@
 
   /** States */
   let hasContextMenuSlot = $derived($$slots.contextMenu);
-  const indexColumns: Column[] = $derived(columns.map((c, index) => (c.index ? c : { ...c, index })));
-  const parameterizedData: RowData[] = $derived(data.map((r) => ({
-    ...r,
-    __ctx: {
-      isSelected: false
-    }
-    // getPrimaryKeyValue() {
-    //   return this[tableConfiguration.primaryKey!]
-    // }
-  })));
+  const indexColumns: Column[] = $derived(
+    columns.map((c, index) => ({
+      ...c,
+      index,
+      resizable: c.resizable ?? true // por defecto las columnas son resizables a menos que se indique lo contrario; Esta config se activa si la tabla es resizable
+    }))
+  );
+  const parameterizedData: RowData[] = $derived(
+    data.map((r) => ({
+      ...r,
+      __ctx: {
+        isSelected: false
+      }
+      /**
+       * TODO: podria hacer un acceso dinamico al valor de la key primaria
+       */
+      // getPrimaryKeyValue() {
+      //   return this[tableConfiguration.primaryKey!]
+      // }
+    }))
+  );
 
   const tableConfiguration: TableConfiguration = $derived({
     selectableType,
@@ -134,7 +148,8 @@
     filterable,
     sortableType,
     pageable,
-    primaryKey
+    primaryKey,
+    resizable
   });
 
   $effect(() => {
@@ -144,12 +159,12 @@
   /**
    * TODO: PAGINACION AUTOMATICA
    * * Si el usuario activa la paginacion pero no la quiere gestionar el con los eventos
-  */
+   */
   // $effect(() => {
   //   if (pageable === true && parameterizedData.length > pageSize) {
   //     transformedData = parameterizedData.slice((page - 1) * pageSize, page * pageSize);
   //     console.log('PAGE CHANGE');
-      
+
   //   } else {
   //     transformedData = parameterizedData;
   //   }

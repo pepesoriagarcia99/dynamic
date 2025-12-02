@@ -140,6 +140,7 @@
         data={filteredData}
         filterable={true}
         pageable={true}
+        resizable={true}
         selectableType="multiple"
         sortableType="multiple"
         pageSizeOptions={[5, 50, 100, 200]}

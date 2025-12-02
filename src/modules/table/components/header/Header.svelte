@@ -18,8 +18,7 @@
     {#each columns as column}
       <ColumnHeader
         {column}
-        filterable={tableConfiguration.filterable}
-        sortableType={tableConfiguration.sortableType}
+        {tableConfiguration}
       />
     {/each}
   </tr>
