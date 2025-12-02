@@ -17,7 +17,7 @@
 
   let columns: Column[] = [
     { key: 'flags.png', name: 'Bandera', type: Image, style: { width: '50px' } },
-    { key: 'name.common', name: 'Nombre', type: String, filterable: true },
+    { key: 'name.common', name: 'Nombre nombre de columna my largo para probar que se ve correctamente jajjajajaja mortal', type: String, filterable: true },
     { key: 'region', name: 'Region', type: String, sortable: true },
     { key: 'subregion', name: 'Subregion', type: String, filterable: true },
     { key: 'capital.[0]', name: 'Capital', type: String, filterable: true },
