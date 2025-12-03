@@ -62,6 +62,8 @@
     border-top: 1px solid var(--table-header-filter-border-top-color);
     border-left: 1px solid var(--table-header-filter-border-left-color);
     border-right: 1px solid var(--table-header-filter-border-right-color);
+    box-sizing: border-box;
+    padding: 4px 8px;
     /* TODO: Usado para genera espacios al no exitir filtro */
     /* width: 1%; */
     /* white-space: nowrap; */

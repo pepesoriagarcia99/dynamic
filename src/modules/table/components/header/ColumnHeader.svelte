@@ -52,43 +52,57 @@
   );
 
   /** Methods */
-  function handleHeaderClick(event: MouseEvent) {
+  function handleResizeMouseDown(event: MouseEvent) {
     event.stopPropagation();
-    sortRef?.toggleSort();
+    event.preventDefault();
+
+    if (!thElement) return;
+
+    isResizing = true;
+    startX = event.clientX;
+    startWidth = thElement.getBoundingClientRect().width;
+
+    thElement.style.width = `${startWidth}px`;
+    thElement.style.minWidth = `${startWidth}px`;
+
+    // Agregar clase para mejorar el rendering durante resize
+    thElement.style.willChange = 'width';
+    document.body.style.cursor = 'ew-resize';
+    document.body.style.userSelect = 'none';
+
+    document.addEventListener('mousemove', handleResizeMouseMove);
+    document.addEventListener('mouseup', handleResizeMouseUp);
   }
-
-function handleResizeMouseDown(event: MouseEvent) {
-  event.stopPropagation();
-  event.preventDefault();
-
-  if (!thElement) return;
-
-  isResizing = true;
-  startX = event.clientX;
-  // Obtener el ancho computado actual antes de comenzar
-  startWidth = thElement.getBoundingClientRect().width;
-  
-  // Establecer el ancho actual como ancho fijo
-  thElement.style.width = `${startWidth}px`;
-  thElement.style.minWidth = `${startWidth}px`;
-
-  document.addEventListener('mousemove', handleResizeMouseMove);
-  document.addEventListener('mouseup', handleResizeMouseUp);
-}
 
   function handleResizeMouseMove(event: MouseEvent) {
     if (!isResizing || !thElement) return;
 
-    const diff = event.clientX - startX;
-    const newWidth = Math.max(50, startWidth + diff); // Mínimo 50px
-    thElement.style.width = `${newWidth}px`;
-    thElement.style.minWidth = `${newWidth}px`;
+    // Usar requestAnimationFrame para suavizar el movimiento
+    requestAnimationFrame(() => {
+      const diff = event.clientX - startX;
+      const newWidth = Math.max(50, startWidth + diff);
+      thElement!.style.width = `${newWidth}px`;
+      thElement!.style.minWidth = `${newWidth}px`;
+    });
   }
 
   function handleResizeMouseUp() {
     isResizing = false;
+
+    // Limpiar estilos temporales
+    if (thElement) {
+      thElement.style.willChange = 'auto';
+    }
+    document.body.style.cursor = '';
+    document.body.style.userSelect = '';
+
     document.removeEventListener('mousemove', handleResizeMouseMove);
     document.removeEventListener('mouseup', handleResizeMouseUp);
+  }
+
+  function handleHeaderClick(event: MouseEvent) {
+    event.stopPropagation();
+    sortRef?.toggleSort();
   }
 </script>
 
@@ -113,12 +127,15 @@ function handleResizeMouseDown(event: MouseEvent) {
 <style>
   th {
     text-align: left;
+    box-sizing: border-box;
+    position: relative;
   }
 
   .column-header-content {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    margin-left: 12px;
   }
 
   .column-header-th {
@@ -138,9 +155,7 @@ function handleResizeMouseDown(event: MouseEvent) {
     width: 100%;
     height: var(--table-header-height);
     padding: 0 16px 0 0;
-  }
 
-  .column-header-btn {
     font-weight: 600;
     font-size: 16px;
   }
@@ -173,28 +188,22 @@ function handleResizeMouseDown(event: MouseEvent) {
     user-select: none;
   }
 
-  .column-header-resize:hover,
-  .column-header-th:hover .column-header-resize {
-    opacity: 1;
-  }
-
   .column-header-resize {
     cursor: ew-resize;
     position: absolute;
     right: 0.5px;
     top: 0;
     bottom: 0;
-    width: 0.5px;
+    width: 8px;
     display: flex;
     align-items: end;
     justify-content: end;
-
-    opacity: 0;
   }
 
   .column-header-resize-icon {
     width: 22px;
     height: 22px;
+    pointer-events: none;
   }
 
   .column-header-resize-icon-sorted {
