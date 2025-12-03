@@ -42,7 +42,7 @@
         part="column-filter-th column-filter-th-{column.index}"
         style={styleTransformer.toString(column?.style)}
       >
-        <div></div>
+        <!-- space -->
       </th>
     {/if}
   {/each}
@@ -62,11 +62,8 @@
     border-top: 1px solid var(--table-header-filter-border-top-color);
     border-left: 1px solid var(--table-header-filter-border-left-color);
     border-right: 1px solid var(--table-header-filter-border-right-color);
-    width: 1%;
-    white-space: nowrap;
-  }
-
-  .column-filter-th-spacer {
-    width: auto;
+    /* TODO: Usado para genera espacios al no exitir filtro */
+    /* width: 1%; */
+    /* white-space: nowrap; */
   }
 </style>

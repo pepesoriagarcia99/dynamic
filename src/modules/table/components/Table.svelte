@@ -488,9 +488,10 @@
   .table {
     border-collapse: separate;
     border-spacing: 0;
-    table-layout: fixed;
-    width: max-content;
-    min-width: 100%;
+    /* TODO: Usado para genera espacios al no exitir filtro */
+    /* table-layout: fixed; */
+    /* width: max-content; */
+    /* min-width: 100%; */
   }
 
   .pagination {

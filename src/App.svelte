@@ -165,7 +165,7 @@
       selectableType="multiple"
       sortableType="multiple"
       pageSizeOptions={[5, 50, 100, 200]}
-      pageSize={5}
+      pageSize={100}
       onready={onReady}
       onrowClick={onRowClick}
       onselection={onRowSelect}
