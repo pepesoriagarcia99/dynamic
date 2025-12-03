@@ -47,16 +47,15 @@
     let subscribeId: string;
     const key = row[tableConfiguration.primaryKey!];
     let selectionComponent = selectionStore.get(key);
-    
-    
-    if (!selectionComponent) {
-      selectionComponent = selectionStore.add(key, row);
-      subscribeId = selectionComponent.subscribe((event) => {
+
+    if(selectionComponent) {
+      isSelected = selectionComponent.value?.__ctx.isSelected ?? false;
+      selectionComponent.subscribe((event) => {
         isSelected = event.value?.__ctx.isSelected ?? false;
       });
     } else {
-      isSelected = selectionComponent.value?.__ctx.isSelected ?? false;
-      selectionComponent.subscribe((event) => {
+      selectionComponent = selectionStore.add(key, row);
+      subscribeId = selectionComponent.subscribe((event) => {
         isSelected = event.value?.__ctx.isSelected ?? false;
       });
     }

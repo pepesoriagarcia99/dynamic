@@ -38,9 +38,9 @@ class SelectionStore extends Store<RowData> {
     });
 
     // Caso: cuando haces click en una fila cuando ya tienes seleccionadas varias, todas deben deseleccionarse y quedarse solo la que has clickeado
-    if(selectionCount > 1) {
+    if (selectionCount > 1) {
       const element = this.elements.find((el) => el.key === key);
-      if(element) {
+      if (element) {
         element.value!.__ctx.isSelected = true;
         element.setValue(element.value);
       }
@@ -95,6 +95,18 @@ class SelectionStore extends Store<RowData> {
     super.emit(
       this.elements.filter((element) => element.value?.__ctx.isSelected === true).map((element) => element.getValue())
     );
+  }
+
+  /**
+   * Limpia todas las selecciones
+   * @override
+   */
+  clear() {
+    this.elements.forEach((el) => {
+      el.value!.__ctx.isSelected = false;
+      el.setValue(el.value);
+    });
+    this.emit();
   }
 }
 
