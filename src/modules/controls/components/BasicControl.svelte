@@ -50,7 +50,7 @@
     class={partNamesInput}
     part={partNamesInput}
     type="text"
-    placeholder={placeholder}
+    {placeholder}
     bind:value
     onkeydown={keydownHandler}
     {disabled}
@@ -60,7 +60,14 @@
 <style>
   @import '../styles/control.css';
 
+  .basic-control-container {
+    padding: 0 8px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
   .basic-control-input {
-    margin: 0px 4px 0px 4px;
+    width: 100%;
+    box-sizing: border-box;
   }
 </style>

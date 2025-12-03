@@ -16,7 +16,7 @@
   import type { ContextMenuEvent } from './modules/table/models/event/ContextMenuEvent';
 
   let columns: Column[] = [
-    { key: 'flags.png', name: 'Bandera', type: Image, style: { width: '50px' } },
+    { key: 'flags.png', name: 'Bandera', type: Image, style: { width: '80px' } },
     {
       key: 'name.common',
       name: 'Nombre nombre de columna my largo para probar que se ve correctamente jajjajajaja mortal',
