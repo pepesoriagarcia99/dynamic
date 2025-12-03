@@ -53,7 +53,9 @@
       })
       .catch(console.error)
       .finally(() => {
-        loading = false;
+        setTimeout(() => {
+          loading = false;
+        }, 2000);
       });
   }
 

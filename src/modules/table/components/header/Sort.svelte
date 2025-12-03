@@ -7,10 +7,10 @@
   import sortIcon from '../../../../assets/svg/sort.svg';
   import sortTopIcon from '../../../../assets/svg/sort-top.svg';
   import sortBottomIcon from '../../../../assets/svg/sort-bottom.svg';
-  import { loadingState } from '../../store/loading-state';
   import { sortStore } from '../../store/sort-store';
 
   import Skeleton from '../Skeleton.svelte';
+  import { loadingState } from '../../store/loading-state.svelte';
 
   interface SortProps {
     column: Column;
@@ -23,8 +23,6 @@
   let sortDirection = $state<SortOrder | null>(null);
   const sortStoreComponent: StoreComponent<SortOrder> = sortStore.add(column.key, null);
 
-  let loading = $state(false);
-
   const partNamesContainer: string = $derived(`sort-container sort-container-${column.index}`);
   const partNamesButton: string = $derived(`sort-btn sort-btn-${column.index}`);
   const partNamesIcon: string = $derived(
@@ -32,10 +30,6 @@
       .filter(Boolean)
       .join(' ')
   );
-
-  loadingState.subscribe((state) => {
-    loading = state;
-  });
 
   /** Methods */
   onMount(() => {
@@ -55,8 +49,8 @@
 </script>
 
 <div class={partNamesContainer} part={partNamesContainer}>
-  {#if loading === true}
-    <Skeleton width="20px" height="20px" />
+  {#if loadingState() === true}
+    <Skeleton width="22px" height="22px" />
   {:else}
     <button onclick={(e) => toggleSort(e)} aria-label="Sort" class={partNamesButton} part={partNamesButton}>
       {#if sortDirection === 'asc'}

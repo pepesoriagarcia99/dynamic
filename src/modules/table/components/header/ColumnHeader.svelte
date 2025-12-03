@@ -6,6 +6,7 @@
   import Sort from './Sort.svelte';
 
   import resizeIcon from '../../../../assets/svg/resize.svg';
+  import { loadingState } from '../../store/loading-state.svelte';
 
   interface ColumnHeaderProps {
     column: Column;
@@ -117,7 +118,7 @@
   </button>
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-  {#if tableConfiguration.resizable === true && column.resizable === true}
+  {#if tableConfiguration.resizable === true && column.resizable === true && loadingState() === false}
     <div class={partNamesResize} part={partNamesResize} onmousedown={handleResizeMouseDown} role="separator">
       <img src={resizeIcon} class={partNamesResizeIcon} part={partNamesResizeIcon} alt="resize" />
     </div>

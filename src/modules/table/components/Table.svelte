@@ -30,18 +30,19 @@
   import type { SelectionApi } from '../models/public-api/SelectionApi';
   import type { FilterApi } from '../models/public-api/FilterApi';
   import type { TableEvent } from '../models/event/TableEvent';
+    import type { RowData } from '../models/RowData';
 
   import { selectionStore } from '../store/selection-store';
   import { filterStore } from '../store/filter-store';
-  import { loadingState } from '../store/loading-state';
   import { sortStore } from '../store/sort-store';
+  import { setLoadingState } from '../store/loading-state.svelte';
 
   import Header from './header/Header.svelte';
   import Row from './body/Row.svelte';
   import Pagination from './Pagination.svelte';
   import Skeleton from './Skeleton.svelte';
   import ContextMenu from './ContextMenu.svelte';
-  import type { RowData } from '../models/RowData';
+
 
   interface TableProps {
     columns?: Column[];
@@ -153,7 +154,7 @@
   });
 
   $effect(() => {
-    loadingState.emit(loading);
+    setLoadingState(loading);
   });
 
   /**

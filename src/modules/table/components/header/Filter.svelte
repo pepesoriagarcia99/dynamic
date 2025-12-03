@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Column } from '../../models/Column';
-  import { loadingState } from '../../store/loading-state';
+  import { loadingState } from '../../store/loading-state.svelte';
   import Skeleton from '../Skeleton.svelte';
   import BasicControl from '../../../controls/components/BasicControl.svelte';
   import { styleTransformer } from '../../../../utils/style-transformer';
@@ -12,14 +12,6 @@
 
   /** Inputs */
   let { columns }: FilterProps = $props();
-
-  /** States */
-  let loading = $state(false);
-
-  /** Values */
-  loadingState.subscribe((state) => {
-    loading = state;
-  });
 </script>
 
 <tr class="filter-thead-tr" part="filter-thead-tr">
@@ -30,8 +22,10 @@
         part="column-filter-th column-filter-th-{column.index}"
         style={`padding-top: 4px; ${styleTransformer.toString(column?.style)}`}
       >
-        {#if loading === true}
-          <Skeleton />
+        {#if loadingState() === true}
+          <div style="padding: 0 8px;">
+            <Skeleton height="34px"/>
+          </div>
         {:else}
           <BasicControl id={column.key} />
         {/if}
