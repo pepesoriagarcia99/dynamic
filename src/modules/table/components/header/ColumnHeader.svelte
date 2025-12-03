@@ -57,19 +57,24 @@
     sortRef?.toggleSort();
   }
 
-  function handleResizeMouseDown(event: MouseEvent) {
-    event.stopPropagation();
-    event.preventDefault();
+function handleResizeMouseDown(event: MouseEvent) {
+  event.stopPropagation();
+  event.preventDefault();
 
-    if (!thElement) return;
+  if (!thElement) return;
 
-    isResizing = true;
-    startX = event.clientX;
-    startWidth = thElement.offsetWidth;
+  isResizing = true;
+  startX = event.clientX;
+  // Obtener el ancho computado actual antes de comenzar
+  startWidth = thElement.getBoundingClientRect().width;
+  
+  // Establecer el ancho actual como ancho fijo
+  thElement.style.width = `${startWidth}px`;
+  thElement.style.minWidth = `${startWidth}px`;
 
-    document.addEventListener('mousemove', handleResizeMouseMove);
-    document.addEventListener('mouseup', handleResizeMouseUp);
-  }
+  document.addEventListener('mousemove', handleResizeMouseMove);
+  document.addEventListener('mouseup', handleResizeMouseUp);
+}
 
   function handleResizeMouseMove(event: MouseEvent) {
     if (!isResizing || !thElement) return;
