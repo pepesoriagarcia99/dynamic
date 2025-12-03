@@ -1,4 +1,4 @@
 export interface PaginationApi {
     setPage: (n: number) => void
-    resetPage: () => void
+    resetPage: (emitEvent?: boolean) => void
 }

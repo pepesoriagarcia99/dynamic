@@ -58,12 +58,30 @@
   }
 
   function transform() {
+    filteredData = data;
+
+    //filter
+    const filters = tableFilter.filter;
+    if (filters.length > 0) {
+      filteredData = filteredData.filter((row: any) => {
+        return filters.every(({ key, value }) => {
+          const cellValue = key
+            .split('.')
+            .reduce((obj, k) => (obj && obj[k] !== 'undefined' ? obj[k] : undefined), row);
+          if (cellValue === undefined || cellValue === null) return false;
+          if (!value) return true;
+
+          return cellValue.toString().toLowerCase().includes(value.toString().toLowerCase());
+        });
+      });
+    }
+
     // paginacion
     const page = tableFilter.page;
     const start = (page.page - 1) * page.pageSize;
     const end = start + page.pageSize;
 
-    filteredData = data.slice(start, end);
+    filteredData = filteredData.slice(start, end);
   }
 
   // function filterValues() {
@@ -101,9 +119,10 @@
     console.log('FILTERED: ', event.detail);
 
     tableEl?.pagination.resetPage();
+    tableFilter.page.page = 1;
     tableFilter.filter = event.detail;
 
-    // filterValues();
+    transform();
   }
 
   function onSortChange(event: any & { detail: SortEvent }) {

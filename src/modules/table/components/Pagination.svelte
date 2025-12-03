@@ -90,8 +90,15 @@
     emitChange();
   }
 
-  export function resetPage() {
+  /**
+   * Resetea la página actual a 1
+   * @param emitEvent Indica si se debe emitir el evento de cambio de página
+   */
+  export function resetPage(emitEvent?: boolean) {
     currentPage = 1;
+    if (emitEvent) {
+      emitChange();
+    }
   }
 
   export function getState() {

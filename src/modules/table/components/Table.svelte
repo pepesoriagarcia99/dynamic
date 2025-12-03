@@ -298,20 +298,20 @@
    */
   function paginationApi(): PaginationApi {
     return {
-      setPage: (n: number) => paginationRef?.setPage(n),
-      resetPage: () => paginationRef?.resetPage()
+      setPage: paginationRef?.setPage!,
+      resetPage: paginationRef?.resetPage!
     };
   }
 
   function selectionApi(): SelectionApi {
     return {
-      reset: () => selectionStore.clear()
+      reset: selectionStore.clear
     };
   }
 
   function filterApi(): FilterApi {
     return {
-      reset: () => filterStore.clear()
+      reset: filterStore.clear
     };
   }
 
