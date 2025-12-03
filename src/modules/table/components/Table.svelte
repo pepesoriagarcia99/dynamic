@@ -40,8 +40,8 @@
   import Header from './header/Header.svelte';
   import Row from './body/Row.svelte';
   import Pagination from './Pagination.svelte';
-  import Skeleton from './Skeleton.svelte';
   import ContextMenu from './ContextMenu.svelte';
+  import LoadingBody from './body/LoadingBody.svelte';
 
 
   interface TableProps {
@@ -80,7 +80,6 @@
   /** Values */
   let el: HTMLElement;
   let paginationRef: Pagination | null = $state<Pagination | null>(null);
-  let skeletonData = Array.from({ length: 200 }, (_, i) => i);
   let contextMenuVisible = $state(false);
   let contextMenuEvent = $state<RowEvent | undefined>(undefined);
 
@@ -343,15 +342,7 @@
 
         <tbody class="tbody" part="tbody">
           {#if loading === true}
-            {#each skeletonData as row}
-              <tr id={row.toString()} style="height: 50px;">
-                {#each indexColumns}
-                  <td>
-                    <Skeleton />
-                  </td>
-                {/each}
-              </tr>
-            {/each}
+            <LoadingBody columns={indexColumns} />
           {:else if data.length === 0 && loading === false}
             <tr>
               <td colspan={indexColumns.length} style="text-align: left; padding: 16px; vertical-align: top;">
@@ -399,6 +390,8 @@
     --selected: #020617;
     --selected-text: #ffffff;
     --border: #d1d1d1;
+
+    --table-column-margin-left: var(--dyn-table-column-margin-left, 12px);
 
     --table-border-color: var(--dyn-table-border-color, #e2e8f0);
     --table-header-background: var(--dyn-table-header-background, #ffffff);

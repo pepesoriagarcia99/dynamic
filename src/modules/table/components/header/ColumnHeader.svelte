@@ -136,7 +136,7 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    margin-left: 12px;
+    margin-left: var(--table-column-margin-left);
   }
 
   .column-header-th {

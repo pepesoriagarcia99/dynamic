@@ -20,7 +20,7 @@
       <th
         class="column-filter-th column-filter-th-{column.index}"
         part="column-filter-th column-filter-th-{column.index}"
-        style={`padding-top: 4px; ${styleTransformer.toString(column?.style)}`}
+        style={styleTransformer.toString(column?.style)}
       >
         {#if loadingState() === true}
           <div style="padding: 0 8px;">
@@ -57,7 +57,8 @@
     border-left: 1px solid var(--table-header-filter-border-left-color);
     border-right: 1px solid var(--table-header-filter-border-right-color);
     box-sizing: border-box;
-    padding: 4px 8px;
+    padding-left: var(--table-column-margin-left);
+    padding-right: var(--table-column-margin-left); /* se pone mismo para que quede centrado */
     /* TODO: Usado para genera espacios al no exitir filtro */
     /* width: 1%; */
     /* white-space: nowrap; */

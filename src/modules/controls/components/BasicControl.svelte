@@ -61,7 +61,6 @@
   @import '../styles/control.css';
 
   .basic-control-container {
-    padding: 0 8px;
     width: 100%;
     box-sizing: border-box;
   }

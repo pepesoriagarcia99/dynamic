@@ -68,6 +68,6 @@
   }
 
   .column-value {
-    margin-left: 6px;
+    padding-left: var(--table-column-margin-left);
   }
 </style>
