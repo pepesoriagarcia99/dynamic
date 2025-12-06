@@ -2,7 +2,7 @@
   import type { Column } from '../../models/Column';
   import type { TableConfiguration } from '../../models/configuration/TableConfiguration';
   import ColumnHeader from './ColumnHeader.svelte';
-  import Filter from './Filter.svelte';
+  import InputFilter from './InputFilter.svelte';
 
   interface HeaderProps {
     columns: Column[];
@@ -24,7 +24,7 @@
   </tr>
 
   {#if tableConfiguration.filterable}
-    <Filter {columns} />
+    <InputFilter {columns} />
   {/if}
 </thead>
 
