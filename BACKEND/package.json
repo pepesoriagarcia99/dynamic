@@ -1,0 +1,13 @@
+{
+  "name": "dynamic",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": ""
+  },
+  "devDependencies": {
+    "@types/node": "~24.10.0",
+    "typescript": "~5.9.3"
+  }
+}
