@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
+import dts from 'vite-plugin-dts';
 
 export default defineConfig({
   plugins: [
@@ -9,6 +10,11 @@ export default defineConfig({
         dev: false
       },
       emitCss: false
+    }),
+    dts({
+      insertTypesEntry: true,
+      include: ['src/main-wc.ts', 'src/modules/**/*.ts'],
+      exclude: ['src/main-dev.ts', 'src/**/*.spec.ts', 'src/**/*.svelte']
     })
   ],
   build: {
