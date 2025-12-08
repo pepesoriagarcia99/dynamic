@@ -5,12 +5,19 @@ export default defineConfig({
   plugins: [
     svelte({
       compilerOptions: {
-        customElement: true 
+        customElement: true,
+        dev: false
       },
       emitCss: false
     })
   ],
   build: {
+    minify: 'terser',
+    terserOptions: {
+      format: {
+        comments: false
+      }
+    },
     lib: {
       entry: './src/main-wc.ts',
       name: 'Dynamic',
@@ -20,7 +27,9 @@ export default defineConfig({
     rollupOptions: {
       output: {
         entryFileNames: 'dynamic.js',
-        inlineDynamicImports: true
+        inlineDynamicImports: true,
+        banner: undefined,
+        footer: undefined
       }
     }
   }
