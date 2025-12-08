@@ -1,19 +1,16 @@
 import { ColumnType } from "./ColumnType";
 
-interface EnumOptions {
+interface EnumOptions<T> {
   /** Se añade un primer valor vacio */
   firstEmpty?: boolean;
 }
 
-// <T>
-export default class Enum extends ColumnType {
-  // #translateRef: string = '';
+export default class Enum<T> extends ColumnType {
+  #translateRef: string = '';
 
-  // #values: { key: T; name: string }[] = [];
+  #values: { key: T; name: string }[] = [];
 
-  constructor(enumObj: Record<string, any>, options?: EnumOptions) {
-    console.log("🚀 ~ Enum ~ constructor ~ options:", options)
-    console.log("🚀 ~ Enum ~ constructor ~ enumObj:", enumObj)
+  constructor(enumObj: Record<string, any>, options?: EnumOptions<T>) {
     super();
 
     // this.#translateRef = this.#searchParentKey(enumObj);
