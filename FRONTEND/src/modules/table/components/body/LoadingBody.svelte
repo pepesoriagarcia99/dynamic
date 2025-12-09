@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Column } from '../../models/Column';
+  import type { Column } from '../../models/column/Column';
   import Skeleton from '../Skeleton.svelte';
 
   interface LoadingBodyProps {

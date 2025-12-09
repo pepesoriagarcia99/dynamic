@@ -82,6 +82,8 @@ export interface Column {
    */
   type: Function | ColumnType;
 
+  // filterType?: Function | ColumnType;
+
   /**
    * Estilo personalizado para la columna.
    */

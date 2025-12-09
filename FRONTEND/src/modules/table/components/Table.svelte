@@ -18,7 +18,7 @@
     SELECTION_EVENT_NAME,
     DEFAULT_RESIZABLE
   } from '../constant';
-  import type { Column } from '../models/Column';
+  import type { Column } from '../models/column/Column';
   import type { RowEvent } from '../models/event/RowEvent';
   import type { SelectableType, SortableType, TableConfiguration } from '../models/configuration/TableConfiguration';
   import type { FilterEvent } from '../models/event/FilterEvent';

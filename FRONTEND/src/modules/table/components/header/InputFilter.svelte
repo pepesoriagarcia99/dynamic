@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Column } from '../../models/Column';
+  import type { Column } from '../../models/column/Column';
   import { loadingState } from '../../store/loading-state.svelte';
   import Skeleton from '../Skeleton.svelte';
   import BasicControl from '../../../controls/components/BasicControl.svelte';

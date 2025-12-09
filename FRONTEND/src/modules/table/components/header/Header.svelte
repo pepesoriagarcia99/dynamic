@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Column } from '../../models/Column';
+  import type { Column } from '../../models/column/Column';
   import type { TableConfiguration } from '../../models/configuration/TableConfiguration';
   import ColumnHeader from './ColumnHeader.svelte';
   import InputFilter from './InputFilter.svelte';

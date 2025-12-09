@@ -1,8 +1,8 @@
 <script lang="ts">
   import { styleTransformer } from '../../../../utils/style-transformer';
   import { valueTransformer } from '../../../../utils/value-transformer';
-  import type { Column } from '../../models/Column';
-  import Image from '../../models/column-types/Image';
+  import type { Column } from '../../models/column/Column';
+  import Image from '../../models/column/column-types/Image';
   import type { RowEvent, RowEventType } from '../../models/event/RowEvent';
 
   interface ColumnValueProps {

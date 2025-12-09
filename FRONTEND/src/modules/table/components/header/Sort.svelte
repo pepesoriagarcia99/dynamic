@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import type { Column } from '../../models/Column';
+  import type { Column } from '../../models/column/Column';
   import type { StoreComponent } from '../../../core/models/StoreComponent';
   import type { SortOrder } from '../../models/event/SortEvent';
 

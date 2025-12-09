@@ -1,6 +1,6 @@
 <script lang="ts">
   import './app.css';
-  import type { Column } from './modules/table/models/Column';
+  import type { Column } from './modules/table/models/column/Column';
   // @ts-ignore
   import Table from './modules/table/components/Table.svelte';
 
@@ -12,7 +12,7 @@
   import type { PageEvent } from './modules/table/models/event/PageEvent';
   import type { PublicApi } from './modules/table/models/public-api/PublicApi';
   import type { TableEvent } from './modules/table/models/event/TableEvent';
-  import Image from './modules/table/models/column-types/Image';
+  import Image from './modules/table/models/column/column-types/Image';
   import type { ContextMenuEvent } from './modules/table/models/event/ContextMenuEvent';
 
   let columns: Column[] = [

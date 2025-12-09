@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import type { Column } from '../../models/Column';
+  import type { Column } from '../../models/column/Column';
   import type { TableConfiguration } from '../../models/configuration/TableConfiguration';
   import type { RowEvent, RowEventType } from '../../models/event/RowEvent';
   import type { RowData } from '../../models/RowData';
