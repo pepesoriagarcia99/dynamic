@@ -1,15 +1,16 @@
-import { ColumnType } from "./ColumnType";
+// import { ColumnType } from "./ColumnType";
 
-/**
- * TODO: Revisar que tiene que hacer aqui la columna de imagen
- */
-export default class Image extends ColumnType {
+// export interface ImageConfig {
+//   alt: string;
+// }
 
-    constructor() {
-        super();
-    }
 
-    getValue(): string {
-        return '';
-    }
-}
+// export default class Image extends ColumnType {
+//     constructor() {
+//         super();
+//     }
+
+//     getValue(): any {
+//         return '';
+//     }
+// }

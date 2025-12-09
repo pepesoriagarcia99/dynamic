@@ -12,21 +12,67 @@
   import type { PageEvent } from './modules/table/models/event/PageEvent';
   import type { PublicApi } from './modules/table/models/public-api/PublicApi';
   import type { TableEvent } from './modules/table/models/event/TableEvent';
-  import Image from './modules/table/models/column/column-types/Image';
+  // import Image from './modules/table/models/column/column-types/Image';
   import type { ContextMenuEvent } from './modules/table/models/event/ContextMenuEvent';
+  // import Avatar from './modules/table/models/column/column-types/Avatar';
 
   let columns: Column[] = [
-    { key: 'flags.png', name: 'Bandera', type: Image, style: { width: '80px' } },
+    { key: 'flags.png', name: 'Bandera', type: 'Image', style: { width: '80px' } },
     {
       key: 'name.common',
       name: 'Nombre nombre de columna my largo para probar que se ve correctamente jajjajajaja mortal',
-      type: String,
+      type: 'Avatar',
       filterable: true
     },
-    { key: 'region', name: 'Region', type: String, sortable: true },
-    { key: 'subregion', name: 'Subregion', type: String, filterable: true },
-    { key: 'capital.[0]', name: 'Capital', type: String, filterable: true },
-    { key: 'population', name: 'Poblacion', type: String, sortable: true }
+    // { key: 'name.official', name: 'Avatar', type: 'Avatar' },
+    { key: 'continents.[0]', name: 'Continente', type: 'String', sortable: true },
+    { key: 'region', name: 'Region', type: 'String', sortable: true },
+    { key: 'subregion', name: 'Subregion', type: 'String', filterable: true },
+    { key: 'capital.[0]', name: 'Capital', type: 'String', filterable: true },
+    {
+      key: 'population',
+      name: 'Poblacion',
+      type: 'Number',
+      configuration: {
+        suffix: ' P.'
+      },
+      filterable: true,
+      sortable: true
+    },
+    { key: 'unMember', name: 'ONU', type: 'Boolean', filterable: true, sortable: true },
+    {
+      key: 'foundation',
+      name: 'Fundacion',
+      type: 'Date',
+      configuration: { format: 'YYYY/MM/DD' },
+      filterable: true,
+      sortable: true
+    },
+    {
+      key: 'pib',
+      name: 'PIB (USD)',
+      type: 'Number',
+      configuration: {
+        options: {
+          style: 'currency',
+          currency: 'USD',
+          currencyDisplay: 'narrowSymbol'
+        }
+      },
+      filterable: true,
+      sortable: true
+    },
+    {
+      key: 'area',
+      name: 'Area',
+      type: 'Number',
+      configuration: {
+        suffix: ' km²'
+      },
+      filterable: true,
+      sortable: true
+    },
+    { key: 'density', name: 'Densidad de poblacion', type: 'String', filterable: true, sortable: true }
   ];
 
   let loading: boolean = $state(false);
@@ -44,10 +90,17 @@
       .then((res) => res.json())
       .then((res) => {
         count = res.length;
-        data = res.map((item: any, index: number) => ({
-          ...item,
-          key: index.toString()
-        }));
+        data = res.map((item: any, index: number) => {
+          const densityValue = item.population / item.area;
+
+          return {
+            ...item,
+            key: index.toString(),
+            foundation: new Date().toISOString(),
+            pib: Math.floor(Math.random() * 100000),
+            density: densityValue > 1000 ? 'High' : densityValue > 100 ? 'Medium' : 'Low'
+          };
+        });
 
         transform();
       })
@@ -200,6 +253,14 @@
   dyn-table::part(column-value-0) {
     width: 40px;
     height: auto;
+  }
+
+  dyn-table::part(column-value-2) {
+    width: 40px;
+    height: auto;
+    border-radius: 50%;
+    aspect-ratio: 1;
+    object-fit: cover;
   }
 
   .contextmenu {
