@@ -1,9 +1,9 @@
 <script lang="ts">
-  import type { StoreComponent, StoreComponentData } from '../../core/models/StoreComponent';
-  import { filterStore } from '../../table/store/filter-store';
   import type { CommonControlProp } from '../models/CommonControlProp';
 
-  interface BasicControlProps extends CommonControlProp {}
+  interface BasicControlProps extends CommonControlProp {
+    type?: string;
+  }
 
   /** States */
   let {
@@ -12,6 +12,7 @@
     placeholder = 'Enter key to search',
     value = $bindable(undefined),
     disabled = false,
+    type = 'text',
     onChange = () => {}
   }: BasicControlProps = $props();
 
@@ -23,10 +24,6 @@
   const partNamesLabel: string = $derived(`control-label basic-control-label basic-control-label-${id}`);
 
   /** Methods */
-  const filterStoreComponent: StoreComponent<string> = filterStore.add(id, value);
-  filterStoreComponent.subscribe((change: StoreComponentData<string>) => {
-    value = change.value ?? '';
-  });
 
   function keydownHandler(event: KeyboardEvent) {
     if (event.key === 'Enter') {
@@ -35,7 +32,6 @@
   }
 
   function onEnter() {
-    filterStoreComponent?.setValue(value);
     onChange(value);
   }
 </script>
@@ -49,7 +45,7 @@
     aria-label={inputId}
     class={partNamesInput}
     part={partNamesInput}
-    type="text"
+    {type}
     {placeholder}
     bind:value
     onkeydown={keydownHandler}
@@ -68,5 +64,15 @@
   .basic-control-input {
     width: 100%;
     box-sizing: border-box;
+  }
+
+  input[type='number'] {
+    -moz-appearance: textfield;
+
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
   }
 </style>

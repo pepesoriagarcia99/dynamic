@@ -69,13 +69,9 @@ export interface NumberColumnConfiguration {
 }
 
 export interface StringColumnConfiguration {
-  // uppercase?: boolean; // Convertir a mayúsculas
-  // lowercase?: boolean; // Convertir a minúsculas
-  // capitalize?: boolean; // Capitalizar la primera letra de cada palabra
-  // trim?: boolean; // Eliminar espacios en blanco al inicio y al final
-
   representation?: 'uppercase' | 'lowercase' | 'capitalize' | 'trim' | 'none';
   colorConfiguration?: Omit<ColorConfiguration<string>, 'range'>[];
+  options?: string[]; // Opciones predefinidas para filtrar o seleccionar
 }
 
 export interface DateColumnConfiguration {
