@@ -75,5 +75,4 @@ export interface Column {
     | DateColumnConfiguration
     | ImageColumnConfiguration
     | AvatarColumnConfiguration;
-    // | TagColumnConfiguration;
 }
