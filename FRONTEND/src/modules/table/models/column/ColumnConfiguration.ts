@@ -41,11 +41,11 @@
 // }
 
 interface Color {
-  textColor?: string; // Color del texto
-  backgroundColor?: string; // Color de fondo
+  text: string; // Color del texto
+  background: string; // Color de fondo
 }
 
-interface ColorConfiguration<T> {
+export interface ColorConfiguration<T> {
   range?: {
     min: T;
     max: T;
@@ -57,8 +57,10 @@ interface ColorConfiguration<T> {
 }
 
 export interface NumberColumnConfiguration {
-  locale?: string;
-  options?: Intl.NumberFormatOptions;
+  IntlNumberFormat?: {
+    locale?: string;
+    options?: Intl.NumberFormatOptions;
+  };
 
   suffix?: string;
   prefix?: string;
@@ -82,20 +84,14 @@ export interface DateColumnConfiguration {
   colorConfiguration?: ColorConfiguration<Date>[];
 }
 
-export interface BooleanColumnConfiguration {
-
-}
+export interface BooleanColumnConfiguration {}
 
 export interface AvatarColumnConfiguration {
-  size?: 'small' | 'medium' | 'large'; // Tamaño del avatar
-  shape?: 'circle' | 'square'; // Forma del avatar
+  pictureUrl?: string; // URL de la imagen del avatar
+  pictureColumn?: string; // Nombre de la columna que contiene la URL de la imagen
+  altText?: string; // Texto alternativo para la imagen
 }
 
 export interface ImageColumnConfiguration {
   altText?: string; // Texto alternativo para la imagen
-  altColumn?: string; // Nombre de la columna que contiene el texto alternativo para la imagen
 }
-
-// export interface TagColumnConfiguration {
-
-// }

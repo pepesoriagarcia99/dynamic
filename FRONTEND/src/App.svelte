@@ -12,9 +12,7 @@
   import type { PageEvent } from './modules/table/models/event/PageEvent';
   import type { PublicApi } from './modules/table/models/public-api/PublicApi';
   import type { TableEvent } from './modules/table/models/event/TableEvent';
-  // import Image from './modules/table/models/column/column-types/Image';
   import type { ContextMenuEvent } from './modules/table/models/event/ContextMenuEvent';
-  // import Avatar from './modules/table/models/column/column-types/Avatar';
 
   let columns: Column[] = [
     { key: 'flags.png', name: 'Bandera', type: 'Image', style: { width: '80px' } },
@@ -22,6 +20,10 @@
       key: 'name.common',
       name: 'Nombre nombre de columna my largo para probar que se ve correctamente jajjajajaja mortal',
       type: 'Avatar',
+      configuration: {
+        pictureColumn: 'picture',
+        altText: 'Country flag'
+      },
       filterable: true
     },
     // { key: 'name.official', name: 'Avatar', type: 'Avatar' },
@@ -53,10 +55,12 @@
       name: 'PIB (USD)',
       type: 'Number',
       configuration: {
-        options: {
-          style: 'currency',
-          currency: 'USD',
-          currencyDisplay: 'narrowSymbol'
+        IntlNumberFormat: {
+          options: {
+            style: 'currency',
+            currency: 'USD',
+            currencyDisplay: 'narrowSymbol'
+          }
         }
       },
       filterable: true,
@@ -67,12 +71,63 @@
       name: 'Area',
       type: 'Number',
       configuration: {
-        suffix: ' km²'
+        suffix: ' km²',
+        colorConfiguration: [
+          {
+            range: { min: 0, max: 10000 },
+            color: {
+              text: 'green'
+            }
+          },
+          {
+            range: { min: 10001, max: 100000 },
+            color: {
+              text: 'orange'
+            }
+          },
+          {
+            range: { min: 100001, max: Infinity },
+            color: {
+              text: 'red'
+            }
+          }
+        ]
       },
       filterable: true,
       sortable: true
     },
-    { key: 'density', name: 'Densidad de poblacion', type: 'String', filterable: true, sortable: true }
+    {
+      key: 'density',
+      name: 'Densidad de poblacion',
+      type: 'String',
+      configuration: {
+        colorConfiguration: [
+          {
+            value: 'Low',
+            color: {
+              text: '#166534',
+              background: '#DCFCE7'
+            }
+          },
+          {
+            value: 'Medium',
+            color: {
+              text: '#854D0E',
+              background: '#FEF9C3'
+            }
+          },
+          {
+            value: 'High',
+            color: {
+              text: '#991B1B',
+              background: '#FEE2E2'
+            }
+          }
+        ]
+      },
+      filterable: true,
+      sortable: true
+    }
   ];
 
   let loading: boolean = $state(false);
@@ -84,6 +139,16 @@
 
   let tableFilter: TableEvent;
 
+  function hashString(str: string): string {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      const char = str.charCodeAt(i);
+      hash = (hash << 5) - hash + char;
+      hash = hash & hash; // Convert to 32bit integer
+    }
+    return Math.abs(hash).toString(16);
+  }
+
   function getCountries() {
     loading = true;
     return fetch('https://restcountries.com/v3.1/independent?status=true')
@@ -92,13 +157,14 @@
         count = res.length;
         data = res.map((item: any, index: number) => {
           const densityValue = item.population / item.area;
-
+          const hash = hashString(item.name.common);
           return {
             ...item,
             key: index.toString(),
             foundation: new Date().toISOString(),
             pib: Math.floor(Math.random() * 100000),
-            density: densityValue > 1000 ? 'High' : densityValue > 100 ? 'Medium' : 'Low'
+            density: densityValue > 1000 ? 'High' : densityValue > 100 ? 'Medium' : 'Low',
+            picture: `https://gravatar.com/avatar/${hash}?d=identicon`
           };
         });
 
@@ -256,11 +322,7 @@
   }
 
   dyn-table::part(column-value-2) {
-    width: 40px;
-    height: auto;
-    border-radius: 50%;
-    aspect-ratio: 1;
-    object-fit: cover;
+    font-weight: 700;
   }
 
   .contextmenu {

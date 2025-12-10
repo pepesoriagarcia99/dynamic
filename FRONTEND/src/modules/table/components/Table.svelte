@@ -392,6 +392,7 @@
     --border: #d1d1d1;
 
     --table-column-margin-left: var(--dyn-table-column-margin-left, 12px);
+    --table-column-margin-right: var(--dyn-table-column-margin-right, 12px);
 
     --table-border-color: var(--dyn-table-border-color, #e2e8f0);
     --table-header-background: var(--dyn-table-header-background, #ffffff);

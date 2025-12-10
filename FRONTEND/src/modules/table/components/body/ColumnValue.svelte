@@ -2,7 +2,10 @@
   import type { Column } from '../../models/column/Column';
   import type { RowEvent, RowEventType } from '../../models/event/RowEvent';
   import type {
+    AvatarColumnConfiguration,
+    ColorConfiguration,
     DateColumnConfiguration,
+    ImageColumnConfiguration,
     NumberColumnConfiguration,
     StringColumnConfiguration
   } from '../../models/column/ColumnConfiguration';
@@ -13,6 +16,7 @@
   import moment from 'moment';
   import { onMount } from 'svelte';
   import BooleanComponent from './value/Boolean.svelte';
+  import Avatar from './value/Avatar.svelte';
 
   interface ColumnValueProps {
     column: Column;
@@ -26,12 +30,10 @@
   const columnPartNames: string = $derived(`column column-${column.index}`);
   const columnValuePartNames: string = $derived(`column-value column-value-${column.index}`);
   let value: any = $state<any>();
+  let style: string = $state<string>('');
 
   /** Methods */
   onMount(() => {
-    // console.log(column);
-    // console.log(row);
-
     getValue();
   });
 
@@ -65,6 +67,39 @@
     }
   }
 
+  function getColumnValueStyle(colorConfiguration: ColorConfiguration<any>[], columnValue: any): string {
+    let styles: string[] = [];
+
+    colorConfiguration.forEach((config) => {
+      const color = config.color;
+
+      if (config.range) {
+        if (Number(columnValue) >= Number(config.range.min) && Number(columnValue) <= Number(config.range.max)) {
+          if (color.text) {
+            styles.push(`color: ${color.text}`);
+          }
+          if (color.background) {
+            styles.push(`background-color: ${color.background}`);
+          }
+        }
+      } else if (config.value !== undefined && String(columnValue) === String(config.value)) {
+        if (color.text) {
+          styles.push(`color: ${color.text}`);
+        }
+        if (color.background) {
+          styles.push(`background-color: ${color.background}`);
+        }
+      }
+    });
+
+    if(styles.length > 0) {
+      styles.push('font-weight: 600');
+      styles.push('border-radius: 4px');
+    }
+
+    return styles.join('; ');
+  }
+
   function getValue() {
     const rowValue = valueTransformer.getValue(column.key, row);
     let transformedValue;
@@ -83,15 +118,18 @@
           transformedValue = String(rowValue).trim();
         }
       }
+
+      if (configuration?.colorConfiguration && configuration?.colorConfiguration) {
+        style = getColumnValueStyle(configuration.colorConfiguration, rowValue);
+      }
     } else if (column.type === 'Number') {
       const configuration = column.configuration as NumberColumnConfiguration;
       let locale =
-        configuration?.locale && isLocaleCode(configuration.locale) === true
-          ? configuration.locale
+        configuration?.IntlNumberFormat?.locale && isLocaleCode(configuration.IntlNumberFormat.locale) === true
+          ? configuration.IntlNumberFormat.locale
           : navigator.language;
 
-      transformedValue = new Intl.NumberFormat(locale, configuration?.options ?? {}).format(rowValue);
-
+      transformedValue = new Intl.NumberFormat(locale, configuration?.IntlNumberFormat?.options ?? {}).format(rowValue);
       if (configuration?.prefix) {
         transformedValue = configuration.prefix + transformedValue;
       }
@@ -99,22 +137,43 @@
       if (configuration?.suffix) {
         transformedValue = transformedValue + configuration.suffix;
       }
+
+      if (configuration?.colorConfiguration && configuration?.colorConfiguration.length > 0) {
+        style = getColumnValueStyle(configuration.colorConfiguration, rowValue);
+      }
     } else if (column.type === 'Date') {
       const configuration = column.configuration as DateColumnConfiguration;
 
       if (configuration?.format) {
         transformedValue = moment(rowValue).format(configuration.format);
       }
+
+      if (configuration?.colorConfiguration && configuration?.colorConfiguration.length > 0) {
+        style = getColumnValueStyle(configuration.colorConfiguration, rowValue);
+      }
     } else if (column.type === 'Boolean') {
       transformedValue = new Boolean(String(rowValue).toLocaleLowerCase() === 'true');
     } else if (column.type === 'Image') {
-      transformedValue = String(rowValue);
+      const configuration = column.configuration as ImageColumnConfiguration;
+
+      transformedValue = {
+        src: String(rowValue),
+        alt: configuration?.altText ?? `Image value ${column.name}`
+      };
     } else if (column.type === 'Avatar') {
-      // return valueTransformer.toTagString(rowValue);
+      const configuration = column.configuration as AvatarColumnConfiguration;
+
+      let picture = configuration?.pictureUrl;
+      if (configuration?.pictureColumn) {
+        picture = valueTransformer.getValue(configuration.pictureColumn, row);
+      }
+
+      transformedValue = {
+        picture: picture,
+        name: String(rowValue),
+        alt: configuration?.altText ?? `Avatar value ${column.name}`
+      };
     }
-    // else if (column.type === 'Tag') {
-    //   // return valueTransformer.toTagString(rowValue);
-    // }
 
     value = transformedValue ?? rowValue;
   }
@@ -130,15 +189,15 @@
 >
   {#if value !== null && value !== undefined}
     {#if column.type === 'String' || column.type === 'Number' || column.type === 'Date'}
-      <span class={columnValuePartNames} part={columnValuePartNames}>{value}</span>
+      <div class={columnValuePartNames} part={columnValuePartNames} style={style}>{value}</div>
     {:else if column.type === 'Boolean'}
       <div class={columnValuePartNames} part={columnValuePartNames}>
         <BooleanComponent {value} />
       </div>
     {:else if column.type === 'Avatar'}
-      <!-- <Avatar src={getValue()} alt={`Avatar value ${column.name}`} class={columnValuePartNames} part={columnValuePartNames} /> -->
+      <Avatar {value} />
     {:else if column.type === 'Image'}
-      <img src={value} alt={`Image value ${column.name}`} class={columnValuePartNames} part={columnValuePartNames} />
+      <img src={value.src} alt={value.alt} class={columnValuePartNames} part={columnValuePartNames} />
     {/if}
   {/if}
 </td>
@@ -153,5 +212,7 @@
 
   .column-value {
     padding-left: var(--table-column-margin-left);
+    padding-right: var(--table-column-margin-right);
+    width: fit-content;
   }
 </style>
