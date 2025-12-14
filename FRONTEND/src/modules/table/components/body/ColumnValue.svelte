@@ -92,7 +92,7 @@
       }
     });
 
-    if(styles.length > 0) {
+    if (styles.length > 0) {
       styles.push('font-weight: 600');
       styles.push('border-radius: 4px');
     }
@@ -189,7 +189,7 @@
 >
   {#if value !== null && value !== undefined}
     {#if column.type === 'String' || column.type === 'Number' || column.type === 'Date'}
-      <div class={columnValuePartNames} part={columnValuePartNames} style={style}>{value}</div>
+      <div class={columnValuePartNames} part={columnValuePartNames} {style}>{value}</div>
     {:else if column.type === 'Boolean'}
       <div class={columnValuePartNames} part={columnValuePartNames}>
         <BooleanComponent {value} />
@@ -199,12 +199,16 @@
     {:else if column.type === 'Image'}
       <img src={value.src} alt={value.alt} class={columnValuePartNames} part={columnValuePartNames} />
     {:else if column.type === 'RelativeDate'}
-       <relative-time datetime={value}></relative-time>
+      <relative-time datetime={value}></relative-time>
     {/if}
   {/if}
 </td>
 
 <style>
+  td {
+    white-space: nowrap;
+  }
+
   .column {
     border-bottom: 1px solid var(--row-border-bottom-color);
     border-top: 1px solid var(--row-border-top-color);

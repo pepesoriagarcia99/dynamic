@@ -130,6 +130,9 @@
     text-align: left;
     box-sizing: border-box;
     position: relative;
+
+    min-width: max-content;
+    white-space: nowrap;
   }
 
   .column-header-content {

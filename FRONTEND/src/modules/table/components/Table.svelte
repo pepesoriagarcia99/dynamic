@@ -470,6 +470,7 @@
     flex-direction: column;
     margin: 22px;
     min-height: 0;
+    overflow: auto;
   }
 
   .table-scroll {
@@ -484,10 +485,10 @@
     border-collapse: separate;
     border-spacing: 0;
     width: 100%;
-    table-layout: fixed;
-    /* TODO: Usado para genera espacios al no exitir filtro */
     /* table-layout: fixed; */
-    /* width: max-content; */
+    /* TODO: Usado para genera espacios al no exitir filtro */
+    table-layout: auto;
+    width: max-content;
     /* min-width: 100%; */
   }
 
