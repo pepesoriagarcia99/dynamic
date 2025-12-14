@@ -8,6 +8,8 @@ export const DEFAULT_PAGE_SIZE = 10;
 export const DEFAULT_RESIZABLE = false;
 
 export const VALID_SELECTABLE_TYPES = ['none', 'single', 'multiple'];
+export const VALID_SORTABLE_TYPES = ['none', 'single', 'multiple'];
+export const VALID_FILTERABLE_TYPES = ['none', 'basic', 'simple', 'advanced'];
 
 export const ROW_CLICK_EVENT_NAME = 'rowClick';
 export const PAGE_CHANGE_EVENT_NAME = 'pageChange';

@@ -7,6 +7,7 @@
 
   import resizeIcon from '../../../../assets/svg/resize.svg';
   import { loadingState } from '../../store/loading-state.svelte';
+  import AdvanceFilter from './AdvanceFilter.svelte';
 
   interface ColumnHeaderProps {
     column: Column;
@@ -23,6 +24,9 @@
   let thElement: HTMLTableCellElement | null = $state(null);
 
   const isSortable: boolean = $derived(column.sortable === true && tableConfiguration.sortableType !== 'none');
+  const isAdvanceFilterable: boolean = $derived(
+    column.filterable === true && tableConfiguration.filterable === 'advanced'
+  );
   const isSorted: boolean = $derived(sortRef?.getSortDirection() !== null && isSortable);
 
   const partNamesTh: string = $derived(
@@ -102,8 +106,10 @@
   }
 
   function handleHeaderClick(event: MouseEvent) {
-    event.stopPropagation();
-    sortRef?.toggleSort();
+    if (tableConfiguration.filterable !== 'advanced') {
+      event.stopPropagation();
+      sortRef?.toggleSort();
+    }
   }
 </script>
 
@@ -113,6 +119,10 @@
       <span class={partNamesName} part={partNamesName}>{column?.name}</span>
       {#if isSortable}
         <Sort bind:this={sortRef} {column} />
+      {/if}
+
+      {#if isAdvanceFilterable}
+        <AdvanceFilter {column} />
       {/if}
     </div>
   </button>

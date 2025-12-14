@@ -33,6 +33,9 @@
 
   /** Methods */
   onMount(() => {
+    /**
+     * TODO: se tendra que monitorizar el valor de filtro en advance filter para saber si mostrar icono activo
+    */
     sortStoreComponent.subscribe((event) => {
       sortDirection = event.value ?? null;
     });

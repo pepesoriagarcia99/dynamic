@@ -16,7 +16,13 @@
     SORT_EVENT_NAME,
     FILTER_EVENT_NAME,
     SELECTION_EVENT_NAME,
-    DEFAULT_RESIZABLE
+    DEFAULT_RESIZABLE,
+
+    VALID_SORTABLE_TYPES,
+
+    VALID_FILTERABLE_TYPES
+
+
   } from '../constant';
   import type { Column } from '../models/column/Column';
   import type { RowEvent } from '../models/event/RowEvent';
@@ -115,6 +121,15 @@
     // si se activa la paginacion, count debe ser un numero mayor a 0
     if (pageable === true && loading === false && count === undefined) {
       throw new Error('The "count" property must be a number greater than 0 when "pageable" is true.');
+    }
+
+    // valida los tipos de ordenacion
+    if (sortableType && !VALID_SORTABLE_TYPES.includes(sortableType)) {
+      throw new Error(`The "sortableType" property must be one of the following values: ${VALID_SORTABLE_TYPES.join(', ')}.`);
+    }
+    // Valida los tipos de estados del filtro
+    if (filterable && !VALID_FILTERABLE_TYPES.includes(filterable)) {
+      throw new Error(`The "filterable" property must be one of the following values: ${VALID_FILTERABLE_TYPES.join(', ')}.`);
     }
   });
 
