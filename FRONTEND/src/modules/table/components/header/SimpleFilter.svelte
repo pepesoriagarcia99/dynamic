@@ -11,7 +11,7 @@
   import Skeleton from '../Skeleton.svelte';
   import BasicControl from '../../../controls/components/BasicControl.svelte';
   // import SelectorControl from '../../../controls/components/SelectorControl.svelte';
-//   import CheckControl from '../../../controls/components/CheckControl.svelte';
+  import CheckControl from '../../../controls/components/CheckControl.svelte';
 
   interface FilterProps {
     columns: Column[];
@@ -49,8 +49,16 @@
           <div style="padding: 0 8px;">
             <Skeleton height="34px" />
           </div>
-        {:else}
-          <BasicControl id={column.key} type="text" {onChange} />
+        <!-- {:else if column.type === 'String' && (column.configuration as StringColumnConfiguration)?.options}
+          <SelectorControl
+            options={(column.configuration as StringColumnConfiguration)?.options}
+            bind:value
+            {onChange}
+          /> -->
+        {:else if column.type === 'Boolean'}
+          <CheckControl id={column.key} {onChange} triState={true} />
+        {:else if column.type === 'String' || column.type === 'Number'}
+          <BasicControl id={column.key} type={column.type === 'Number' ? 'number' : 'text'} {onChange} />
         {/if}
       </th>
     {:else}

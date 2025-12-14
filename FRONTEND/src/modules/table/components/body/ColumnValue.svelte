@@ -198,6 +198,8 @@
       <Avatar {value} />
     {:else if column.type === 'Image'}
       <img src={value.src} alt={value.alt} class={columnValuePartNames} part={columnValuePartNames} />
+    {:else if column.type === 'RelativeDate'}
+       <relative-time datetime={value}></relative-time>
     {/if}
   {/if}
 </td>

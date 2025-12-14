@@ -3,6 +3,7 @@
   import type { TableConfiguration } from '../../models/configuration/TableConfiguration';
   import ColumnHeader from './ColumnHeader.svelte';
   import BasicFilter from './BasicFilter.svelte';
+  import SimpleFilter from './SimpleFilter.svelte';
 
   interface HeaderProps {
     columns: Column[];
@@ -23,8 +24,10 @@
     {/each}
   </tr>
 
-  {#if tableConfiguration.filterable}
+  {#if tableConfiguration.filterable === 'basic'}
     <BasicFilter {columns} />
+  {:else if tableConfiguration.filterable === 'simple'}
+    <SimpleFilter {columns} />
   {/if}
 </thead>
 

@@ -20,7 +20,7 @@
   } from '../constant';
   import type { Column } from '../models/column/Column';
   import type { RowEvent } from '../models/event/RowEvent';
-  import type { SelectableType, SortableType, TableConfiguration } from '../models/configuration/TableConfiguration';
+  import type { FilterableType, SelectableType, SortableType, TableConfiguration } from '../models/configuration/TableConfiguration';
   import type { FilterEvent } from '../models/event/FilterEvent';
   import type { SortEvent, SortOrder } from '../models/event/SortEvent';
   import type { PageEvent } from '../models/event/PageEvent';
@@ -52,7 +52,7 @@
     data?: any[];
     selectableType?: SelectableType;
     selectAll?: boolean;
-    filterable?: boolean;
+    filterable?: FilterableType;
     sortableType?: SortableType;
     pageable?: boolean;
     pageSizeOptions?: number[];

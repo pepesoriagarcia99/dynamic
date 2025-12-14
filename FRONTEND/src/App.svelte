@@ -50,6 +50,11 @@
       filterable: true,
       sortable: true
     },
+        {
+      key: 'foundation',
+      name: 'Fundacion',
+      type: 'RelativeDate',
+    },
     {
       key: 'pib',
       name: 'PIB (USD)',
@@ -280,7 +285,7 @@
       {columns}
       {count}
       data={filteredData}
-      filterable={true}
+      filterable="basic"
       pageable={true}
       resizable={true}
       selectableType="multiple"

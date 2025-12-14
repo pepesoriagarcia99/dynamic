@@ -1,6 +1,6 @@
 export const DEFAULT_SELECTABLE_TYPE = 'none';
 export const DEFAULT_SELECT_ALL = false;
-export const DEFAULT_FILTERABLE = false;
+export const DEFAULT_FILTERABLE = 'none';
 export const DEFAULT_SORTABLE = 'none';
 export const DEFAULT_PAGEABLE = false;
 export const DEFAULT_PAGE_SIZE_OPTIONS = [10, 25, 50, 100, 200];

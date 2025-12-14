@@ -12,7 +12,7 @@ export interface ColumnStyle {
 }
 
 // | 'Tag'
-export type ColumnType = 'String' | 'Number' | 'Boolean' | 'Date' | 'Image' | 'Avatar' ;
+export type ColumnType = 'String' | 'Number' | 'Boolean' | 'Date' | 'Image' | 'Avatar' | 'RelativeDate';
 
 /**
  * Modelo de Columna de tabla.
