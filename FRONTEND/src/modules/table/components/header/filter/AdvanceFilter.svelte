@@ -1,12 +1,14 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import advanceFilterIcon from '../../../../assets/svg/advance-filter.svg';
+  import advanceFilterIcon from '../../../../../assets/svg/advance-filter.svg';
+  import advanceFilterFillIcon from '../../../../../assets/svg/advance-filter-fill.svg';
   import type { StoreComponent } from '../../../../core/models/StoreComponent';
   import type { Column } from '../../../models/column/Column';
   import type { SortOrder } from '../../../models/event/SortEvent';
   import { loadingState } from '../../../store/loading-state.svelte';
   import { sortStore } from '../../../store/sort-store';
   import Skeleton from '../../Skeleton.svelte';
+  import { getColumnIndexOpen, setColumnIndexOpen } from '../../../store/advance-filter-open-state.svelte';
 
   interface AdvanceFilterIconProps {
     column: Column;
@@ -30,7 +32,7 @@
   const partNamesIcon: string = $derived(
     [
       'advance-filter-icon',
-      value !== null || sortDirection !== null ? 'advance-filter-icon-active' : null,
+      sortDirection !== null ? 'advance-filter-icon-active' : null,
       `advance-filter-icon-${column.index}`
     ]
       .filter(Boolean)
@@ -44,17 +46,22 @@
     });
   });
 
-  function toggleSort(event?: MouseEvent) {
-    event?.stopPropagation();
-    // Implement advance filter toggle logic here
+  $effect(() => {
+    if(getColumnIndexOpen() !== column.index) {
+      showModal = false;
+    }
+  });
 
-    console.log('🚀 ~ toggleSort ~ event:', event);
+  function toggleShowModal(event?: MouseEvent) {
+    event?.stopPropagation();
     showModal = !showModal;
+    setColumnIndexOpen(showModal ? column.index! : null);
   }
 
   function handleClickOutside(event: MouseEvent) {
     if (showModal && buttonRef && !buttonRef.contains(event.target as Node)) {
       showModal = false;
+      setColumnIndexOpen(null);
     }
   }
 </script>
@@ -67,12 +74,16 @@
   {:else}
     <button
       bind:this={buttonRef}
-      onclick={(e) => toggleSort(e)}
+      onclick={(e) => toggleShowModal(e)}
       aria-label="Advance Filter"
       class={partNamesButton}
       part={partNamesButton}
     >
-      <img src={advanceFilterIcon} alt="Advance filter" class={partNamesIcon} part={partNamesIcon} />
+      {#if showModal || value}
+        <img src={advanceFilterFillIcon} alt="Advance filter" class={partNamesIcon} part={partNamesIcon} />
+      {:else}
+        <img src={advanceFilterIcon} alt="Advance filter" class={partNamesIcon} part={partNamesIcon} />
+      {/if}
     </button>
 
     {#if showModal}
