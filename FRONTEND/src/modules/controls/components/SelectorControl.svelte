@@ -1,5 +1,4 @@
 <script lang="ts">
-  import '../styles/control.css';
   import type { CommonControlProp } from '../models/CommonControlProp';
 
   interface SelectorProps extends CommonControlProp {

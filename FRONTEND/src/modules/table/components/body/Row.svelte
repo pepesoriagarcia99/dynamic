@@ -109,7 +109,7 @@
   }
 
   .row:not(.row-selected) {
-    color: var(--table-row-value-color);
+    color: var(--table-row-text-color);
   }
 
   .row-selected {

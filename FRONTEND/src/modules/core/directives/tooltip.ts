@@ -70,6 +70,25 @@ export function tooltip(element: HTMLElement, content: string): ActionReturn {
         left = rect.left + (rect.width - tooltipRect.width) / 2;
     }
 
+    // Ajustar para evitar que se salga de la pantalla
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    const margin = 8;
+
+    // Ajustar horizontalmente
+    if (left < margin) {
+      left = margin;
+    } else if (left + tooltipRect.width > viewportWidth - margin) {
+      left = viewportWidth - tooltipRect.width - margin;
+    }
+
+    // Ajustar verticalmente
+    if (top < margin) {
+      top = margin;
+    } else if (top + tooltipRect.height > viewportHeight - margin) {
+      top = viewportHeight - tooltipRect.height - margin;
+    }
+
     state.tooltipElement.style.top = `${top + window.scrollY}px`;
     state.tooltipElement.style.left = `${left + window.scrollX}px`;
   }

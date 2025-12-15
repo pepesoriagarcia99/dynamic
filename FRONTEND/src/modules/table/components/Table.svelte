@@ -406,48 +406,59 @@
     width: 100%;
     height: 100%;
 
-    /** TABLE*/
+    /** TABLE */
     --hover: #e2e8f0;
     --selected: #020617;
     --selected-text: #ffffff;
     --border: #d1d1d1;
 
+    /** Table column */
     --table-column-margin-left: var(--dyn-table-column-margin-left, 12px);
     --table-column-margin-right: var(--dyn-table-column-margin-right, 12px);
 
+    /** Table border*/
     --table-border-color: var(--dyn-table-border-color, #e2e8f0);
+    
+    /** Table header */
+    --table-header-height: var(--dyn-table-header-height, 56px);
     --table-header-background: var(--dyn-table-header-background, #ffffff);
 
-    --table-header-height: var(--dyn-table-header-height, 56px);
-    --table-row-height: var(--dyn-table-row-height, 50px);
-    --table-row-value-color: var(--dyn-table-row-value-color, #495057);
-
+    /** Table header borders */
     --table-header-border-top-color: var(--dyn-table-header-border-top-color);
     --table-header-border-left-color: var(--dyn-table-header-border-left-color);
     --table-header-border-right-color: var(--dyn-table-header-border-right-color);
     --table-header-border-bottom-color: var(--dyn-table-header-border-bottom-color, var(--border));
 
+    /** Table header sortable*/
     --table-header-sortable-hover-background: var(--dyn-table-sortable-hover-background, var(--hover));
     --table-header-sorted-background: var(--dyn-table-header-sorted-background, var(--selected));
     --table-header-sorted-text-color: var(--dyn-table-header-sorted-text-color, var(--selected-text));
     --table-header-sorted-icon-color: var(--dyn-table-header-sorted-icon-color, var(--selected-text));
 
+    /** Table header resized */
     --table-header-resized-icon-color: var(--dyn-table-header-resized-icon-color, var(--selected-text));
 
+    /** Table header filter */
     --table-header-filter-border-top-color: var(--dyn-table-header-filter-border-top-color);
     --table-header-filter-border-left-color: var(--dyn-table-header-filter-border-left-color);
     --table-header-filter-border-right-color: var(--dyn-table-header-filter-border-right-color);
     --table-header-filter-border-bottom-color: var(--dyn-table-header-filter-border-bottom-color, var(--border));
 
+    /** Table selection */
     --select-color: var(--dyn-table-select-color, var(--selected));
     --select-text-color: var(--dyn-table-select-text-color, var(--selected-text));
     --select-hover-color: var(--dyn-table-select-hover-color, var(--hover));
+
+    /** Table rows*/
+    --table-row-height: var(--dyn-table-row-height, 50px);
+    --table-row-text-color: var(--dyn-table-row-text-color, #495057);
 
     --row-border-top-color: var(--dyn-table-border-top-color);
     --row-border-left-color: var(--dyn-table-border-left-color);
     --row-border-right-color: var(--dyn-table-border-right-color);
     --row-border-bottom-color: var(--dyn-table-border-bottom-color, var(--border));
 
+    /** Pagination */
     --pagination-background: var(--dyn-table-pagination-background, #ffffff);
     --pagination-height: var(--dyn-table-pagination-height, 50px);
     --pagination-page-num-btn-selected: var(--dyn-table-pagination-page-num-btn-selected, var(--selected));
@@ -459,7 +470,7 @@
     --context-menu-border-color: var(--dyn-table-context-menu-border-color, var(--table-border-color));
     --context-menu-background: var(--dyn-table-context-menu-background, #ffffff);
 
-    /** Controls */
+    /** CONTROLS */
     --control-text-color: var(--dyn-table-control-color, #495057);
     --control-background-color: var(--dyn-table-control-background, #ffffff);
     --control-background-disabled-color: var(--dyn-table-control-disabled-background-color, #e9ecef);
@@ -468,6 +479,12 @@
     --control-border-focus-color: var(--dyn-table-control-border-hover-color, #020617);
     --control-height: var(--dyn-table-control-height, 34px);
     --control-border-radius: var(--dyn-table-control-border-radius, 6px);
+
+    /** TOOLTIP */
+    /** ESTO NO SE USA, EL MAPEO ESTA EN tooltip.css */
+    --tooltip-background-color: var(--dyn-tooltip-background-color, #020617);
+    --tooltip-text-color: var(--dyn-tooltip-text-color, #ffffff);
+    --tooltip-font-size: var(--dyn-tooltip-font-size, 14px);
   }
 
   .table-root {
