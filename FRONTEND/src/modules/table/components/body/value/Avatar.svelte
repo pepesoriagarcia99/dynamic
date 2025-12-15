@@ -1,6 +1,6 @@
 <script lang="ts">
   interface AvatarProps {
-    value: { picture: string; alt: string; name?: string};
+    value: { picture: string; alt: string; name?: string };
   }
 
   /** Inputs */
@@ -8,20 +8,25 @@
 </script>
 
 <div class="avatar-container" part="avatar-container">
-  <img src={value.picture} alt={value.alt} class="avatar" />
-  <span>{value.name}</span>
+  <img src={value.picture} alt={value.alt} class="avatar-picture" part="avatar-picture" />
+  <span class="avatar-name" part="avatar-name">{value.name}</span>
 </div>
 
 <style>
-
   .avatar-container {
     display: flex;
     gap: 6px;
     align-items: center;
   }
-  .avatar {
+  .avatar-picture {
     border-radius: 50%;
     width: 40px;
     height: 40px;
+  }
+
+  .avatar-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 </style>

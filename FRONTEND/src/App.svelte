@@ -24,6 +24,7 @@
         pictureColumn: 'picture',
         altText: 'Country flag'
       },
+      style: { 'max-width': '200px' },
       filterable: true
     },
     // { key: 'name.official', name: 'Avatar', type: 'Avatar' },

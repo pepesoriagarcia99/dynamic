@@ -53,7 +53,7 @@
 
 <div class={partNamesContainer} part={partNamesContainer}>
   {#if loadingState() === true}
-    <Skeleton width="22px" height="22px" />
+    <Skeleton width="26px" height="26px" />
   {:else}
     <button onclick={(e) => toggleSort(e)} aria-label="Sort" class={partNamesButton} part={partNamesButton}>
       {#if sortDirection === 'asc'}

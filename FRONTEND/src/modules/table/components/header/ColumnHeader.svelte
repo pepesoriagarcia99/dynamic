@@ -174,6 +174,13 @@
     font-size: 16px;
   }
 
+  .column-header-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
   .column-header-th-sortable:hover {
     cursor: pointer;
     background: var(--table-header-sortable-hover-background);

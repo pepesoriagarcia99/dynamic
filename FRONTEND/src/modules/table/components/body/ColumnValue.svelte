@@ -220,5 +220,8 @@
     padding-left: var(--table-column-margin-left);
     padding-right: var(--table-column-margin-right);
     width: fit-content;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 </style>

@@ -63,7 +63,7 @@
 
 <div class={partNamesContainer} part={partNamesContainer}>
   {#if loadingState() === true}
-    <Skeleton width="22px" height="22px" />
+    <Skeleton width="26px" height="26px" />
   {:else}
     <button
       bind:this={buttonRef}
@@ -76,7 +76,15 @@
     </button>
 
     {#if showModal}
-      <div class="advance-filter-modal" onclick={(e) => e.stopPropagation()}>
+      <div
+        class="advance-filter-modal"
+        part="advance-filter-modal"
+        role="dialog"
+        aria-modal="true"
+        tabindex="-1"
+        onclick={(e) => e.stopPropagation()}
+        onkeydown={(e) => e.stopPropagation()}
+      >
         <!-- Contenido del modal vacío por ahora -->
       </div>
     {/if}
