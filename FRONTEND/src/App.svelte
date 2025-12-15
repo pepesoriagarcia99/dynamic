@@ -286,7 +286,7 @@
       {columns}
       {count}
       data={filteredData}
-      filterable="advanced"
+      filterable="simple"
       pageable={true}
       resizable={true}
       selectableType="multiple"
@@ -301,9 +301,9 @@
       onpageChange={onPageChange}
       oncontextMenuEvent={onContextMenuEvent}
     >
-      <div slot="contextMenu" class="contextmenu">
-        <button class="contextmenu-btn"> Editar </button>
-        <button class="contextmenu-btn"> Eliminar </button>
+      <div slot="context-menu" class="context-menu">
+        <button class="context-menu-btn"> Editar </button>
+        <button class="context-menu-btn"> Eliminar </button>
       </div>
     </dyn-table>
   </div>
@@ -331,11 +331,11 @@
     font-weight: 700;
   }
 
-  .contextmenu {
+  .context-menu {
     padding: 4px 0;
   }
 
-  .contextmenu-btn {
+  .context-menu-btn {
     width: 100%;
     padding: 8px 16px;
     border: none;
@@ -344,7 +344,7 @@
     text-align: left;
   }
 
-  .contextmenu-btn:hover {
+  .context-menu-btn:hover {
     background: gainsboro;
   }
 </style>

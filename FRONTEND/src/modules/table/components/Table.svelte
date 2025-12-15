@@ -143,7 +143,7 @@
   });
 
   /** States */
-  let hasContextMenuSlot = $derived($$slots.contextMenu);
+  let hasContextMenuSlot = $derived($$slots['context-menu']);
   const indexColumns: Column[] = $derived(
     columns.map((c, index) => ({
       ...c,
@@ -225,6 +225,23 @@
       window.removeEventListener('keydown', handleKeyDown);
     };
   });
+
+  /**
+   * TABLE HANDLERS
+   */
+  function handleClickOutside() {
+    if (contextMenuVisible && hasContextMenuSlot) {
+      contextMenuVisible = false;
+      contextMenuEvent = undefined;
+    }
+  }
+
+  function handleScroll() {
+    if (contextMenuVisible && hasContextMenuSlot) {
+      contextMenuVisible = false;
+      contextMenuEvent = undefined;
+    }
+  }
 
   /**
    * EVENTS
@@ -344,9 +361,11 @@
 <!-- slot: paginacion -->
 <!-- slot: filter -->
 
+<svelte:window onmousedown={handleClickOutside} />
+
 <div class="table-root" part="table-root" bind:this={el}>
   <div class="table-container" part="table-container">
-    <div class="table-scroll" part="table-scroll">
+    <div class="table-scroll" part="table-scroll" onscroll={handleScroll}>
       <table class="table" part="table">
         <Header columns={indexColumns} {tableConfiguration} />
 
@@ -384,7 +403,7 @@
 
   {#if hasContextMenuSlot}
     <ContextMenu bind:visible={contextMenuVisible} bind:event={contextMenuEvent}>
-      <slot name="contextMenu" event={contextMenuEvent} />
+      <slot name="context-menu" event={contextMenuEvent} />
     </ContextMenu>
   {/if}
 </div>
@@ -407,7 +426,7 @@
 
     /** Table border*/
     --table-border-color: var(--dyn-table-border-color, #e2e8f0);
-    
+
     /** Table header */
     --table-header-height: var(--dyn-table-header-height, 56px);
     --table-header-background: var(--dyn-table-header-background, #ffffff);
