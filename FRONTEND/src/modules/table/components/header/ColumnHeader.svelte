@@ -9,7 +9,7 @@
   import { tooltip, tooltipDelay, tooltipPosition } from '../../../core/directives/tooltip';
   import { loadingState } from '../../store/loading-state.svelte';
 
-  import AdvanceFilter from './AdvanceFilter.svelte';
+  import AdvanceFilter from './filter/AdvanceFilter.svelte';
   import Sort from './Sort.svelte';
 
   interface ColumnHeaderProps {

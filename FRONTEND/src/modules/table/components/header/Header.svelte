@@ -2,8 +2,8 @@
   import type { Column } from '../../models/column/Column';
   import type { TableConfiguration } from '../../models/configuration/TableConfiguration';
   import ColumnHeader from './ColumnHeader.svelte';
-  import BasicFilter from './BasicFilter.svelte';
-  import SimpleFilter from './SimpleFilter.svelte';
+  import BasicFilter from './filter/BasicFilter.svelte';
+  import SimpleFilter from './filter/SimpleFilter.svelte';
 
   interface HeaderProps {
     columns: Column[];

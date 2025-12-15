@@ -2,16 +2,16 @@
   import { onMount } from 'svelte';
 
   // import type { StoreComponent, StoreComponentData } from '../../../core/models/StoreComponent';
-  import type { Column } from '../../models/column/Column';
+  import type { Column } from '../../../models/column/Column';
   // import { filterStore } from '../../store/filter-store';
 
-  import { styleTransformer } from '../../../../utils/style-transformer';
-  import { loadingState } from '../../store/loading-state.svelte';
+  import { styleTransformer } from '../../../../../utils/style-transformer';
+  import { loadingState } from '../../../store/loading-state.svelte';
 
-  import Skeleton from '../Skeleton.svelte';
-  import BasicControl from '../../../controls/components/BasicControl.svelte';
+  import Skeleton from '../../Skeleton.svelte';
+  import BasicControl from '../../../../controls/components/BasicControl.svelte';
   // import SelectorControl from '../../../controls/components/SelectorControl.svelte';
-  import CheckControl from '../../../controls/components/CheckControl.svelte';
+//   import CheckControl from '../../../controls/components/CheckControl.svelte';
 
   interface FilterProps {
     columns: Column[];
@@ -49,16 +49,8 @@
           <div style="padding: 0 8px;">
             <Skeleton height="34px" />
           </div>
-        <!-- {:else if column.type === 'String' && (column.configuration as StringColumnConfiguration)?.options}
-          <SelectorControl
-            options={(column.configuration as StringColumnConfiguration)?.options}
-            bind:value
-            {onChange}
-          /> -->
-        {:else if column.type === 'Boolean'}
-          <CheckControl id={column.key} {onChange} triState={true} />
-        {:else if column.type === 'String' || column.type === 'Number'}
-          <BasicControl id={column.key} type={column.type === 'Number' ? 'number' : 'text'} {onChange} />
+        {:else}
+          <BasicControl id={column.key} type="text" {onChange} />
         {/if}
       </th>
     {:else}
