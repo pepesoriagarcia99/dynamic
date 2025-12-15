@@ -4,6 +4,7 @@ export interface CommonControlProp {
     placeholder?: string;
     disabled?: boolean;
     tooltip?: string;
+    style?: string;
 
     value?: any;
     onChange?: (change: string) => void;

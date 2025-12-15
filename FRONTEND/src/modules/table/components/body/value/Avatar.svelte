@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { tooltip, tooltipDelay, tooltipPosition } from '../../../../core/directives/tooltip';
+  import { tooltip, tooltipDelay, tooltipPosition } from '../../../../tooltip/directives/tooltip';
   import { TOOLTIP_DELAY } from '../../../constant';
 
   interface AvatarProps {

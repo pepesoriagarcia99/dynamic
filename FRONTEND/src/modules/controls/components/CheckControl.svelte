@@ -16,6 +16,7 @@
     checked = $bindable<CheckState>(false),
     disabled = false,
     triState = false,
+    style = '',
     onChange = () => {}
   }: CheckControlProps = $props();
 
@@ -71,6 +72,7 @@
         part={partNamesInput}
         type="checkbox"
         checked={isChecked}
+        {style}
         {disabled}
         tabindex="-1"
       />

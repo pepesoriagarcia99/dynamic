@@ -9,6 +9,7 @@
   import { sortStore } from '../../../store/sort-store';
   import Skeleton from '../../Skeleton.svelte';
   import { getColumnIndexOpen, setColumnIndexOpen } from '../../../store/advance-filter-open-state.svelte';
+  import SelectorControl from '../../../../controls/components/SelectorControl.svelte';
 
   interface AdvanceFilterIconProps {
     column: Column;
@@ -47,7 +48,7 @@
   });
 
   $effect(() => {
-    if(getColumnIndexOpen() !== column.index) {
+    if (getColumnIndexOpen() !== column.index) {
       showModal = false;
     }
   });
@@ -96,7 +97,11 @@
         onclick={(e) => e.stopPropagation()}
         onkeydown={(e) => e.stopPropagation()}
       >
-        <!-- Contenido del modal vacío por ahora -->
+        <div class="advance-filter-modal-content">
+          <div class="selector-condition">
+            <SelectorControl options={[1, 2, 3, 4]} bind:value />
+          </div>
+        </div>
       </div>
     {/if}
   {/if}
@@ -145,5 +150,13 @@
     min-width: 250px;
     min-height: 200px;
     animation: fadeIn 150ms ease-in;
+  }
+
+  .advance-filter-modal-content {
+    padding: 12px;
+  }
+
+  .selector-condition {
+    width: 100%;
   }
 </style>

@@ -6,7 +6,7 @@
   import resizeIcon from '../../../../assets/svg/resize.svg';
 
   import { styleTransformer } from '../../../../utils/style-transformer';
-  import { tooltip, tooltipDelay, tooltipPosition } from '../../../core/directives/tooltip';
+  import { tooltip, tooltipDelay, tooltipPosition } from '../../../tooltip/directives/tooltip';
   import { loadingState } from '../../store/loading-state.svelte';
 
   import AdvanceFilter from './filter/AdvanceFilter.svelte';

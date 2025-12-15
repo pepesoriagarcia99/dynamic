@@ -18,7 +18,7 @@
   import { styleTransformer } from '../../../../utils/style-transformer';
   import { valueTransformer } from '../../../../utils/value-transformer';
 
-  import { tooltip, tooltipDelay, tooltipPosition } from '../../../core/directives/tooltip';
+  import { tooltip, tooltipDelay, tooltipPosition } from '../../../tooltip/directives/tooltip';
 
   import BooleanComponent from './value/Boolean.svelte';
   import Avatar from './value/Avatar.svelte';

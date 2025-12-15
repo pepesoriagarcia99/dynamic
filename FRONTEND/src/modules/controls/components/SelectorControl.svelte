@@ -12,6 +12,7 @@
     options,
     value = $bindable(undefined),
     disabled = false,
+    style = '',
     onChange = () => {}
   }: SelectorProps = $props();
 
@@ -37,6 +38,7 @@
     aria-label={inputId}
     class={partNamesInput}
     part={partNamesInput}
+    {style}
     {disabled}
     bind:value
     onchange={onSelectChange}

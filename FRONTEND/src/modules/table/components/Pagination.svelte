@@ -156,7 +156,13 @@
   >
     <img src={lastPageIcon} alt="last page" class="last-page-icon" part="last-page-icon" />
   </button>
-  <SelectorControl options={pageSizeOptions} bind:value={pageSize} onChange={onChangePageSize} disabled={loadingState()} />
+  <SelectorControl
+    style="width: auto;"
+    options={pageSizeOptions}
+    bind:value={pageSize}
+    onChange={onChangePageSize}
+    disabled={loadingState()}
+  />
 </div>
 
 <style>
@@ -242,5 +248,9 @@
     width: 14px;
     height: 14px;
     margin: 4px 4px 4px 4px;
+  }
+
+  :global(.pagination-selector .selector-control-select) {
+    width: auto !important;
   }
 </style>

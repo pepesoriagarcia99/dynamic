@@ -1,7 +1,7 @@
 <svelte:options customElement="dyn-table" />
 
 <script lang="ts">
-  import '../../../assets/styles/tooltip.css';
+  import '../../tooltip/styles/tooltip.css';
 
   import { onMount } from 'svelte';
   import {

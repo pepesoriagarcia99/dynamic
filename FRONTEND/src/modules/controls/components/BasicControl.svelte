@@ -13,6 +13,7 @@
     value = $bindable(undefined),
     disabled = false,
     type = 'text',
+    style = '',
     onChange = () => {}
   }: BasicControlProps = $props();
 
@@ -45,6 +46,7 @@
     aria-label={inputId}
     class={partNamesInput}
     part={partNamesInput}
+    {style}
     {type}
     {placeholder}
     bind:value
