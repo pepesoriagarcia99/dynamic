@@ -17,6 +17,7 @@
   import { onMount } from 'svelte';
   import BooleanComponent from './value/Boolean.svelte';
   import Avatar from './value/Avatar.svelte';
+  import { tooltip, tooltipPosition } from '../../../core/directives/tooltip';
 
   interface ColumnValueProps {
     column: Column;
@@ -189,7 +190,15 @@
 >
   {#if value !== null && value !== undefined}
     {#if column.type === 'String' || column.type === 'Number' || column.type === 'Date'}
-      <div class={columnValuePartNames} part={columnValuePartNames} {style}>{value}</div>
+      <div
+        class={columnValuePartNames}
+        part={columnValuePartNames}
+        {style}
+        use:tooltip={value}
+        use:tooltipPosition={'right'}
+      >
+        {value}
+      </div>
     {:else if column.type === 'Boolean'}
       <div class={columnValuePartNames} part={columnValuePartNames}>
         <BooleanComponent {value} />
@@ -197,7 +206,14 @@
     {:else if column.type === 'Avatar'}
       <Avatar {value} />
     {:else if column.type === 'Image'}
-      <img src={value.src} alt={value.alt} class={columnValuePartNames} part={columnValuePartNames} />
+      <img
+        src={value.src}
+        alt={value.alt}
+        class={columnValuePartNames}
+        part={columnValuePartNames}
+        use:tooltip={value.alt}
+        use:tooltipPosition={'right'}
+      />
     {:else if column.type === 'RelativeDate'}
       <relative-time datetime={value}></relative-time>
     {/if}

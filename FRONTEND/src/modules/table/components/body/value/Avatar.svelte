@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { tooltip, tooltipPosition } from '../../../../core/directives/tooltip';
+
   interface AvatarProps {
     value: { picture: string; alt: string; name?: string };
   }
@@ -9,7 +11,9 @@
 
 <div class="avatar-container" part="avatar-container">
   <img src={value.picture} alt={value.alt} class="avatar-picture" part="avatar-picture" />
-  <span class="avatar-name" part="avatar-name">{value.name}</span>
+  <span class="avatar-name" part="avatar-name" use:tooltip={value?.name ?? ''} use:tooltipPosition={'right'}
+    >{value.name}</span
+  >
 </div>
 
 <style>

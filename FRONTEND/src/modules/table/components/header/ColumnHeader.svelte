@@ -8,6 +8,7 @@
   import resizeIcon from '../../../../assets/svg/resize.svg';
   import { loadingState } from '../../store/loading-state.svelte';
   import AdvanceFilter from './AdvanceFilter.svelte';
+  import { tooltip, tooltipPosition } from '../../../core/directives/tooltip';
 
   interface ColumnHeaderProps {
     column: Column;
@@ -116,7 +117,12 @@
 <th bind:this={thElement} class={partNamesTh} part={partNamesTh} style={styleTransformer.toString(column?.style)}>
   <button class={partNamesBtn} part={partNamesBtn} onclick={(e) => handleHeaderClick(e)}>
     <div class={partNamesContent} part={partNamesContent}>
-      <span class={partNamesName} part={partNamesName}>{column?.name}</span>
+      <span
+        class={partNamesName}
+        part={partNamesName}
+        use:tooltip={column?.name}
+        use:tooltipPosition={'top'}
+      >{column?.name}</span>
       {#if isSortable}
         <Sort bind:this={sortRef} {column} />
       {/if}

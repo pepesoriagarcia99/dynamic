@@ -1,6 +1,8 @@
 <svelte:options customElement="dyn-table" />
 
 <script lang="ts">
+  import '../../../assets/styles/tooltip.css';
+
   import { onMount } from 'svelte';
   import {
     DEFAULT_FILTERABLE,
@@ -17,16 +19,17 @@
     FILTER_EVENT_NAME,
     SELECTION_EVENT_NAME,
     DEFAULT_RESIZABLE,
-
     VALID_SORTABLE_TYPES,
-
     VALID_FILTERABLE_TYPES
-
-
   } from '../constant';
   import type { Column } from '../models/column/Column';
   import type { RowEvent } from '../models/event/RowEvent';
-  import type { FilterableType, SelectableType, SortableType, TableConfiguration } from '../models/configuration/TableConfiguration';
+  import type {
+    FilterableType,
+    SelectableType,
+    SortableType,
+    TableConfiguration
+  } from '../models/configuration/TableConfiguration';
   import type { FilterEvent } from '../models/event/FilterEvent';
   import type { SortEvent, SortOrder } from '../models/event/SortEvent';
   import type { PageEvent } from '../models/event/PageEvent';
@@ -36,7 +39,7 @@
   import type { SelectionApi } from '../models/public-api/SelectionApi';
   import type { FilterApi } from '../models/public-api/FilterApi';
   import type { TableEvent } from '../models/event/TableEvent';
-    import type { RowData } from '../models/RowData';
+  import type { RowData } from '../models/RowData';
 
   import { selectionStore } from '../store/selection-store';
   import { filterStore } from '../store/filter-store';
@@ -48,7 +51,6 @@
   import Pagination from './Pagination.svelte';
   import ContextMenu from './ContextMenu.svelte';
   import LoadingBody from './body/LoadingBody.svelte';
-
 
   interface TableProps {
     columns?: Column[];
@@ -125,11 +127,15 @@
 
     // valida los tipos de ordenacion
     if (sortableType && !VALID_SORTABLE_TYPES.includes(sortableType)) {
-      throw new Error(`The "sortableType" property must be one of the following values: ${VALID_SORTABLE_TYPES.join(', ')}.`);
+      throw new Error(
+        `The "sortableType" property must be one of the following values: ${VALID_SORTABLE_TYPES.join(', ')}.`
+      );
     }
     // Valida los tipos de estados del filtro
     if (filterable && !VALID_FILTERABLE_TYPES.includes(filterable)) {
-      throw new Error(`The "filterable" property must be one of the following values: ${VALID_FILTERABLE_TYPES.join(', ')}.`);
+      throw new Error(
+        `The "filterable" property must be one of the following values: ${VALID_FILTERABLE_TYPES.join(', ')}.`
+      );
     }
   });
 
