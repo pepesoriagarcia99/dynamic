@@ -11,7 +11,7 @@
   import Skeleton from '../../Skeleton.svelte';
   import BasicControl from '../../../../controls/components/BasicControl.svelte';
   // import SelectorControl from '../../../controls/components/SelectorControl.svelte';
-//   import CheckControl from '../../../controls/components/CheckControl.svelte';
+  //   import CheckControl from '../../../controls/components/CheckControl.svelte';
 
   interface FilterProps {
     columns: Column[];
@@ -20,11 +20,12 @@
 
   /** Inputs */
   let { columns }: FilterProps = $props();
+  let trElement: HTMLTableRowElement | undefined = $state();
 
   /** Methods */
   onMount(() => {
     columns.forEach((column) => {
-      console.log("🚀 ~ column:", column)
+      console.log('🚀 ~ column:', column);
       // const filterStoreComponent: StoreComponent<string> = filterStore.add(column.key, value);
       // filterStoreComponent.subscribe((change: StoreComponentData<string>) => {
       //   value = change.value ?? '';
@@ -32,12 +33,22 @@
     });
   });
 
-  function onChange(value: any) {
-    console.log("🚀 ~ onChange ~ value:", value)
+  function onChange(column: Column, value: any) {
+    console.log('🚀 ~ onChange ~ value:', value);
+
+    if (trElement) {
+      trElement.dispatchEvent(
+        new CustomEvent(`CONTROL_CHANGE_${column.index}`, {
+          detail: {},
+          bubbles: true,
+          composed: true
+        })
+      );
+    }
   }
 </script>
 
-<tr class="filter-thead-tr" part="filter-thead-tr">
+<tr bind:this={trElement} class="filter-thead-tr" part="filter-thead-tr">
   {#each columns as column}
     {#if column.filterable === true}
       <th
@@ -50,7 +61,7 @@
             <Skeleton height="34px" />
           </div>
         {:else}
-          <BasicControl id={column.key} type="text" {onChange} />
+          <BasicControl id={column.key} type="text" onChange={(value) => onChange(column, value)} />
         {/if}
       </th>
     {:else}
