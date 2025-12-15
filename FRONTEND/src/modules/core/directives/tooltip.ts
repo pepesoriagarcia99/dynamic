@@ -3,7 +3,9 @@ type TooltipPosition = 'top' | 'bottom' | 'left' | 'right';
 interface TooltipState {
   content: string;
   position: TooltipPosition;
+  delay: number;
   tooltipElement: HTMLDivElement | null;
+  timeoutId: number | null;
 }
 
 interface ActionReturn {
@@ -20,7 +22,9 @@ export function tooltip(element: HTMLElement, content: string): ActionReturn {
     state = {
       content: '',
       position: 'top',
-      tooltipElement: null
+      delay: 0,
+      tooltipElement: null,
+      timeoutId: null
     };
     tooltipState.set(element, state);
   }
@@ -72,14 +76,28 @@ export function tooltip(element: HTMLElement, content: string): ActionReturn {
 
   function showTooltip(): void {
     if (!state?.content) return;
-    createTooltip();
-    positionTooltip();
-    setTimeout(() => {
-      state?.tooltipElement?.classList.add('visible');
-    }, 10);
+    
+    // Cancelar timeout previo si existe
+    if (state.timeoutId !== null) {
+      clearTimeout(state.timeoutId);
+    }
+
+    state.timeoutId = window.setTimeout(() => {
+      createTooltip();
+      positionTooltip();
+      setTimeout(() => {
+        state?.tooltipElement?.classList.add('visible');
+      }, 10);
+    }, state.delay);
   }
 
   function hideTooltip(): void {
+    // Cancelar timeout si aún no se mostró el tooltip
+    if (state !== undefined && state.timeoutId !== null) {
+      clearTimeout(state.timeoutId);
+      state.timeoutId = null;
+    }
+
     if (state?.tooltipElement) {
       state.tooltipElement.classList.remove('visible');
       setTimeout(() => {
@@ -103,6 +121,9 @@ export function tooltip(element: HTMLElement, content: string): ActionReturn {
       }
     },
     destroy(): void {
+      if (state?.timeoutId !== null) {
+        clearTimeout(state.timeoutId);
+      }
       element.removeEventListener('mouseenter', showTooltip);
       element.removeEventListener('mouseleave', hideTooltip);
       hideTooltip();
@@ -118,7 +139,9 @@ export function tooltipPosition(element: HTMLElement, position: TooltipPosition)
     state = {
       content: '',
       position: 'top',
-      tooltipElement: null
+      delay: 0,
+      tooltipElement: null,
+      timeoutId: null
     };
     tooltipState.set(element, state);
   }
@@ -129,6 +152,30 @@ export function tooltipPosition(element: HTMLElement, position: TooltipPosition)
     update(newPosition: TooltipPosition): void {
       if (!state) return;
       state.position = newPosition;
+    }
+  };
+}
+
+export function tooltipDelay(element: HTMLElement, delay: number): ActionReturn {
+  let state = tooltipState.get(element);
+  
+  if (!state) {
+    state = {
+      content: '',
+      position: 'top',
+      delay: 0,
+      tooltipElement: null,
+      timeoutId: null
+    };
+    tooltipState.set(element, state);
+  }
+
+  state.delay = delay;
+
+  return {
+    update(newDelay: number): void {
+      if (!state) return;
+      state.delay = newDelay;
     }
   };
 }

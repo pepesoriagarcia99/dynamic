@@ -1,4 +1,7 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
+  import moment from 'moment';
+
   import type { Column } from '../../models/column/Column';
   import type { RowEvent, RowEventType } from '../../models/event/RowEvent';
   import type {
@@ -10,14 +13,15 @@
     StringColumnConfiguration
   } from '../../models/column/ColumnConfiguration';
 
+  import { TOOLTIP_DELAY } from '../../constant';
+
   import { styleTransformer } from '../../../../utils/style-transformer';
   import { valueTransformer } from '../../../../utils/value-transformer';
 
-  import moment from 'moment';
-  import { onMount } from 'svelte';
+  import { tooltip, tooltipDelay, tooltipPosition } from '../../../core/directives/tooltip';
+
   import BooleanComponent from './value/Boolean.svelte';
   import Avatar from './value/Avatar.svelte';
-  import { tooltip, tooltipPosition } from '../../../core/directives/tooltip';
 
   interface ColumnValueProps {
     column: Column;
@@ -196,6 +200,7 @@
         {style}
         use:tooltip={value}
         use:tooltipPosition={'right'}
+        use:tooltipDelay={TOOLTIP_DELAY}
       >
         {value}
       </div>
@@ -213,6 +218,7 @@
         part={columnValuePartNames}
         use:tooltip={value.alt}
         use:tooltipPosition={'right'}
+        use:tooltipDelay={TOOLTIP_DELAY}
       />
     {:else if column.type === 'RelativeDate'}
       <relative-time datetime={value}></relative-time>

@@ -18,4 +18,4 @@ export const FILTER_EVENT_NAME = 'filterChange';
 export const SELECTION_EVENT_NAME = 'selection';
 export const CONTEXT_MENU_EVENT_NAME = 'contextMenuEvent';
 
-// export const DEFAULT_DATE_FORMAT = 'dd/MM/yyyy';
+export const TOOLTIP_DELAY = 250;

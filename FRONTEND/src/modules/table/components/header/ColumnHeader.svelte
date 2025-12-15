@@ -2,13 +2,15 @@
   import type { Column } from '../../models/column/Column';
   import type { TableConfiguration } from '../../models/configuration/TableConfiguration';
 
-  import { styleTransformer } from '../../../../utils/style-transformer';
-  import Sort from './Sort.svelte';
-
+  import { TOOLTIP_DELAY } from '../../constant';
   import resizeIcon from '../../../../assets/svg/resize.svg';
+
+  import { styleTransformer } from '../../../../utils/style-transformer';
+  import { tooltip, tooltipDelay, tooltipPosition } from '../../../core/directives/tooltip';
   import { loadingState } from '../../store/loading-state.svelte';
+
   import AdvanceFilter from './AdvanceFilter.svelte';
-  import { tooltip, tooltipPosition } from '../../../core/directives/tooltip';
+  import Sort from './Sort.svelte';
 
   interface ColumnHeaderProps {
     column: Column;
@@ -122,7 +124,8 @@
         part={partNamesName}
         use:tooltip={column?.name}
         use:tooltipPosition={'top'}
-      >{column?.name}</span>
+        use:tooltipDelay={TOOLTIP_DELAY}>{column?.name}</span
+      >
       {#if isSortable}
         <Sort bind:this={sortRef} {column} />
       {/if}
