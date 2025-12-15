@@ -98,12 +98,15 @@
   }
 
   // Reactive checks
+  // Las columnas se validan a parte, el objeto comuna puede cambiar
   $effect(() => {
     // Valida que no se use la columna reservada "__ctx"
     if (columns.findIndex((col) => col.key === '__ctx') !== -1) {
       throw new Error('The column "__ctx" is reserved for internal functionality and cannot be used.');
     }
+  });
 
+  $effect(() => {
     // Valida que el selectableType sea valido
     if (selectableType && !VALID_SELECTABLE_TYPES.includes(selectableType)) {
       throw new Error(
@@ -176,20 +179,6 @@
   $effect(() => {
     setLoadingState(loading);
   });
-
-  /**
-   * TODO: PAGINACION AUTOMATICA
-   * * Si el usuario activa la paginacion pero no la quiere gestionar el con los eventos
-   */
-  // $effect(() => {
-  //   if (pageable === true && parameterizedData.length > pageSize) {
-  //     transformedData = parameterizedData.slice((page - 1) * pageSize, page * pageSize);
-  //     console.log('PAGE CHANGE');
-
-  //   } else {
-  //     transformedData = parameterizedData;
-  //   }
-  // });
 
   /** Methods */
   onMount(() => {

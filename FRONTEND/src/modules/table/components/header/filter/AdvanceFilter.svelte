@@ -65,6 +65,23 @@
       setColumnIndexOpen(null);
     }
   }
+
+  // function controlEvent() {
+    /**
+     * Aqui se pueden mapear los diferentes eventos
+     * 
+     * Por ejemplo:
+     * Selectores: Evento de paginacion para traer mas valores
+     * AutoComplete: Evento de busqueda para filtrar valores, Evento de paginacion
+    */
+    // el.dispatchEvent(
+    //   new CustomEvent('ControlEvent', {
+    //     detail: eventDetail as SortEvent[],
+    //     bubbles: true,
+    //     composed: true
+    //   })
+    // );
+  // }
 </script>
 
 <svelte:window on:click={handleClickOutside} />
