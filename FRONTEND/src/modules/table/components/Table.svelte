@@ -20,7 +20,8 @@
     SELECTION_EVENT_NAME,
     DEFAULT_RESIZABLE,
     VALID_SORTABLE_TYPES,
-    VALID_FILTERABLE_TYPES
+    VALID_FILTERABLE_TYPES,
+    SCROLL_END_EVENT_NAME
   } from '../constant';
   import type { Column } from '../models/column/Column';
   import type { RowEvent } from '../models/event/RowEvent';
@@ -236,10 +237,28 @@
     }
   }
 
-  function handleScroll() {
+  /**
+   * TODO: Posible necesidad de optimizacion.
+   */
+  function handleScroll(event: Event) {
     if (contextMenuVisible && hasContextMenuSlot) {
       contextMenuVisible = false;
       contextMenuEvent = undefined;
+    }
+
+    const target = event.target as HTMLElement;
+    const scrollTop = target.scrollTop;
+    const scrollHeight = target.scrollHeight;
+    const clientHeight = target.clientHeight;
+
+    // Detectar si llegó al final (con un margen de 5px)
+    if (scrollTop + clientHeight >= scrollHeight - 5) {
+      el.dispatchEvent(
+        new CustomEvent(SCROLL_END_EVENT_NAME, {
+          bubbles: true,
+          composed: true
+        })
+      );
     }
   }
 

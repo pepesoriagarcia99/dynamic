@@ -234,6 +234,10 @@
     tableEl = document.getElementById('main-table') as HTMLElement & PublicApi;
   });
 
+  function onScrollEndEvent(event: any & { detail: any }) {
+    console.log('SCROLL END EVENT: ', event.detail);
+  }
+
   function onRowClick(event: any & { detail: RowEvent }) {
     console.log('CLICKED: ', event.detail);
   }
@@ -300,6 +304,7 @@
       onsortChange={onSortChange}
       onpageChange={onPageChange}
       oncontextMenuEvent={onContextMenuEvent}
+      onscrollEndEvent={onScrollEndEvent}
     >
       <div slot="context-menu" class="context-menu">
         <button class="context-menu-btn"> Editar </button>

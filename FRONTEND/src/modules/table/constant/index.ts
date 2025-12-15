@@ -17,5 +17,6 @@ export const SORT_EVENT_NAME = 'sortChange';
 export const FILTER_EVENT_NAME = 'filterChange';
 export const SELECTION_EVENT_NAME = 'selection';
 export const CONTEXT_MENU_EVENT_NAME = 'contextMenuEvent';
+export const SCROLL_END_EVENT_NAME = 'scrollEndEvent';
 
 export const TOOLTIP_DELAY = 250;
