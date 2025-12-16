@@ -295,7 +295,7 @@
       {columns}
       {count}
       data={filteredData}
-      filterable="basic"
+      filterable="simple"
       pageableType="pagination"
       resizable={true}
       selectableType="multiple"
