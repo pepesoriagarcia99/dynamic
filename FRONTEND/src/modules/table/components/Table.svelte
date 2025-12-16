@@ -21,12 +21,14 @@
     DEFAULT_RESIZABLE,
     VALID_SORTABLE_TYPES,
     VALID_FILTERABLE_TYPES,
-    SCROLL_END_EVENT_NAME
+    SCROLL_END_EVENT_NAME,
+    VALID_PAGEABLE_TYPES
   } from '../constant';
   import type { Column } from '../models/column/Column';
   import type { RowEvent } from '../models/event/RowEvent';
   import type {
     FilterableType,
+    PageableType,
     SelectableType,
     SortableType,
     TableConfiguration
@@ -63,7 +65,7 @@
     selectAll?: boolean;
     filterable?: FilterableType;
     sortableType?: SortableType;
-    pageable?: boolean;
+    pageableType?: PageableType;
     pageSizeOptions?: number[];
     pageSize?: number;
     resizable?: boolean;
@@ -80,7 +82,7 @@
     selectAll = DEFAULT_SELECT_ALL,
     filterable = DEFAULT_FILTERABLE,
     sortableType = DEFAULT_SORTABLE,
-    pageable = DEFAULT_PAGEABLE,
+    pageableType = DEFAULT_PAGEABLE,
     pageSizeOptions = DEFAULT_PAGE_SIZE_OPTIONS,
     pageSize = DEFAULT_PAGE_SIZE,
     resizable = DEFAULT_RESIZABLE
@@ -91,6 +93,7 @@
   let paginationRef: Pagination | null = $state<Pagination | null>(null);
   let contextMenuVisible = $state(false);
   let contextMenuEvent = $state<RowEvent | undefined>(undefined);
+  let wasAtBottom = false;
 
   /** Checks */
   // Static checks
@@ -124,8 +127,14 @@
       throw new Error('The "primaryKey" property must be defined when "selectableType" is not "none".');
     }
 
+    if (pageableType !== 'none' && !VALID_PAGEABLE_TYPES.includes(pageableType)) {
+      throw new Error(
+        `The "pageableType" property must be one of the following values: ${VALID_PAGEABLE_TYPES.join(', ')}.`
+      );
+    }
+
     // si se activa la paginacion, count debe ser un numero mayor a 0
-    if (pageable === true && loading === false && count === undefined) {
+    if (pageableType === 'pagination' && loading === false && count === undefined) {
       throw new Error('The "count" property must be a number greater than 0 when "pageable" is true.');
     }
 
@@ -172,7 +181,7 @@
     selectAll,
     filterable,
     sortableType,
-    pageable,
+    pageableType,
     primaryKey,
     resizable
   });
@@ -246,19 +255,26 @@
       contextMenuEvent = undefined;
     }
 
-    const target = event.target as HTMLElement;
-    const scrollTop = target.scrollTop;
-    const scrollHeight = target.scrollHeight;
-    const clientHeight = target.clientHeight;
+    if (pageableType === 'infinite') {
+      const target = event.target as HTMLElement;
+      const scrollTop = target.scrollTop;
+      const scrollHeight = target.scrollHeight;
+      const clientHeight = target.clientHeight;
 
-    // Detectar si llegó al final (con un margen de 5px)
-    if (scrollTop + clientHeight >= scrollHeight - 5) {
-      el.dispatchEvent(
-        new CustomEvent(SCROLL_END_EVENT_NAME, {
-          bubbles: true,
-          composed: true
-        })
-      );
+      // Detectar si está en el fondo (con un margen de 5px)
+      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 5;
+
+      // Solo disparar el evento cuando se llega al fondo (transición de no estar a estar)
+      if (isAtBottom && !wasAtBottom) {
+        el.dispatchEvent(
+          new CustomEvent(SCROLL_END_EVENT_NAME, {
+            bubbles: true,
+            composed: true
+          })
+        );
+      }
+
+      wasAtBottom = isAtBottom;
     }
   }
 
@@ -414,7 +430,7 @@
     </div>
 
     <div class="pagination" part="pagination">
-      {#if pageable === true && count !== undefined}
+      {#if pageableType === 'pagination' && count !== undefined}
         <Pagination bind:this={paginationRef} {count} {pageSizeOptions} {pageSize} onChange={onPageChange} />
       {/if}
     </div>
