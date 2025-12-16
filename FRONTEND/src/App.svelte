@@ -15,11 +15,11 @@
   import type { ContextMenuEvent } from './modules/table/models/event/ContextMenuEvent';
 
   let columns: Column[] = [
-    { key: 'flags.png', name: 'Bandera', type: 'Image', style: { width: '80px' } },
+    { key: 'flags.png', name: 'Bandera', type: 'image', style: { width: '80px' } },
     {
       key: 'name.common',
       name: 'Nombre nombre de columna my largo para probar que se ve correctamente jajjajajaja mortal',
-      type: 'Avatar',
+      type: 'avatar',
       configuration: {
         pictureColumn: 'picture',
         altText: 'Country flag'
@@ -28,25 +28,25 @@
       filterable: true
     },
     // { key: 'name.official', name: 'Avatar', type: 'Avatar' },
-    { key: 'continents.[0]', name: 'Continente', type: 'String', sortable: true },
-    { key: 'region', name: 'Region', type: 'String', sortable: true },
-    { key: 'subregion', name: 'Subregion', type: 'String', filterable: true },
-    { key: 'capital.[0]', name: 'Capital', type: 'String', filterable: true },
+    { key: 'continents.[0]', name: 'Continente', type: 'string', sortable: true },
+    { key: 'region', name: 'Region', type: 'string', sortable: true },
+    { key: 'subregion', name: 'Subregion', type: 'string', filterable: true },
+    { key: 'capital.[0]', name: 'Capital', type: 'string', filterable: true },
     {
       key: 'population',
       name: 'Poblacion',
-      type: 'Number',
+      type: 'number',
       configuration: {
         suffix: ' P.'
       },
       filterable: true,
       sortable: true
     },
-    { key: 'unMember', name: 'ONU', type: 'Boolean', filterable: true, sortable: true },
+    { key: 'unMember', name: 'ONU', type: 'boolean', filterable: true, sortable: true },
     {
       key: 'foundation',
       name: 'Fundacion',
-      type: 'Date',
+      type: 'date',
       configuration: { format: 'YYYY/MM/DD' },
       filterable: true,
       sortable: true
@@ -54,12 +54,12 @@
         {
       key: 'foundation',
       name: 'Fundacion',
-      type: 'RelativeDate',
+      type: 'relative-date',
     },
     {
       key: 'pib',
       name: 'PIB (USD)',
-      type: 'Number',
+      type: 'number',
       configuration: {
         IntlNumberFormat: {
           options: {
@@ -75,7 +75,7 @@
     {
       key: 'area',
       name: 'Area',
-      type: 'Number',
+      type: 'number',
       configuration: {
         suffix: ' km²',
         colorConfiguration: [
@@ -105,7 +105,7 @@
     {
       key: 'density',
       name: 'Densidad de poblacion',
-      type: 'String',
+      type: 'selector',
       configuration: {
         colorConfiguration: [
           {

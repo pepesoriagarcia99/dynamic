@@ -4,6 +4,7 @@ import type {
   DateColumnConfiguration,
   ImageColumnConfiguration,
   NumberColumnConfiguration,
+  SelectorColumnConfiguration,
   StringColumnConfiguration,
 } from './ColumnConfiguration';
 
@@ -12,7 +13,7 @@ export interface ColumnStyle {
 }
 
 // | 'Tag'
-export type ColumnType = 'String' | 'Number' | 'Boolean' | 'Date' | 'Image' | 'Avatar' | 'RelativeDate';
+export type ColumnType = 'string' | 'number' | 'boolean' | 'date' | 'image' | 'avatar' | 'relative-date' | 'selector';
 
 /**
  * Modelo de Columna de tabla.
@@ -74,5 +75,6 @@ export interface Column {
     | BooleanColumnConfiguration
     | DateColumnConfiguration
     | ImageColumnConfiguration
-    | AvatarColumnConfiguration;
+    | AvatarColumnConfiguration
+    | SelectorColumnConfiguration;
 }

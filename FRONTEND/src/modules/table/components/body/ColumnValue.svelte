@@ -10,6 +10,7 @@
     DateColumnConfiguration,
     ImageColumnConfiguration,
     NumberColumnConfiguration,
+    SelectorColumnConfiguration,
     StringColumnConfiguration
   } from '../../models/column/ColumnConfiguration';
 
@@ -109,7 +110,7 @@
     const rowValue = valueTransformer.getValue(column.key, row);
     let transformedValue;
 
-    if (column.type === 'String') {
+    if (column.type === 'string') {
       const configuration = column.configuration as StringColumnConfiguration;
 
       if (configuration?.representation && configuration.representation !== 'none') {
@@ -127,7 +128,7 @@
       if (configuration?.colorConfiguration && configuration?.colorConfiguration) {
         style = getColumnValueStyle(configuration.colorConfiguration, rowValue);
       }
-    } else if (column.type === 'Number') {
+    } else if (column.type === 'number') {
       const configuration = column.configuration as NumberColumnConfiguration;
       let locale =
         configuration?.IntlNumberFormat?.locale && isLocaleCode(configuration.IntlNumberFormat.locale) === true
@@ -146,7 +147,7 @@
       if (configuration?.colorConfiguration && configuration?.colorConfiguration.length > 0) {
         style = getColumnValueStyle(configuration.colorConfiguration, rowValue);
       }
-    } else if (column.type === 'Date') {
+    } else if (column.type === 'date') {
       const configuration = column.configuration as DateColumnConfiguration;
 
       if (configuration?.format) {
@@ -156,16 +157,16 @@
       if (configuration?.colorConfiguration && configuration?.colorConfiguration.length > 0) {
         style = getColumnValueStyle(configuration.colorConfiguration, rowValue);
       }
-    } else if (column.type === 'Boolean') {
+    } else if (column.type === 'boolean') {
       transformedValue = new Boolean(String(rowValue).toLocaleLowerCase() === 'true');
-    } else if (column.type === 'Image') {
+    } else if (column.type === 'image') {
       const configuration = column.configuration as ImageColumnConfiguration;
 
       transformedValue = {
         src: String(rowValue),
         alt: configuration?.altText ?? `Image value ${column.name}`
       };
-    } else if (column.type === 'Avatar') {
+    } else if (column.type === 'avatar') {
       const configuration = column.configuration as AvatarColumnConfiguration;
 
       let picture = configuration?.pictureUrl;
@@ -178,6 +179,15 @@
         name: String(rowValue),
         alt: configuration?.altText ?? `Avatar value ${column.name}`
       };
+    } else if (column.type === 'relative-date') {
+      transformedValue = moment(rowValue).toISOString();
+    } else if (column.type === 'selector') {
+      const configuration = column.configuration as SelectorColumnConfiguration;
+      transformedValue = rowValue;
+
+      if (configuration?.colorConfiguration && configuration?.colorConfiguration.length > 0) {
+        style = getColumnValueStyle(configuration.colorConfiguration, rowValue);
+      }
     }
 
     value = transformedValue ?? rowValue;
@@ -193,7 +203,7 @@
   ondblclick={(event) => onCellClick(event, 'doubleclick')}
 >
   {#if value !== null && value !== undefined}
-    {#if column.type === 'String' || column.type === 'Number' || column.type === 'Date'}
+    {#if column.type === 'string' || column.type === 'number' || column.type === 'date' || column.type === 'selector'}
       <div
         class={columnValuePartNames}
         part={columnValuePartNames}
@@ -204,13 +214,13 @@
       >
         {value}
       </div>
-    {:else if column.type === 'Boolean'}
+    {:else if column.type === 'boolean'}
       <div class={columnValuePartNames} part={columnValuePartNames}>
         <BooleanComponent {value} />
       </div>
-    {:else if column.type === 'Avatar'}
+    {:else if column.type === 'avatar'}
       <Avatar {value} />
-    {:else if column.type === 'Image'}
+    {:else if column.type === 'image'}
       <img
         src={value.src}
         alt={value.alt}
@@ -220,7 +230,7 @@
         use:tooltipPosition={'right'}
         use:tooltipDelay={TOOLTIP_DELAY}
       />
-    {:else if column.type === 'RelativeDate'}
+    {:else if column.type === 'relative-date'}
       <relative-time datetime={value}></relative-time>
     {/if}
   {/if}
