@@ -97,20 +97,21 @@
   let wasAtBottom = false;
 
   /** Checks */
-  // Static checks
-  if (!Array.isArray(columns) || columns.length === 0) {
-    throw new Error('The "columns" property must be a non-empty array.');
-  }
-
-  // Reactive checks
-  // Las columnas se validan a parte, el objeto comuna puede cambiar
+  // Validacion de configuracion de columnas
   $effect(() => {
+    console.log('$effect de cambio de columnas');
+
+    if (!Array.isArray(columns) || columns.length === 0) {
+      throw new Error('The "columns" property must be a non-empty array.');
+    }
+
     // Valida que no se use la columna reservada "__ctx"
     if (columns.findIndex((col) => col.key === '__ctx') !== -1) {
       throw new Error('The column "__ctx" is reserved for internal functionality and cannot be used.');
     }
   });
 
+  // validacion de configuracion de seleccion
   $effect(() => {
     // Valida que el selectableType sea valido
     if (selectableType && !VALID_SELECTABLE_TYPES.includes(selectableType)) {
@@ -127,7 +128,11 @@
     if (selectableType !== 'none' && !primaryKey) {
       throw new Error('The "primaryKey" property must be defined when "selectableType" is not "none".');
     }
+  });
 
+  // validacion de configuracion de paginacion
+  $effect(() => {
+    // valida los tipos de paginacion
     if (pageableType !== 'none' && !VALID_PAGEABLE_TYPES.includes(pageableType)) {
       throw new Error(
         `The "pageableType" property must be one of the following values: ${VALID_PAGEABLE_TYPES.join(', ')}.`
@@ -138,13 +143,20 @@
     if (pageableType === 'pagination' && loading === false && count === undefined) {
       throw new Error('The "count" property must be a number greater than 0 when "pageable" is true.');
     }
+  });
 
+  // validacion de configuracion de ordenacion
+  $effect(() => {
     // valida los tipos de ordenacion
     if (sortableType && !VALID_SORTABLE_TYPES.includes(sortableType)) {
       throw new Error(
         `The "sortableType" property must be one of the following values: ${VALID_SORTABLE_TYPES.join(', ')}.`
       );
     }
+  });
+
+  // validacion de configuracion de filtro
+  $effect(() => {
     // Valida los tipos de estados del filtro
     if (filterable && !VALID_FILTERABLE_TYPES.includes(filterable)) {
       throw new Error(
