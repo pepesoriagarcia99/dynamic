@@ -13,6 +13,7 @@
   import type { PublicApi } from './modules/table/models/public-api/PublicApi';
   import type { TableEvent } from './modules/table/models/event/TableEvent';
   import type { ContextMenuEvent } from './modules/table/models/event/ContextMenuEvent';
+  import type { BasicControlEvent } from './modules/table/models/event/ControlEvent';
 
   let columns: Column[] = [
     { key: 'flags.png', name: 'Bandera', type: 'image', style: { width: '80px' } },
@@ -51,10 +52,10 @@
       filterable: true,
       sortable: true
     },
-        {
+    {
       key: 'foundation',
       name: 'Fundacion',
-      type: 'relative-date',
+      type: 'relative-date'
     },
     {
       key: 'pib',
@@ -279,6 +280,10 @@
   function onContextMenuEvent(event: any & { detail: ContextMenuEvent }) {
     console.log('CONTEXT MENU EVENT: ', event.detail);
   }
+
+  function onControlEvent(event: any & { detail: BasicControlEvent }) {
+    console.log('CONTROL EVENT 1: ', event.detail);
+  }
 </script>
 
 <main>
@@ -290,21 +295,22 @@
       {columns}
       {count}
       data={filteredData}
-      filterable="simple"
+      filterable="basic"
       pageableType="pagination"
       resizable={true}
       selectableType="multiple"
       sortableType="multiple"
       pageSizeOptions={[5, 50, 100, 200]}
       pageSize={100}
-      onready={onReady}
-      onrowClick={onRowClick}
-      onselection={onRowSelect}
-      onfilterChange={onFilterChange}
-      onsortChange={onSortChange}
-      onpageChange={onPageChange}
-      oncontextMenuEvent={onContextMenuEvent}
-      onscrollEndEvent={onScrollEndEvent}
+      onReady={onReady}
+      onRowClick={onRowClick}
+      onSelection={onRowSelect}
+      onFilterChange={onFilterChange}
+      onSortChange={onSortChange}
+      onPageChange={onPageChange}
+      onContextMenuEvent={onContextMenuEvent}
+      onScrollEndEvent={onScrollEndEvent}
+      onControlEvent_1={onControlEvent}
     >
       <div slot="context-menu" class="context-menu">
         <button class="context-menu-btn"> Editar </button>

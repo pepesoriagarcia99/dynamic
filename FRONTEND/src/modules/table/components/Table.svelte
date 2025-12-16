@@ -22,7 +22,8 @@
     VALID_SORTABLE_TYPES,
     VALID_FILTERABLE_TYPES,
     SCROLL_END_EVENT_NAME,
-    VALID_PAGEABLE_TYPES
+    VALID_PAGEABLE_TYPES,
+    READY_EVENT_NAME
   } from '../constant';
   import type { Column } from '../models/column/Column';
   import type { RowEvent } from '../models/event/RowEvent';
@@ -345,7 +346,7 @@
       sort: mapColumnKey<SortEvent>(sortStore.state().filter((e) => e.value))
     };
 
-    el.dispatchEvent(new CustomEvent('ready', { detail: event, bubbles: true, composed: true }));
+    el.dispatchEvent(new CustomEvent(READY_EVENT_NAME, { detail: event, bubbles: true, composed: true }));
   }
 
   function handleKeyDown(event: KeyboardEvent) {
