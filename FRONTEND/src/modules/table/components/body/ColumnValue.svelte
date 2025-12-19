@@ -239,6 +239,7 @@
 <style>
   td {
     white-space: nowrap;
+    overflow: hidden;
   }
 
   .column {

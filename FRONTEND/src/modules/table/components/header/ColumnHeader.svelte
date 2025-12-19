@@ -150,6 +150,7 @@
     box-sizing: border-box;
     position: relative;
 
+    width: auto;
     min-width: max-content;
     white-space: nowrap;
   }

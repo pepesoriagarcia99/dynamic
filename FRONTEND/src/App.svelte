@@ -16,19 +16,18 @@
   import type { BasicControlEvent } from './modules/table/models/event/ControlEvent';
 
   let columns: Column[] = [
-    { key: 'flags.png', name: 'Bandera', type: 'image', style: { width: '80px' } },
-    {
-      key: 'name.common',
-      name: 'Nombre nombre de columna my largo para probar que se ve correctamente jajjajajaja mortal',
-      type: 'avatar',
-      configuration: {
-        pictureColumn: 'picture',
-        altText: 'Country flag'
-      },
-      style: { 'max-width': '200px' },
-      filterable: true
-    },
-    // { key: 'name.official', name: 'Avatar', type: 'Avatar' },
+    // { key: 'flags.png', name: 'Bandera', type: 'image', style: { width: '80px' } },
+    // {
+    //   key: 'name.common',
+    //   name: 'Nombre nombre de columna my largo para probar que se ve correctamente jajjajajaja mortal',
+    //   type: 'avatar',
+    //   configuration: {
+    //     pictureColumn: 'picture',
+    //     altText: 'Country flag'
+    //   },
+    //   style: { 'max-width': '200px' },
+    //   filterable: true
+    // },
     { key: 'continents.[0]', name: 'Continente', type: 'string', sortable: true },
     { key: 'region', name: 'Region', type: 'string', sortable: true },
     { key: 'subregion', name: 'Subregion', type: 'string', filterable: true },
@@ -134,7 +133,22 @@
       },
       filterable: true,
       sortable: true
-    }
+    },
+    { key: 'region', name: 'Region', type: 'string' },
+    { key: 'region', name: 'Region', type: 'string' },
+    { key: 'region', name: 'Region', type: 'string' },
+    { key: 'region', name: 'Region', type: 'string' },
+    { key: 'region', name: 'Region', type: 'string' },
+    { key: 'region', name: 'Region', type: 'string' },
+    { key: 'region', name: 'Region', type: 'string' },
+    { key: 'region', name: 'Region', type: 'string' },
+    { key: 'region', name: 'Region', type: 'string' },
+    { key: 'region', name: 'Region', type: 'string' },
+    { key: 'region', name: 'Region', type: 'string' },
+    { key: 'region', name: 'Region', type: 'string' },
+    { key: 'region', name: 'Region', type: 'string' },
+    { key: 'region', name: 'Region', type: 'string' },
+    { key: 'region', name: 'Region', type: 'string' },
   ];
 
   let loading: boolean = $state(false);
@@ -179,9 +193,10 @@
       })
       .catch(console.error)
       .finally(() => {
-        setTimeout(() => {
-          loading = false;
-        }, 2000);
+        loading = false;
+        // setTimeout(() => {
+        //   loading = false;
+        // }, 2000);
       });
   }
 

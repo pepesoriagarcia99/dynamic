@@ -579,11 +579,8 @@
     border-collapse: separate;
     border-spacing: 0;
     width: 100%;
-    /* table-layout: fixed; */
-    /* TODO: Usado para genera espacios al no exitir filtro */
     table-layout: auto;
-    width: max-content;
-    /* min-width: 100%; */
+    min-width: 100%;
   }
 
   .pagination {
