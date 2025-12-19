@@ -25,7 +25,7 @@
     {#each columns as column, iCol}
       <td class={getColumnPartNames(iCol)} part={getColumnPartNames(iCol)}>
         <div class="loading-column-value" part="loading-column-value">
-          {#if column.type === 'Avatar'}
+          {#if column.type === 'avatar'}
             <div class="loading-column-avatar" part="loading-column-avatar">
               <Skeleton width="40px" borderRadius="50%" height="40px" />
               <Skeleton width="50%" height="calc(var(--table-row-height) * 0.5)" />

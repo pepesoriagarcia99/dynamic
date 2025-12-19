@@ -5,7 +5,6 @@
   import { TOOLTIP_DELAY } from '../../constant';
   import resizeIcon from '../../../../assets/svg/resize.svg';
 
-  import { styleTransformer } from '../../../../utils/style-transformer';
   import { tooltip, tooltipDelay, tooltipPosition } from '../../../tooltip/directives/tooltip';
   import { loadingState } from '../../store/loading-state.svelte';
 
@@ -116,7 +115,7 @@
   }
 </script>
 
-<th bind:this={thElement} class={partNamesTh} part={partNamesTh} style={styleTransformer.toString(column?.style)}>
+<th bind:this={thElement} class={partNamesTh} part={partNamesTh} style={column?.style as string}>
   <button class={partNamesBtn} part={partNamesBtn} onclick={(e) => handleHeaderClick(e)}>
     <div class={partNamesContent} part={partNamesContent}>
       <span
@@ -137,7 +136,7 @@
   </button>
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-  {#if tableConfiguration.resizable === true && column.resizable === true && loadingState() === false}
+  {#if tableConfiguration.resizable && column.resizable && loadingState() === false}
     <div class={partNamesResize} part={partNamesResize} onmousedown={handleResizeMouseDown} role="separator">
       <img src={resizeIcon} class={partNamesResizeIcon} part={partNamesResizeIcon} alt="resize" />
     </div>

@@ -6,7 +6,6 @@
   import type { StoreComponent, StoreComponentData } from '../../../../core/models/StoreComponent';
 
   import { filterStore } from '../../../store/filter-store';
-  import { styleTransformer } from '../../../../../utils/style-transformer';
   import { loadingState } from '../../../store/loading-state.svelte';
 
   import Skeleton from '../../Skeleton.svelte';
@@ -71,7 +70,7 @@
       <th
         class="column-filter-th column-filter-th-{control.column.index}"
         part="column-filter-th column-filter-th-{control.column.index}"
-        style={styleTransformer.toString(control.column?.style)}
+        style={control.column?.style as string}
       >
         {#if loadingState() === true}
           <div style="padding: 0 8px;">
@@ -85,7 +84,7 @@
       <th
         class="column-filter-th column-filter-th-{control.column.index} column-filter-th-spacer"
         part="column-filter-th column-filter-th-{control.column.index}"
-        style={styleTransformer.toString(control.column?.style)}
+        style={control.column?.style as string}
       >
         <!-- space -->
       </th>

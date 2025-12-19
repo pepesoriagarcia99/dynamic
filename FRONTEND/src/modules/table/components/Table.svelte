@@ -49,6 +49,7 @@
   import { filterStore } from '../store/filter-store';
   import { sortStore } from '../store/sort-store';
   import { setLoadingState } from '../store/loading-state.svelte';
+  import { styleTransformer } from '../../../utils/style-transformer';
 
   import Header from './header/Header.svelte';
   import Row from './body/Row.svelte';
@@ -168,11 +169,26 @@
   /** States */
   let hasContextMenuSlot = $derived($$slots['context-menu']);
   const indexColumns: Column[] = $derived(
-    columns.map((c, index) => ({
-      ...c,
-      index,
-      resizable: c.resizable ?? true // por defecto las columnas son resizables a menos que se indique lo contrario; Esta config se activa si la tabla es resizable
-    }))
+    columns.map((column, index) => {
+      if (typeof column.style === 'object') {
+        column.style = styleTransformer.toString(column.style);
+      }
+
+      // @ts-ignore
+      if(column.configuration?.colorConfiguration) {
+        // @ts-ignore
+        column.configuration?.colorConfiguration.forEach((colorConfig: any) => {
+          if (typeof colorConfig.style === 'object') {
+            colorConfig.style = styleTransformer.toString(colorConfig.style);
+          }
+        });
+      }
+
+      return {
+        ...column,
+        index
+      };
+    })
   );
   const parameterizedData: RowData[] = $derived(
     data.map((r) => ({

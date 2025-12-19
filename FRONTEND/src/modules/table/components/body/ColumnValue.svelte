@@ -1,28 +1,15 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import moment from 'moment';
 
   import type { Column } from '../../models/column/Column';
   import type { RowEvent, RowEventType } from '../../models/event/RowEvent';
-  import type {
-    AvatarColumnConfiguration,
-    ColorConfiguration,
-    DateColumnConfiguration,
-    ImageColumnConfiguration,
-    NumberColumnConfiguration,
-    SelectorColumnConfiguration,
-    StringColumnConfiguration
-  } from '../../models/column/ColumnConfiguration';
 
   import { TOOLTIP_DELAY } from '../../constant';
-
-  import { styleTransformer } from '../../../../utils/style-transformer';
-  import { valueTransformer } from '../../../../utils/value-transformer';
-
   import { tooltip, tooltipDelay, tooltipPosition } from '../../../tooltip/directives/tooltip';
 
   import BooleanComponent from './value/Boolean.svelte';
   import Avatar from './value/Avatar.svelte';
+  import { TransformerFactory } from '../../services/TransformerFactory';
 
   interface ColumnValueProps {
     column: Column;
@@ -36,7 +23,7 @@
   const columnPartNames: string = $derived(`column column-${column.index}`);
   const columnValuePartNames: string = $derived(`column-value column-value-${column.index}`);
   let value: any = $state<any>();
-  let style: string = $state<string>('');
+  let style: string | undefined = $state<string | undefined>();
 
   /** Methods */
   onMount(() => {
@@ -64,175 +51,49 @@
     });
   }
 
-  function isLocaleCode(locale: string): boolean {
-    try {
-      Intl.getCanonicalLocales(locale);
-      return true;
-    } catch {
-      return false;
-    }
-  }
-
-  function getColumnValueStyle(colorConfiguration: ColorConfiguration<any>[], columnValue: any): string {
-    let styles: string[] = [];
-
-    colorConfiguration.forEach((config) => {
-      const color = config.color;
-
-      if (config.range) {
-        if (Number(columnValue) >= Number(config.range.min) && Number(columnValue) <= Number(config.range.max)) {
-          if (color.text) {
-            styles.push(`color: ${color.text}`);
-          }
-          if (color.background) {
-            styles.push(`background-color: ${color.background}`);
-          }
-        }
-      } else if (config.value !== undefined && String(columnValue) === String(config.value)) {
-        if (color.text) {
-          styles.push(`color: ${color.text}`);
-        }
-        if (color.background) {
-          styles.push(`background-color: ${color.background}`);
-        }
-      }
-    });
-
-    if (styles.length > 0) {
-      styles.push('font-weight: 600');
-      styles.push('border-radius: 4px');
-    }
-
-    return styles.join('; ');
-  }
-
-  function getValue() {
-    const rowValue = valueTransformer.getValue(column.key, row);
-    let transformedValue;
-
-    if (column.type === 'string') {
-      const configuration = column.configuration as StringColumnConfiguration;
-
-      if (configuration?.representation && configuration.representation !== 'none') {
-        if (configuration.representation === 'uppercase') {
-          transformedValue = String(rowValue).toUpperCase();
-        } else if (configuration.representation === 'lowercase') {
-          transformedValue = String(rowValue).toLowerCase();
-        } else if (configuration.representation === 'capitalize') {
-          transformedValue = String(rowValue).replace(/\b\w/g, (char) => char.toUpperCase());
-        } else if (configuration.representation === 'trim') {
-          transformedValue = String(rowValue).trim();
-        }
-      }
-
-      if (configuration?.colorConfiguration && configuration?.colorConfiguration) {
-        style = getColumnValueStyle(configuration.colorConfiguration, rowValue);
-      }
-    } else if (column.type === 'number') {
-      const configuration = column.configuration as NumberColumnConfiguration;
-      let locale =
-        configuration?.IntlNumberFormat?.locale && isLocaleCode(configuration.IntlNumberFormat.locale) === true
-          ? configuration.IntlNumberFormat.locale
-          : navigator.language;
-
-      transformedValue = new Intl.NumberFormat(locale, configuration?.IntlNumberFormat?.options ?? {}).format(rowValue);
-      if (configuration?.prefix) {
-        transformedValue = configuration.prefix + transformedValue;
-      }
-
-      if (configuration?.suffix) {
-        transformedValue = transformedValue + configuration.suffix;
-      }
-
-      if (configuration?.colorConfiguration && configuration?.colorConfiguration.length > 0) {
-        style = getColumnValueStyle(configuration.colorConfiguration, rowValue);
-      }
-    } else if (column.type === 'date') {
-      const configuration = column.configuration as DateColumnConfiguration;
-
-      if (configuration?.format) {
-        transformedValue = moment(rowValue).format(configuration.format);
-      }
-
-      if (configuration?.colorConfiguration && configuration?.colorConfiguration.length > 0) {
-        style = getColumnValueStyle(configuration.colorConfiguration, rowValue);
-      }
-    } else if (column.type === 'boolean') {
-      transformedValue = new Boolean(String(rowValue).toLocaleLowerCase() === 'true');
-    } else if (column.type === 'image') {
-      const configuration = column.configuration as ImageColumnConfiguration;
-
-      transformedValue = {
-        src: String(rowValue),
-        alt: configuration?.altText ?? `Image value ${column.name}`
-      };
-    } else if (column.type === 'avatar') {
-      const configuration = column.configuration as AvatarColumnConfiguration;
-
-      let picture = configuration?.pictureUrl;
-      if (configuration?.pictureColumn) {
-        picture = valueTransformer.getValue(configuration.pictureColumn, row);
-      }
-
-      transformedValue = {
-        picture: picture,
-        name: String(rowValue),
-        alt: configuration?.altText ?? `Avatar value ${column.name}`
-      };
-    } else if (column.type === 'relative-date') {
-      transformedValue = moment(rowValue).toISOString();
-    } else if (column.type === 'selector') {
-      const configuration = column.configuration as SelectorColumnConfiguration;
-      transformedValue = rowValue;
-
-      if (configuration?.colorConfiguration && configuration?.colorConfiguration.length > 0) {
-        style = getColumnValueStyle(configuration.colorConfiguration, rowValue);
-      }
-    }
-
-    value = transformedValue ?? rowValue;
+  function getValue(): void {
+    const transformer = TransformerFactory.createTransformer(column, row);
+    value = transformer.getValue();
   }
 </script>
 
 <td
   class={columnPartNames}
   part={columnPartNames}
-  style={styleTransformer.toString(column?.style)}
+  style={column?.style as string}
   onclick={(event) => onCellClick(event, 'leftclick')}
   oncontextmenu={(event) => onCellClick(event, 'rightclick')}
   ondblclick={(event) => onCellClick(event, 'doubleclick')}
 >
-  {#if value !== null && value !== undefined}
-    {#if column.type === 'string' || column.type === 'number' || column.type === 'date' || column.type === 'selector'}
-      <div
-        class={columnValuePartNames}
-        part={columnValuePartNames}
-        {style}
-        use:tooltip={value}
-        use:tooltipPosition={'right'}
-        use:tooltipDelay={TOOLTIP_DELAY}
-      >
-        {value}
-      </div>
-    {:else if column.type === 'boolean'}
-      <div class={columnValuePartNames} part={columnValuePartNames}>
-        <BooleanComponent {value} />
-      </div>
-    {:else if column.type === 'avatar'}
-      <Avatar {value} />
-    {:else if column.type === 'image'}
-      <img
-        src={value.src}
-        alt={value.alt}
-        class={columnValuePartNames}
-        part={columnValuePartNames}
-        use:tooltip={value.alt}
-        use:tooltipPosition={'right'}
-        use:tooltipDelay={TOOLTIP_DELAY}
-      />
-    {:else if column.type === 'relative-date'}
-      <relative-time datetime={value}></relative-time>
-    {/if}
+  {#if ['string', 'number', 'date', 'selector'].includes(column.type)}
+    <div
+      class={columnValuePartNames}
+      part={columnValuePartNames}
+      {style}
+      use:tooltip={value}
+      use:tooltipPosition={'right'}
+      use:tooltipDelay={TOOLTIP_DELAY}
+    >
+      {value}
+    </div>
+  {:else if column.type === 'boolean'}
+    <div class={columnValuePartNames} part={columnValuePartNames}>
+      <BooleanComponent {value} />
+    </div>
+  {:else if column.type === 'avatar'}
+    <Avatar {value} />
+  {:else if column.type === 'image'}
+    <img
+      src={value?.src}
+      alt={value?.alt}
+      class={columnValuePartNames}
+      part={columnValuePartNames}
+      use:tooltip={value?.alt}
+      use:tooltipPosition={'right'}
+      use:tooltipDelay={TOOLTIP_DELAY}
+    />
+  {:else if column.type === 'relative-date'}
+    <relative-time datetime={value}></relative-time>
   {/if}
 </td>
 

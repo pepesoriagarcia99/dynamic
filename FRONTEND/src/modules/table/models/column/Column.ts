@@ -7,10 +7,8 @@ import type {
   SelectorColumnConfiguration,
   StringColumnConfiguration,
 } from './ColumnConfiguration';
+import type { Style } from './Style';
 
-export interface ColumnStyle {
-  [key: string]: string | number;
-}
 
 // | 'Tag'
 export type ColumnType = 'string' | 'number' | 'boolean' | 'date' | 'image' | 'avatar' | 'relative-date' | 'selector';
@@ -49,7 +47,7 @@ export interface Column {
   /**
    * Estilo personalizado para la columna.
    */
-  style?: ColumnStyle;
+  style?: Style | string;
 
   /**
    * Indica si la columna es ordenable.

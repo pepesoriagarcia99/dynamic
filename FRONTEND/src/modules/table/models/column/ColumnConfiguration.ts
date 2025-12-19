@@ -1,7 +1,4 @@
-interface Color {
-  text: string; // Color del texto
-  background: string; // Color de fondo
-}
+import type { Style } from "./Style";
 
 export interface ColorConfiguration<T> {
   range?: {
@@ -10,8 +7,7 @@ export interface ColorConfiguration<T> {
   };
 
   value?: T;
-
-  color: Color;
+  style: Style | string;
 }
 
 export interface NumberColumnConfiguration {
@@ -27,7 +23,7 @@ export interface NumberColumnConfiguration {
 }
 
 export interface StringColumnConfiguration {
-  representation?: 'uppercase' | 'lowercase' | 'capitalize' | 'trim' | 'none';
+  representation?: 'uppercase' | 'lowercase' | 'capitalize' | 'trim';
   colorConfiguration?: Omit<ColorConfiguration<string>, 'range'>[];
 }
 

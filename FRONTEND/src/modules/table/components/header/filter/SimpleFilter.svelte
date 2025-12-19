@@ -5,7 +5,6 @@
   import type { Column } from '../../../models/column/Column';
   // import { filterStore } from '../../store/filter-store';
 
-  import { styleTransformer } from '../../../../../utils/style-transformer';
   import { loadingState } from '../../../store/loading-state.svelte';
 
   import Skeleton from '../../Skeleton.svelte';
@@ -23,13 +22,13 @@
 
   /** Methods */
   onMount(() => {
-    columns.forEach((column) => {
-      console.log("🚀 ~ column:", column)
+    // columns.forEach((column) => {
+      // console.log("🚀 ~ column:", column)
       // const filterStoreComponent: StoreComponent<string> = filterStore.add(column.key, value);
       // filterStoreComponent.subscribe((change: StoreComponentData<string>) => {
       //   value = change.value ?? '';
       // });
-    });
+    // });
   });
 
   function onChange(value: any) {
@@ -43,7 +42,7 @@
       <th
         class="column-filter-th column-filter-th-{column.index}"
         part="column-filter-th column-filter-th-{column.index}"
-        style={styleTransformer.toString(column?.style)}
+        style={column?.style as string}
       >
         {#if loadingState() === true}
           <div style="padding: 0 8px;">
@@ -55,17 +54,17 @@
             bind:value
             {onChange}
           /> -->
-        {:else if column.type === 'Boolean'}
+        {:else if column.type === 'boolean'}
           <CheckControl id={column.key} {onChange} triState={true} />
-        {:else if column.type === 'String' || column.type === 'Number'}
-          <BasicControl id={column.key} type={column.type === 'Number' ? 'number' : 'text'} {onChange} />
+        {:else if column.type === 'string' || column.type === 'number'}
+          <BasicControl id={column.key} type={column.type === 'number' ? 'number' : 'text'} {onChange} />
         {/if}
       </th>
     {:else}
       <th
         class="column-filter-th column-filter-th-{column.index} column-filter-th-spacer"
         part="column-filter-th column-filter-th-{column.index}"
-        style={styleTransformer.toString(column?.style)}
+        style={column?.style as string}
       >
         <!-- space -->
       </th>

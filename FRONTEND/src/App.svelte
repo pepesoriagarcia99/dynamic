@@ -16,18 +16,18 @@
   import type { BasicControlEvent } from './modules/table/models/event/ControlEvent';
 
   let columns: Column[] = [
-    // { key: 'flags.png', name: 'Bandera', type: 'image', style: { width: '80px' } },
-    // {
-    //   key: 'name.common',
-    //   name: 'Nombre nombre de columna my largo para probar que se ve correctamente jajjajajaja mortal',
-    //   type: 'avatar',
-    //   configuration: {
-    //     pictureColumn: 'picture',
-    //     altText: 'Country flag'
-    //   },
-    //   style: { 'max-width': '200px' },
-    //   filterable: true
-    // },
+    { key: 'flags.png', name: 'Bandera', type: 'image', style: { width: '80px' } },
+    {
+      key: 'name.common',
+      name: 'Nombre nombre de columna my largo para probar que se ve correctamente jajjajajaja mortal',
+      type: 'avatar',
+      configuration: {
+        pictureColumn: 'picture',
+        altText: 'Country flag'
+      },
+      style: { 'max-width': '200px' },
+      filterable: true
+    },
     { key: 'continents.[0]', name: 'Continente', type: 'string', sortable: true },
     { key: 'region', name: 'Region', type: 'string', sortable: true },
     { key: 'subregion', name: 'Subregion', type: 'string', filterable: true },
@@ -81,20 +81,20 @@
         colorConfiguration: [
           {
             range: { min: 0, max: 10000 },
-            color: {
-              text: 'green'
+            style: {
+              'color': 'green'
             }
           },
           {
             range: { min: 10001, max: 100000 },
-            color: {
-              text: 'orange'
+            style: {
+              'color': 'orange'
             }
           },
           {
             range: { min: 100001, max: Infinity },
-            color: {
-              text: 'red'
+            style: {
+              'color': 'red'
             }
           }
         ]
@@ -110,23 +110,29 @@
         colorConfiguration: [
           {
             value: 'Low',
-            color: {
-              text: '#166534',
-              background: '#DCFCE7'
+            style: {
+              color: '#065F46',
+              'background-color': '#D1FAE5',
+              'border-radius': '4px',
+              'font-weight': '600'
             }
           },
           {
             value: 'Medium',
-            color: {
-              text: '#854D0E',
-              background: '#FEF9C3'
+            style: {
+              'color': '#854D0E',
+              'background-color': '#FEF9C3',
+              'border-radius': '4px',
+              'font-weight': '600'
             }
           },
           {
             value: 'High',
-            color: {
-              text: '#991B1B',
-              background: '#FEE2E2'
+            style: {
+              color: '#7F1D1D',
+              'background-color': '#FECACA',
+              'border-radius': '4px',
+              'font-weight': '600'
             }
           }
         ]
@@ -148,7 +154,7 @@
     { key: 'region', name: 'Region', type: 'string' },
     { key: 'region', name: 'Region', type: 'string' },
     { key: 'region', name: 'Region', type: 'string' },
-    { key: 'region', name: 'Region', type: 'string' },
+    { key: 'region', name: 'Region', type: 'string' }
   ];
 
   let loading: boolean = $state(false);
@@ -194,9 +200,9 @@
       .catch(console.error)
       .finally(() => {
         loading = false;
-        // setTimeout(() => {
-        //   loading = false;
-        // }, 2000);
+        setTimeout(() => {
+          loading = false;
+        }, 2000);
       });
   }
 
@@ -317,14 +323,14 @@
       sortableType="multiple"
       pageSizeOptions={[5, 50, 100, 200]}
       pageSize={100}
-      onReady={onReady}
-      onRowClick={onRowClick}
+      {onReady}
+      {onRowClick}
       onSelection={onRowSelect}
-      onFilterChange={onFilterChange}
-      onSortChange={onSortChange}
-      onPageChange={onPageChange}
-      onContextMenuEvent={onContextMenuEvent}
-      onScrollEndEvent={onScrollEndEvent}
+      {onFilterChange}
+      {onSortChange}
+      {onPageChange}
+      {onContextMenuEvent}
+      {onScrollEndEvent}
       onControlEvent_1={onControlEvent}
     >
       <div slot="context-menu" class="context-menu">

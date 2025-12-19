@@ -1,8 +1,9 @@
-import type { ColumnStyle } from "../modules/table/models/column/Column";
+import type { Style } from "../modules/table/models/column/Style";
+
 
 class StyleTransformer {
 
-    toString(columnStyle?: ColumnStyle): string | undefined {
+    toString(columnStyle?: Style): string | undefined {
         if (!columnStyle) {
             return undefined;
         }
@@ -10,9 +11,9 @@ class StyleTransformer {
         let styleString = '';
 
         for (const [key, value] of Object.entries(columnStyle)) {
-            const kebabKey = key.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
-            styleString += `${kebabKey}: ${value}; `;
+            styleString += `${key}:${value};`;
         }
+
         return styleString.trim();
     }
 }
