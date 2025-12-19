@@ -11,7 +11,7 @@
   }
 
   /** Inputs */
-  const { columns = [], tableConfiguration }: HeaderProps = $props();
+  const { columns, tableConfiguration }: HeaderProps = $props();
 </script>
 
 <thead class="thead" part="thead">

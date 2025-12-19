@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
+
   import { CONTROL_EVENT_NAME } from '../../../constant';
 
   import type { Column } from '../../../models/column/Column';
@@ -29,7 +31,7 @@
   let controls: Control[] = $state([]);
 
   /** Methods */
-  $effect(() => {
+  onMount(() => {
     controls = columns.map((column) => {
       const control: Control = {
         column,

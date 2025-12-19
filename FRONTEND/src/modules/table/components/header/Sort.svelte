@@ -21,21 +21,22 @@
 
   /** Values */
   let sortDirection = $state<SortOrder | null>(null);
-  const sortStoreComponent: StoreComponent<SortOrder> = sortStore.add(column.key, null);
-
-  const partNamesContainer: string = $derived(`sort-container sort-container-${column.index}`);
-  const partNamesButton: string = $derived(`sort-btn sort-btn-${column.index}`);
   const partNamesIcon: string = $derived(
     ['sort-icon', sortDirection !== null ? 'sort-icon-active' : null, `sort-icon-${column.index}`]
       .filter(Boolean)
       .join(' ')
   );
 
+  const sortStoreComponent: StoreComponent<SortOrder> = sortStore.add(column.key, null);
+
+  const partNamesContainer: string = `sort-container sort-container-${column.index}`;
+  const partNamesButton: string = `sort-btn sort-btn-${column.index}`;
+
   /** Methods */
   onMount(() => {
     /**
      * TODO: se tendra que monitorizar el valor de filtro en advance filter para saber si mostrar icono activo
-    */
+     */
     sortStoreComponent.subscribe((event) => {
       sortDirection = event.value ?? null;
     });
@@ -93,7 +94,8 @@
   .sort-icon-active {
     width: 22px;
     height: 22px;
-    filter: invert(1) drop-shadow(0 0 0 var(--table-header-sorted-icon-color)) drop-shadow(0 0 0 var(--table-header-sorted-icon-color));
+    filter: invert(1) drop-shadow(0 0 0 var(--table-header-sorted-icon-color))
+      drop-shadow(0 0 0 var(--table-header-sorted-icon-color));
     transform: scale(1.2);
   }
 </style>

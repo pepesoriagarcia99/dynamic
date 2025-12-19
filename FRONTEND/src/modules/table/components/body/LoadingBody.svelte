@@ -4,20 +4,16 @@
 
   interface LoadingBodyProps {
     columns?: Column[];
+    pageSize?: number;
   }
 
   /** Inputs */
-  const { columns = [] }: LoadingBodyProps = $props();
+  const { columns, pageSize = 200 }: LoadingBodyProps = $props();
 
-  let skeletonData = Array.from({ length: 200 }, (_, i) => i);
+  let skeletonData = Array.from({ length: pageSize }, (_, i) => i);
 
-  const getRowPartNames = (index: number) => {
-    return `loading-row loading-row-${index % 2 === 0 ? 'even' : 'odd'}`;
-  };
-
-  const getColumnPartNames = (index: number) => {
-    return `loading-column loading-column-${index}`;
-  };
+  const getRowPartNames = (index: number) => `loading-row loading-row-${index % 2 === 0 ? 'even' : 'odd'}`;
+  const getColumnPartNames = (index: number) => `loading-column loading-column-${index}`;
 </script>
 
 {#each skeletonData as { }, iRow}

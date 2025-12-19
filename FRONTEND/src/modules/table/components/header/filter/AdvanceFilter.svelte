@@ -27,9 +27,6 @@
   let sortDirection = $state<SortOrder | null>(null);
   let value = $state<any>(null);
   const sortStoreComponent: StoreComponent<SortOrder> | undefined = sortStore.get(column.key);
-
-  const partNamesContainer: string = $derived(`advance-filter-container advance-filter-container-${column.index}`);
-  const partNamesButton: string = $derived(`advance-filter-btn advance-filter-btn-${column.index}`);
   const partNamesIcon: string = $derived(
     [
       'advance-filter-icon',
@@ -39,6 +36,9 @@
       .filter(Boolean)
       .join(' ')
   );
+
+  const partNamesContainer: string = `advance-filter-container advance-filter-container-${column.index}`;
+  const partNamesButton: string = `advance-filter-btn advance-filter-btn-${column.index}`;
 
   /** Methods */
   onMount(() => {
@@ -67,20 +67,20 @@
   }
 
   // function controlEvent() {
-    /**
-     * Aqui se pueden mapear los diferentes eventos
-     * 
-     * Por ejemplo:
-     * Selectores: Evento de paginacion para traer mas valores
-     * AutoComplete: Evento de busqueda para filtrar valores, Evento de paginacion
-    */
-    // el.dispatchEvent(
-    //   new CustomEvent('ControlEvent', {
-    //     detail: eventDetail as SortEvent[],
-    //     bubbles: true,
-    //     composed: true
-    //   })
-    // );
+  /**
+   * Aqui se pueden mapear los diferentes eventos
+   *
+   * Por ejemplo:
+   * Selectores: Evento de paginacion para traer mas valores
+   * AutoComplete: Evento de busqueda para filtrar valores, Evento de paginacion
+   */
+  // el.dispatchEvent(
+  //   new CustomEvent('ControlEvent', {
+  //     detail: eventDetail as SortEvent[],
+  //     bubbles: true,
+  //     composed: true
+  //   })
+  // );
   // }
 </script>
 

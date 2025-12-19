@@ -186,7 +186,9 @@
 
       return {
         ...column,
-        index
+        index,
+        // si la tabla es resizable, la columna tambien lo es por omision
+        resizable: column.resizable ?? true
       };
     })
   );
@@ -435,10 +437,10 @@
 
         <tbody class="tbody" part="tbody">
           {#if loading === true}
-            <LoadingBody columns={indexColumns} />
+            <LoadingBody columns={indexColumns} {pageSize} />
           {:else if data.length === 0 && loading === false}
             <tr>
-              <td colspan={indexColumns.length} style="text-align: left; padding: 16px; vertical-align: top;">
+              <td colspan={indexColumns.length} class="table-no-data" part="table-no-data">
                 No data available.
               </td>
             </tr>
@@ -458,7 +460,7 @@
       </table>
     </div>
 
-    <div class="pagination" part="pagination">
+    <div class="pagination-root" part="pagination-root">
       {#if pageableType === 'pagination' && count !== undefined}
         <Pagination bind:this={paginationRef} {count} {pageSizeOptions} {pageSize} onChange={onPageChange} />
       {/if}
@@ -599,7 +601,13 @@
     min-width: 100%;
   }
 
-  .pagination {
+  .table-no-data {
+    padding: 16px;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .pagination-root {
     flex-shrink: 0;
     background: var(--pagination-background);
     margin-top: 12px;

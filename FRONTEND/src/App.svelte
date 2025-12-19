@@ -207,12 +207,12 @@
   }
 
   function transform() {
-    filteredData = data;
+    let dataFrame = data;
 
     //filter
     const filters = tableFilter.filter;
     if (filters.length > 0) {
-      filteredData = filteredData.filter((row: any) => {
+      dataFrame = dataFrame.filter((row: any) => {
         return filters.every(({ key, value }) => {
           const cellValue = key
             .split('.')
@@ -230,27 +230,8 @@
     const start = (page.page - 1) * page.pageSize;
     const end = start + page.pageSize;
 
-    filteredData = filteredData.slice(start, end);
+    filteredData = dataFrame.slice(start, end);
   }
-
-  // function filterValues() {
-  //   const filters = tableFilter.filter;
-
-  //   if (filters.length === 0) {
-  //     filteredData = data;
-  //     return;
-  //   }
-
-  //   filteredData = data.filter((row: any) => {
-  //     return filters.every(({ key, value }) => {
-  //       const cellValue = key.split('.').reduce((obj, k) => (obj && obj[k] !== 'undefined' ? obj[k] : undefined), row);
-  //       if (cellValue === undefined || cellValue === null) return false;
-  //       if (!value) return true;
-
-  //       return cellValue.toString().toLowerCase().includes(value.toString().toLowerCase());
-  //     });
-  //   });
-  // }
 
   onMount(() => {
     tableEl = document.getElementById('main-table') as HTMLElement & PublicApi;
@@ -264,7 +245,7 @@
     console.log('CLICKED: ', event.detail);
   }
 
-  function onRowSelect(event: any & { detail: SelectionEvent }) {
+  function onSelection(event: any & { detail: SelectionEvent }) {
     console.log('SELECTED: ', event.detail);
   }
 
@@ -316,7 +297,7 @@
       {columns}
       {count}
       data={filteredData}
-      filterable="simple"
+      filterable="basic"
       pageableType="pagination"
       resizable={true}
       selectableType="multiple"
@@ -325,7 +306,7 @@
       pageSize={100}
       {onReady}
       {onRowClick}
-      onSelection={onRowSelect}
+      {onSelection}
       {onFilterChange}
       {onSortChange}
       {onPageChange}

@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-
   import type { Column } from '../../models/column/Column';
   import type { RowEvent, RowEventType } from '../../models/event/RowEvent';
 
@@ -20,15 +18,14 @@
 
   /** Inputs */
   const { column, row, contextMenu = false, onClick = () => {} }: ColumnValueProps = $props();
-  const columnPartNames: string = $derived(`column column-${column.index}`);
-  const columnValuePartNames: string = $derived(`column-value column-value-${column.index}`);
-  let value: any = $state<any>();
-  let style: string | undefined = $state<string | undefined>();
+
+  const simpleTypes = new Set(['string', 'number', 'date', 'selector']);
+  const columnPartNames: string = `column column-${column.index}`;
+  const columnValuePartNames: string = `column-value column-value-${column.index}`;
 
   /** Methods */
-  onMount(() => {
-    getValue();
-  });
+  const transformer = TransformerFactory.createTransformer(column, row);
+  let value: any = $state<any>(transformer.getValue());
 
   function onCellClick(event: MouseEvent, type: RowEventType) {
     event.stopPropagation();
@@ -50,11 +47,6 @@
       }
     });
   }
-
-  function getValue(): void {
-    const transformer = TransformerFactory.createTransformer(column, row);
-    value = transformer.getValue();
-  }
 </script>
 
 <td
@@ -65,11 +57,11 @@
   oncontextmenu={(event) => onCellClick(event, 'rightclick')}
   ondblclick={(event) => onCellClick(event, 'doubleclick')}
 >
-  {#if ['string', 'number', 'date', 'selector'].includes(column.type)}
+  {#if simpleTypes.has(column.type)}
     <div
       class={columnValuePartNames}
       part={columnValuePartNames}
-      {style}
+      style={(column.configuration as any)?.colorConfiguration?.style }
       use:tooltip={value}
       use:tooltipPosition={'right'}
       use:tooltipDelay={TOOLTIP_DELAY}

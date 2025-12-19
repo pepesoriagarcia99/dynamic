@@ -40,14 +40,13 @@
       .filter(Boolean)
       .join(' ')
   );
-  const partNamesBtn: string = $derived(`column-header-btn column-header-btn-${column.index}`);
-  const partNamesContent: string = $derived(`column-header-content column-header-content-${column.index}`);
+  ;
+  const partNamesBtn: string = $derived(['column-header-btn' , 'column-header-btn', `column-header-btn-${column.index}`, isSortable ? 'column-header-btn-sortable' : null].filter(Boolean).join(' '));
   const partNamesName: string = $derived(
     ['column-header-name', isSorted ? 'column-header-name-sorted' : null, `column-header-name-${column.index}`]
       .filter(Boolean)
       .join(' ')
   );
-  const partNamesResize: string = $derived(`column-header-resize column-header-resize-${column.index}`);
   const partNamesResizeIcon: string = $derived(
     [
       'column-header-resize-icon',
@@ -57,6 +56,9 @@
       .filter(Boolean)
       .join(' ')
   );
+
+  const partNamesResize: string = `column-header-resize column-header-resize-${column.index}`;
+  const partNamesContent: string = `column-header-content column-header-content-${column.index}`;
 
   /** Methods */
   function handleResizeMouseDown(event: MouseEvent) {
@@ -136,7 +138,7 @@
   </button>
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-  {#if tableConfiguration.resizable && column.resizable && loadingState() === false}
+  {#if tableConfiguration.resizable === true && column.resizable === true && loadingState() === false}
     <div class={partNamesResize} part={partNamesResize} onmousedown={handleResizeMouseDown} role="separator">
       <img src={resizeIcon} class={partNamesResizeIcon} part={partNamesResizeIcon} alt="resize" />
     </div>
@@ -173,7 +175,7 @@
   .column-header-btn {
     background: none;
     border: none;
-    cursor: pointer;
+    cursor: default;
 
     width: 100%;
     height: var(--table-header-height);
@@ -181,6 +183,10 @@
 
     font-weight: 600;
     font-size: 16px;
+  }
+
+  .column-header-btn-sortable {
+    cursor: pointer;
   }
 
   .column-header-name {
