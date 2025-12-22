@@ -29,14 +29,13 @@
 
   /** Values */
   let isSelected = $state<boolean>(false);
-  let isSelectableRow = $derived<boolean>(tableConfiguration.selectableType !== 'none');
 
   /** Computed */
-  const partNames: string = $derived(
+  let rowStaticStyle: string = `${index % 2 === 0 ? 'row-even' : 'row-odd'}`; 
+  const rowStyle: string = $derived(
     [
       'row',
-      index % 2 === 0 ? 'row-even' : 'row-odd',
-      isSelected ? 'row-selected' : isSelectableRow ? 'row-selectable' : null
+      isSelected ? 'row-selected' : tableConfiguration.selectableType !== 'none' ? 'row-selectable' : null
     ]
       .filter(Boolean)
       .join(' ')
@@ -92,8 +91,8 @@
 </script>
 
 <tr
-  part={partNames}
-  class={partNames}
+  part={rowStyle + ' ' + rowStaticStyle}
+  class={rowStyle + ' ' + rowStaticStyle}
   onclick={(e) => onRowClick('leftclick', e)}
   oncontextmenu={() => onRowClick('rightclick')}
   ondblclick={() => onRowClick('doubleclick')}

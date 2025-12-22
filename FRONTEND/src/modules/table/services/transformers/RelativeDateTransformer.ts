@@ -1,5 +1,4 @@
 import { TransformerTemplate } from '../TransformerTemplate';
-import moment from 'moment';
 
 import type { Column } from '../../models/column/Column';
 
@@ -9,6 +8,6 @@ export class RelativeDateTransformer extends TransformerTemplate {
   }
 
   getValue(): string {
-    return moment(this.getElementValue()).toISOString();
+    return this.getElementValue();
   }
 }
