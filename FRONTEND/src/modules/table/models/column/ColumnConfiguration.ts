@@ -23,7 +23,6 @@ export interface NumberColumnConfiguration {
 }
 
 export interface StringColumnConfiguration {
-  representation?: 'uppercase' | 'lowercase' | 'capitalize' | 'trim';
   colorConfiguration?: Omit<ColorConfiguration<string>, 'range'>[];
 }
 
