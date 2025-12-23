@@ -4,19 +4,16 @@ import type { TransformerValue } from '../models/transformer/TransformerReturnTy
 export abstract class TransformerTemplate {
   column: Column;
 
-  element: any;
-
-  constructor(column: Column, element: any) {
+  constructor(column: Column) {
     this.column = column;
-    this.element = element;
   }
 
-  protected getElementValue(k?: string): any {
+  protected getElementValue(element: any, k?: string): any {
     const key = k ?? this.column.key;
     let keys = key.split('.');
 
     if (keys.length > 1) {
-      let currentValue = this.element;
+      let currentValue = element;
       for (const key of keys) {
         const arrayIndexMatch = key.match(/\[(\d+)\]$/);
 
@@ -30,9 +27,9 @@ export abstract class TransformerTemplate {
 
       return currentValue;
     } else {
-      return this.element[key];
+      return element[key];
     }
   }
 
-  abstract getValue(): TransformerValue;
+  abstract getValue(element: any): TransformerValue;
 }

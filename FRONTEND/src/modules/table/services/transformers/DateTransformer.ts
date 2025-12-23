@@ -5,19 +5,22 @@ import type { Column } from '../../models/column/Column';
 import type { DateColumnConfiguration } from '../../models/column/ColumnConfiguration';
 
 export class DateTransformer extends TransformerTemplate {
+  private format: string | undefined;
 
-  constructor(column: Column, element: any) {
-    super(column, element);
+  constructor(column: Column) {
+    super(column);
+    
+    const configuration = this.column.configuration as DateColumnConfiguration;
+    this.format = configuration?.format;
   }
 
-  getValue(): string | undefined {
-    let rowValue = this.getElementValue();
-    const configuration = this.column.configuration as DateColumnConfiguration;
-
-    if (configuration?.format) {
-      return moment(rowValue).format(configuration.format);
-    } else {
-      return rowValue;
+  getValue(element: any): string | undefined {
+    const rowValue = this.getElementValue(element);
+    
+    if (this.format) {
+      return moment(rowValue).format(this.format);
     }
+    
+    return rowValue;
   }
 }

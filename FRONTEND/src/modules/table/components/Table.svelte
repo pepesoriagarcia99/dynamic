@@ -100,8 +100,6 @@
   /** Checks */
   // Validacion de configuracion de columnas
   $effect(() => {
-    console.log('$effect de cambio de columnas');
-
     if (!Array.isArray(columns) || columns.length === 0) {
       throw new Error('The "columns" property must be a non-empty array.');
     }

@@ -4,8 +4,23 @@ import type { Column } from '../../models/column/Column';
 import type { NumberColumnConfiguration } from '../../models/column/ColumnConfiguration';
 
 export class NumberTransformer extends TransformerTemplate {
-  constructor(column: Column, element: any) {
-    super(column, element);
+  private formatter: Intl.NumberFormat;
+  private prefix: string;
+  private suffix: string;
+
+  constructor(column: Column) {
+    super(column);
+
+    const configuration = this.column.configuration as NumberColumnConfiguration;
+
+    const locale =
+      configuration?.IntlNumberFormat?.locale && this.isLocaleCode(configuration.IntlNumberFormat.locale)
+        ? configuration.IntlNumberFormat.locale
+        : navigator.language;
+
+    this.formatter = new Intl.NumberFormat(locale, configuration?.IntlNumberFormat?.options ?? {});
+    this.prefix = configuration?.prefix ?? '';
+    this.suffix = configuration?.suffix ?? '';
   }
 
   private isLocaleCode(locale: string): boolean {
@@ -17,26 +32,10 @@ export class NumberTransformer extends TransformerTemplate {
     }
   }
 
-  getValue(): string | undefined {
-    let value;
-    let rowValue = this.getElementValue();
-    const configuration = this.column.configuration as NumberColumnConfiguration;
-
-    let locale =
-      configuration?.IntlNumberFormat?.locale && this.isLocaleCode(configuration.IntlNumberFormat.locale) === true
-        ? configuration.IntlNumberFormat.locale
-        : navigator.language;
-
-    value = new Intl.NumberFormat(locale, configuration?.IntlNumberFormat?.options ?? {}).format(rowValue);
-
-    if (configuration?.prefix) {
-      value = configuration.prefix + value;
-    }
-
-    if (configuration?.suffix) {
-      value = value + configuration.suffix;
-    }
-
-    return value;
+  getValue(element: any): string | undefined {
+    const rowValue = this.getElementValue(element);
+    const formattedValue = this.formatter.format(rowValue);
+    
+    return this.prefix + formattedValue + this.suffix;
   }
 }

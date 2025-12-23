@@ -5,17 +5,21 @@ import type { ImageValue } from '../../models/transformer/TransformerReturnType'
 import type { ImageColumnConfiguration } from '../../models/column/ColumnConfiguration';
 
 export class ImageTransformer extends TransformerTemplate {
-  constructor(column: Column, element: any) {
-    super(column, element);
+  private altText: string;
+
+  constructor(column: Column) {
+    super(column);
+    
+    const configuration = this.column.configuration as ImageColumnConfiguration;
+    this.altText = configuration?.altText ?? `Image value ${this.column.name}`;
   }
 
-  getValue(): ImageValue {
-    const rowValue = this.getElementValue();
-    const configuration = this.column.configuration as ImageColumnConfiguration;
+  getValue(element: any): ImageValue {
+    const rowValue = this.getElementValue(element);
 
     return {
       src: String(rowValue),
-      alt: configuration?.altText ?? `Image value ${this.column.name}`
+      alt: this.altText
     };
   }
 }

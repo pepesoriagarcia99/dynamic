@@ -24,8 +24,8 @@
   const columnValuePartNames: string = `column-value column-value-${column.index}`;
 
   /** Methods */
-  const transformer = TransformerFactory.createTransformer(column, row);
-  let value: any = $state<any>(transformer.getValue());
+  const transformer = TransformerFactory.createTransformer(column);
+  let value: any = $state<any>(transformer.getValue(row));
 
   function onCellClick(event: MouseEvent, type: RowEventType) {
     event.stopPropagation();
