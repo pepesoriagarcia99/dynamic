@@ -167,6 +167,10 @@
   /** States */
   let hasContextMenuSlot = $derived($$slots['context-menu']);
   const indexColumns: Column[] = $derived(
+    /**
+     * TODO: Revisar tipado Typescript
+     * TODO: Revisar rendimiento de esto
+    */
     columns.map((column, index) => {
       if (typeof column.style === 'object') {
         column.style = styleTransformer.toString(column.style);

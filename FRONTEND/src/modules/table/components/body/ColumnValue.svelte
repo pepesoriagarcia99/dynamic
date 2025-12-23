@@ -8,6 +8,7 @@
   import BooleanComponent from './value/Boolean.svelte';
   import Avatar from './value/Avatar.svelte';
   import { TransformerFactory } from '../../services/TransformerFactory';
+  import type { ColorConfiguration } from '../../models/column/ColumnConfiguration';
 
   interface ColumnValueProps {
     column: Column;
@@ -18,6 +19,8 @@
 
   /** Inputs */
   const { column, row, contextMenu = false, onClick = () => {} }: ColumnValueProps = $props();
+
+  console.log();
 
   const simpleTypes = new Set(['string', 'number', 'date', 'selector']);
   const columnPartNames: string = `column column-${column.index}`;
@@ -47,6 +50,27 @@
       }
     });
   }
+
+  /**
+   * TODO: Revisart tipado typescript
+   * TODO: Revisar rendimiento
+   */
+  function getStyle() {
+    const configStyle: ColorConfiguration<any>[] = (column.configuration as any)?.colorConfiguration;
+    let style: string = '';
+
+    configStyle?.forEach((config) => {
+      if (config.range) {
+        if (Number(value) >= Number(config.range.min) && Number(value) <= Number(config.range.max)) {
+          style = config.style as string;
+        }
+      } else if (config.value !== undefined && String(value) === String(config.value)) {
+        style = config.style as string;
+      }
+    });
+
+    return style;
+  }
 </script>
 
 <td
@@ -61,7 +85,7 @@
     <div
       class={columnValuePartNames}
       part={columnValuePartNames}
-      style={(column.configuration as any)?.colorConfiguration?.style }
+      style={getStyle()}
       use:tooltip={value}
       use:tooltipPosition={'right'}
       use:tooltipDelay={TOOLTIP_DELAY}
