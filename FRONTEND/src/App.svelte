@@ -181,8 +181,8 @@
     return fetch('https://restcountries.com/v3.1/independent?status=true')
       .then((res) => res.json())
       .then((res) => {
-        count = res.length;
-        data = res.map((item: any, index: number) => {
+        count = res.length * 4;
+        data = [...res, ...res, ...res, ...res].map((item: any, index: number) => {
           const densityValue = item.population / item.area;
           const hash = hashString(item.name.common);
           return {
