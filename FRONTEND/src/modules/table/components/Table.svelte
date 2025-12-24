@@ -211,19 +211,6 @@
     }))
   );
 
-  /**
-   * TODO: Posible optimizacion
-   * $derived con memo
-   */
-//   const parameterizedData: RowData[] = $derived.by(() => {
-//   return data.map((r) => ({
-//     ...r,
-//     __ctx: {
-//       isSelected: false
-//     }
-//   }));
-// });
-
   const tableConfiguration: TableConfiguration = $derived({
     selectableType,
     selectAll,
@@ -476,6 +463,18 @@
                 onClick={onRowClick}
               />
             {/each}
+            <!-- TODO: IDEA DE REFACTORING -->
+            <!-- En vez de regenerar los comoponentes Row, lo que hago es mutarlos -->
+            <!-- {#each { length: pageSize } as _, i (i)}
+              <Row
+                index={i}
+                columns={indexColumns}
+                row={parameterizedData[i]}
+                {tableConfiguration}
+                contextMenu={hasContextMenuSlot}
+                onClick={onRowClick}
+              />
+            {/each} -->
           {/if}
         </tbody>
       </table>

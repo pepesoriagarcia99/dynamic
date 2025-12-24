@@ -26,6 +26,19 @@
   const columnValuePartNames: string = `column-value column-value-${column.index}`;
 
   /** Methods */
+
+  /**
+   * TODO: IDEA DE REFACTORING
+   * En vez de regenerar los comoponentes Row, lo que hago es mutarlos
+   */
+  // const transformer: TransformerTemplate = TransformerFactory.createTransformer(column);
+  // let value: any = $state<any>();
+  // $effect(() => {
+  //   if (row) {
+  //     value = transformer.getValue(row);
+  //   }
+  // });
+
   const transformer: TransformerTemplate = TransformerFactory.createTransformer(column);
   let value: any = $state<any>(transformer.getValue(row));
 

@@ -31,23 +31,49 @@
   let isSelected = $state<boolean>(false);
 
   /** Computed */
-  let rowStaticStyle: string = `${index % 2 === 0 ? 'row-even' : 'row-odd'}`; 
+  let rowStaticStyle: string = `${index % 2 === 0 ? 'row-even' : 'row-odd'}`;
   const rowStyle: string = $derived(
-    [
-      'row',
-      isSelected ? 'row-selected' : tableConfiguration.selectableType !== 'none' ? 'row-selectable' : null
-    ]
+    ['row', isSelected ? 'row-selected' : tableConfiguration.selectableType !== 'none' ? 'row-selectable' : null]
       .filter(Boolean)
       .join(' ')
   );
 
   /** Methods */
+  /**
+   * TODO: IDEA DE REFACTORING
+   * En vez de regenerar los comoponentes Row, lo que hago es mutarlos
+   */
+  // $effect(() => {
+  //   let subscribeId: string;
+
+  //   if (row) {
+  //     const key = row[tableConfiguration.primaryKey!];
+  //     let selectionComponent = selectionStore.get(key);
+
+  //     if (selectionComponent) {
+  //       isSelected = selectionComponent.value?.__ctx.isSelected ?? false;
+  //       selectionComponent.subscribe((event) => {
+  //         isSelected = event.value?.__ctx.isSelected ?? false;
+  //       });
+  //     } else {
+  //       selectionComponent = selectionStore.add(key, row);
+  //       subscribeId = selectionComponent.subscribe((event) => {
+  //         isSelected = event.value?.__ctx.isSelected ?? false;
+  //       });
+  //     }
+
+  //     return () => {
+  //       selectionComponent.unsubscribe(subscribeId);
+  //     };
+  //   }
+  // });
+
   onMount(() => {
     let subscribeId: string;
     const key = row[tableConfiguration.primaryKey!];
     let selectionComponent = selectionStore.get(key);
 
-    if(selectionComponent) {
+    if (selectionComponent) {
       isSelected = selectionComponent.value?.__ctx.isSelected ?? false;
       selectionComponent.subscribe((event) => {
         isSelected = event.value?.__ctx.isSelected ?? false;
@@ -90,6 +116,9 @@
   }
 </script>
 
+<!-- TODO: IDEA DE REFACTORING -->
+<!-- En vez de regenerar los comoponentes Row, lo que hago es mutarlos -->
+<!-- style:display={!!row ? 'hidden' : 'none'} -->
 <tr
   part={rowStyle + ' ' + rowStaticStyle}
   class={rowStyle + ' ' + rowStaticStyle}
