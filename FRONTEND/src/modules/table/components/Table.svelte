@@ -96,6 +96,7 @@
   let contextMenuVisible = $state(false);
   let contextMenuEvent = $state<RowEvent | undefined>(undefined);
   let wasAtBottom = false;
+  let scrollTimeout: number | undefined;
 
   /** Checks */
   // Validacion de configuracion de columnas
@@ -170,14 +171,14 @@
     /**
      * TODO: Revisar tipado Typescript
      * TODO: Revisar rendimiento de esto
-    */
+     */
     columns.map((column, index) => {
       if (typeof column.style === 'object') {
         column.style = styleTransformer.toString(column.style);
       }
 
       // @ts-ignore
-      if(column.configuration?.colorConfiguration) {
+      if (column.configuration?.colorConfiguration) {
         // @ts-ignore
         column.configuration?.colorConfiguration.forEach((colorConfig: any) => {
           if (typeof colorConfig.style === 'object') {
@@ -194,6 +195,7 @@
       };
     })
   );
+
   const parameterizedData: RowData[] = $derived(
     data.map((r) => ({
       ...r,
@@ -208,6 +210,19 @@
       // }
     }))
   );
+
+  /**
+   * TODO: Posible optimizacion
+   * $derived con memo
+   */
+//   const parameterizedData: RowData[] = $derived.by(() => {
+//   return data.map((r) => ({
+//     ...r,
+//     __ctx: {
+//       isSelected: false
+//     }
+//   }));
+// });
 
   const tableConfiguration: TableConfiguration = $derived({
     selectableType,
@@ -274,8 +289,10 @@
    */
   function handleClickOutside() {
     if (contextMenuVisible && hasContextMenuSlot) {
-      contextMenuVisible = false;
-      contextMenuEvent = undefined;
+      requestAnimationFrame(() => {
+        contextMenuVisible = false;
+        contextMenuEvent = undefined;
+      });
     }
   }
 
@@ -289,25 +306,29 @@
     }
 
     if (pageableType === 'infinite') {
-      const target = event.target as HTMLElement;
-      const scrollTop = target.scrollTop;
-      const scrollHeight = target.scrollHeight;
-      const clientHeight = target.clientHeight;
+      // Throttle del evento de scroll
+      if (scrollTimeout) return;
 
-      // Detectar si está en el fondo (con un margen de 5px)
-      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 5;
+      scrollTimeout = window.setTimeout(() => {
+        const target = event.target as HTMLElement;
+        const scrollTop = target.scrollTop;
+        const scrollHeight = target.scrollHeight;
+        const clientHeight = target.clientHeight;
 
-      // Solo disparar el evento cuando se llega al fondo (transición de no estar a estar)
-      if (isAtBottom && !wasAtBottom) {
-        el.dispatchEvent(
-          new CustomEvent(SCROLL_END_EVENT_NAME, {
-            bubbles: true,
-            composed: true
-          })
-        );
-      }
+        const isAtBottom = scrollTop + clientHeight >= scrollHeight - 5;
 
-      wasAtBottom = isAtBottom;
+        if (isAtBottom && !wasAtBottom) {
+          el.dispatchEvent(
+            new CustomEvent(SCROLL_END_EVENT_NAME, {
+              bubbles: true,
+              composed: true
+            })
+          );
+        }
+
+        wasAtBottom = isAtBottom;
+        scrollTimeout = undefined;
+      }, 100);
     }
   }
 
@@ -442,9 +463,7 @@
             <LoadingBody columns={indexColumns} {pageSize} />
           {:else if data.length === 0 && loading === false}
             <tr>
-              <td colspan={indexColumns.length} class="table-no-data" part="table-no-data">
-                No data available.
-              </td>
+              <td colspan={indexColumns.length} class="table-no-data" part="table-no-data"> No data available. </td>
             </tr>
           {:else}
             {#each parameterizedData as row, i (row[primaryKey!])}
@@ -454,7 +473,7 @@
                 {row}
                 {tableConfiguration}
                 contextMenu={hasContextMenuSlot}
-                onClick={(event) => onRowClick(event)}
+                onClick={onRowClick}
               />
             {/each}
           {/if}

@@ -21,6 +21,7 @@
   const { column, row, contextMenu = false, onClick = () => {} }: ColumnValueProps = $props();
 
   const simpleTypes = new Set(['string', 'number', 'date', 'selector']);
+  const isSimpleType = simpleTypes.has(column.type);
   const columnPartNames: string = `column column-${column.index}`;
   const columnValuePartNames: string = `column-value column-value-${column.index}`;
 
@@ -31,7 +32,7 @@
   function onCellClick(event: MouseEvent, type: RowEventType) {
     event.stopPropagation();
     if (contextMenu) {
-      event?.preventDefault();
+      event.preventDefault();
     }
 
     onClick({
@@ -58,7 +59,7 @@
   oncontextmenu={(event) => onCellClick(event, 'rightclick')}
   ondblclick={(event) => onCellClick(event, 'doubleclick')}
 >
-  {#if simpleTypes.has(column.type)}
+  {#if isSimpleType}
     <div
       class={columnValuePartNames}
       part={columnValuePartNames}

@@ -98,7 +98,7 @@
   ondblclick={() => onRowClick('doubleclick')}
 >
   {#each columns as column}
-    <ColumnValue {column} {row} {contextMenu} onClick={(event) => onCellClick(event)} />
+    <ColumnValue {column} {row} {contextMenu} onClick={onCellClick} />
   {/each}
 </tr>
 

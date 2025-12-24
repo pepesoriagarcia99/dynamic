@@ -8,18 +8,21 @@
   }
 
   /** Inputs */
-  const { columns, pageSize = 200 }: LoadingBodyProps = $props();
+  const { columns, pageSize = 100 }: LoadingBodyProps = $props();
 
-  let skeletonData = Array.from({ length: pageSize }, (_, i) => i);
-
-  const getRowPartNames = (index: number) => `loading-row loading-row-${index % 2 === 0 ? 'even' : 'odd'}`;
-  const getColumnPartNames = (index: number) => `loading-column loading-column-${index}`;
+  // Optimización: usar array directo en lugar de Array.from con mapeo
+  let skeletonRows = pageSize ?? 100;
 </script>
 
-{#each skeletonData as { }, iRow}
-  <tr class={getRowPartNames(iRow)} part={getRowPartNames(iRow)}>
-    {#each columns as column, iCol}
-      <td class={getColumnPartNames(iCol)} part={getColumnPartNames(iCol)}>
+{#each { length: skeletonRows } as _, iRow (iRow)}
+  {@const isEven = iRow % 2 === 0}
+  {@const rowClass = isEven ? 'loading-row row-even' : 'loading-row row-odd'}
+  
+  <tr class={rowClass} part={rowClass}>
+    {#each columns as column, iCol (iCol)}
+      {@const colClass = `loading-column loading-column-${iCol}`}
+      
+      <td class={colClass} part={colClass}>
         <div class="loading-column-value" part="loading-column-value">
           {#if column.type === 'avatar'}
             <div class="loading-column-avatar" part="loading-column-avatar">

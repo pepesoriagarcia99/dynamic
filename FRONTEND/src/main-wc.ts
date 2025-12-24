@@ -2,16 +2,21 @@ import Table from './modules/table/components/Table.svelte';
 
 export { Table };
 
-
 // Exportar tipos de modelos
-export type { Column } from './modules/table/models/column/Column';
+export type { Column, ColumnType } from './modules/table/models/column/Column';
 export type { RowData } from './modules/table/models/RowData';
 
 // Exportar tipos de columnas específicas
-// export type { ColumnType } from './modules/table/models/column/column-types/ColumnType';
-// export type { BigNumber } from './modules/table/models/column-types/BigNumber';
-// export type { Enum } from './modules/table/models/column-types/Enum';
-// export type { Image } from './modules/table/models/column-types/Image';
+export type {
+  ColorConfiguration,
+  NumberColumnConfiguration,
+  StringColumnConfiguration,
+  DateColumnConfiguration,
+  BooleanColumnConfiguration,
+  AvatarColumnConfiguration,
+  ImageColumnConfiguration,
+  SelectorColumnConfiguration
+} from './modules/table/models/column/ColumnConfiguration';
 
 // Exportar tipos de eventos
 export type { FilterEvent } from './modules/table/models/event/FilterEvent';
