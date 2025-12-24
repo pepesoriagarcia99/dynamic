@@ -22,7 +22,7 @@ export class TransformerFactory {
         'avatar': AvatarTransformer,
     } as const;
 
-    public static createTransformer(column: Column): any {
+    public static createTransformer(column: Column): TransformerTemplate {
         const TransformerClass = this.transformers[column.type as keyof typeof this.transformers];
         if (!TransformerClass) {
             throw new Error(`Transformer for column type ${column.type} not implemented.`);

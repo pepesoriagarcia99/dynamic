@@ -1,14 +1,14 @@
 <script lang="ts">
   import type { Column } from '../../models/column/Column';
   import type { RowEvent, RowEventType } from '../../models/event/RowEvent';
+  import type { TransformerTemplate } from '../../services/TransformerTemplate';
 
   import { TOOLTIP_DELAY } from '../../constant';
   import { tooltip, tooltipDelay, tooltipPosition } from '../../../tooltip/directives/tooltip';
+  import { TransformerFactory } from '../../services/TransformerFactory';
 
   import BooleanComponent from './value/Boolean.svelte';
   import Avatar from './value/Avatar.svelte';
-  import { TransformerFactory } from '../../services/TransformerFactory';
-  import type { ColorConfiguration } from '../../models/column/ColumnConfiguration';
 
   interface ColumnValueProps {
     column: Column;
@@ -20,14 +20,12 @@
   /** Inputs */
   const { column, row, contextMenu = false, onClick = () => {} }: ColumnValueProps = $props();
 
-  console.log();
-
   const simpleTypes = new Set(['string', 'number', 'date', 'selector']);
   const columnPartNames: string = `column column-${column.index}`;
   const columnValuePartNames: string = `column-value column-value-${column.index}`;
 
   /** Methods */
-  const transformer = TransformerFactory.createTransformer(column);
+  const transformer: TransformerTemplate = TransformerFactory.createTransformer(column);
   let value: any = $state<any>(transformer.getValue(row));
 
   function onCellClick(event: MouseEvent, type: RowEventType) {
@@ -50,27 +48,6 @@
       }
     });
   }
-
-  /**
-   * TODO: Revisart tipado typescript
-   * TODO: Revisar rendimiento
-   */
-  function getStyle() {
-    const configStyle: ColorConfiguration<any>[] = (column.configuration as any)?.colorConfiguration;
-    let style: string = '';
-
-    configStyle?.forEach((config) => {
-      if (config.range) {
-        if (Number(value) >= Number(config.range.min) && Number(value) <= Number(config.range.max)) {
-          style = config.style as string;
-        }
-      } else if (config.value !== undefined && String(value) === String(config.value)) {
-        style = config.style as string;
-      }
-    });
-
-    return style;
-  }
 </script>
 
 <td
@@ -85,7 +62,7 @@
     <div
       class={columnValuePartNames}
       part={columnValuePartNames}
-      style={getStyle()}
+      style={transformer.getStyle()}
       use:tooltip={value}
       use:tooltipPosition={'right'}
       use:tooltipDelay={TOOLTIP_DELAY}

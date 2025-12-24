@@ -1,8 +1,11 @@
 import type { Column } from '../models/column/Column';
+import type { ColorConfiguration } from '../models/column/ColumnConfiguration';
 import type { TransformerValue } from '../models/transformer/TransformerReturnType';
 
 export abstract class TransformerTemplate {
-  column: Column;
+  protected column: Column;
+
+  private baseValue: any;
 
   constructor(column: Column) {
     this.column = column;
@@ -25,10 +28,33 @@ export abstract class TransformerTemplate {
         }
       }
 
-      return currentValue;
+      this.baseValue = currentValue;
     } else {
-      return element[key];
+      this.baseValue = element[key];
     }
+
+    return this.baseValue
+  }
+
+  /**
+   * TODO: Revisart tipado typescript
+   * TODO: Revisar rendimiento
+   */
+  public getStyle(): string {
+    const configStyle: ColorConfiguration<any>[] = (this.column.configuration as any)?.colorConfiguration ?? [];
+    let style: string = '';
+
+    configStyle.forEach((config) => {
+      if (config.range) {
+        if (Number(this.baseValue) >= Number(config.range.min) && Number(this.baseValue) <= Number(config.range.max)) {
+          style = config.style as string;
+        }
+      } else if (config.value !== undefined && String(this.baseValue) === String(config.value)) {
+        style = config.style as string;
+      }
+    });
+
+    return style;
   }
 
   abstract getValue(element: any): TransformerValue;
