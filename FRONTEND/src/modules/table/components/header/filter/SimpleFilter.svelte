@@ -1,16 +1,17 @@
 <script lang="ts">
   import { onMount } from 'svelte';
 
-  // import type { StoreComponent, StoreComponentData } from '../../../core/models/StoreComponent';
   import type { Column } from '../../../models/column/Column';
-  // import { filterStore } from '../../store/filter-store';
 
   import { loadingState } from '../../../store/loading-state.svelte';
 
   import Skeleton from '../../Skeleton.svelte';
   import BasicControl from '../../../../controls/components/BasicControl.svelte';
-  // import SelectorControl from '../../../controls/components/SelectorControl.svelte';
+  import SelectorControl from '../../../../controls/components/SelectorControl.svelte';
   import CheckControl from '../../../../controls/components/CheckControl.svelte';
+  import DateControl from '../../../../controls/components/DateControl.svelte';
+  import MultipleSelectorControl from '../../../../controls/components/MultipleSelectorControl.svelte';
+  import AutoCompleteControl from '../../../../controls/components/AutoCompleteControl.svelte';
 
   interface FilterProps {
     columns: Column[];
@@ -23,21 +24,22 @@
   /** Methods */
   onMount(() => {
     // columns.forEach((column) => {
-      // console.log("🚀 ~ column:", column)
-      // const filterStoreComponent: StoreComponent<string> = filterStore.add(column.key, value);
-      // filterStoreComponent.subscribe((change: StoreComponentData<string>) => {
-      //   value = change.value ?? '';
-      // });
+    // console.log("🚀 ~ column:", column)
+    // const filterStoreComponent: StoreComponent<string> = filterStore.add(column.key, value);
+    // filterStoreComponent.subscribe((change: StoreComponentData<string>) => {
+    //   value = change.value ?? '';
+    // });
     // });
   });
 
   function onChange(value: any) {
-    console.log("🚀 ~ onChange ~ value:", value)
+    console.log('🚀 ~ onChange ~ value:', value);
   }
 </script>
 
 <tr class="filter-thead-tr" part="filter-thead-tr">
   {#each columns as column}
+    {@const configuration: any = column.configuration}
     {#if column.filterable === true}
       <th
         class="column-filter-th column-filter-th-{column.index}"
@@ -48,15 +50,19 @@
           <div style="padding: 0 8px;">
             <Skeleton height="34px" />
           </div>
-        <!-- {:else if column.type === 'String' && (column.configuration as StringColumnConfiguration)?.options}
-          <SelectorControl
-            options={(column.configuration as StringColumnConfiguration)?.options}
-            bind:value
-            {onChange}
-          /> -->
+        {:else if column.type === 'selector' && configuration?.options }
+          {#if !configuration.filterType || configuration.filterType === 'simple-selector'}
+            <SelectorControl options={configuration.options!} {onChange} />
+          {:else if configuration.filterType === 'auto-complete'}
+            <AutoCompleteControl options={configuration.options!} {onChange} />
+            {:else if configuration.filterType === 'multi-selector'}
+            <MultipleSelectorControl options={configuration.options!} {onChange} />
+          {/if}
         {:else if column.type === 'boolean'}
           <CheckControl id={column.key} {onChange} triState={true} />
-        {:else if column.type === 'string' || column.type === 'number'}
+        {:else if column.type === 'date' || column.type === 'relative-date'}
+          <DateControl id={column.key} {onChange} />
+        {:else}
           <BasicControl id={column.key} type={column.type === 'number' ? 'number' : 'text'} {onChange} />
         {/if}
       </th>

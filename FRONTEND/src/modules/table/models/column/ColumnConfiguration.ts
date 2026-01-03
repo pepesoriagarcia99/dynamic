@@ -24,6 +24,7 @@ export interface NumberColumnConfiguration {
 
 export interface StringColumnConfiguration {
   colorConfiguration?: Omit<ColorConfiguration<string>, 'range'>[];
+
 }
 
 export interface DateColumnConfiguration {
@@ -45,7 +46,7 @@ export interface ImageColumnConfiguration {
 }
 
 export interface SelectorColumnConfiguration {
-  options: [],
+  options: Array<string>,
   filterType: 'simple-selector' | 'search-selector' | 'multi-selector' | 'auto-complete';
   colorConfiguration?: Omit<ColorConfiguration<string>, 'range'>[];
 }

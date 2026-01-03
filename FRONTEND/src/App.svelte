@@ -82,19 +82,19 @@
           {
             range: { min: 0, max: 10000 },
             style: {
-              'color': 'green'
+              color: 'green'
             }
           },
           {
             range: { min: 10001, max: 100000 },
             style: {
-              'color': 'orange'
+              color: 'orange'
             }
           },
           {
             range: { min: 100001, max: Infinity },
             style: {
-              'color': 'red'
+              color: 'red'
             }
           }
         ]
@@ -120,7 +120,7 @@
           {
             value: 'Medium',
             style: {
-              'color': '#854D0E',
+              color: '#854D0E',
               'background-color': '#FEF9C3',
               'border-radius': '4px',
               'font-weight': '600'
@@ -135,13 +135,34 @@
               'font-weight': '600'
             }
           }
-        ]
+        ],
+        options: ['Low', 'Medium', 'High']
       },
       filterable: true,
       sortable: true
     },
-    { key: 'region', name: 'Region', type: 'string' },
-    { key: 'region', name: 'Region', type: 'string' },
+    {
+      key: 'region',
+      name: 'Region',
+      type: 'selector',
+      filterable: true,
+      sortable: false,
+      configuration: {
+        filterType: 'auto-complete',
+        options: ['Africa', 'Antarctica', 'Asia', 'Europe', 'North America', 'Oceania', 'South America']
+      }
+    },
+    {
+      key: 'region',
+      name: 'Region',
+      type: 'selector',
+      filterable: true,
+      sortable: false,
+      configuration: {
+        filterType: 'multi-selector',
+        options: ['Africa', 'Antarctica', 'Asia', 'Europe', 'North America', 'Oceania', 'South America']
+      }
+    },
     { key: 'region', name: 'Region', type: 'string' },
     { key: 'region', name: 'Region', type: 'string' },
     { key: 'region', name: 'Region', type: 'string' },
@@ -297,7 +318,7 @@
       {columns}
       {count}
       data={filteredData}
-      filterable="basic"
+      filterable="simple"
       pageableType="pagination"
       resizable={true}
       selectableType="multiple"

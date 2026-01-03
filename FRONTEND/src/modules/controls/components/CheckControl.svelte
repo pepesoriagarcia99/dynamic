@@ -106,6 +106,11 @@
 <style>
   @import '../styles/control.css';
 
+  .control-container {
+    align-items: flex-start !important;
+    height: auto !important;
+  }
+
   .check-control-container {
     width: 100%;
     box-sizing: border-box;

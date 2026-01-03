@@ -69,6 +69,7 @@
   }
 
   input[type='number'] {
+    appearance: textfield;
     -moz-appearance: textfield;
 
     &::-webkit-inner-spin-button,
