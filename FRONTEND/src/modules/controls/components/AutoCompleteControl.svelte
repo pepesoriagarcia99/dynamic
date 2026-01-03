@@ -25,7 +25,7 @@
   let isOpen = $state(false);
   let highlightedIndex = $state(-1);
   let inputElement: HTMLInputElement;
-  let dropdownElement: HTMLDivElement;
+  let dropdownElement: HTMLDivElement | null = $state(null);
 
   const inputId: string = $derived(`autocomplete-control-${id}`);
   const dropdownId: string = $derived(`autocomplete-dropdown-${id}`);

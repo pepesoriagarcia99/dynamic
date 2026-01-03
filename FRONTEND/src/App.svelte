@@ -13,7 +13,7 @@
   import type { PublicApi } from './modules/table/models/public-api/PublicApi';
   import type { TableEvent } from './modules/table/models/event/TableEvent';
   import type { ContextMenuEvent } from './modules/table/models/event/ContextMenuEvent';
-  import type { BasicControlEvent } from './modules/table/models/event/ControlEvent';
+  // import type { BasicControlEvent } from './modules/table/models/event/ControlEvent';
 
   let columns: Column[] = [
     { key: 'flags.png', name: 'Bandera', type: 'image', style: { width: '80px' } },
@@ -295,6 +295,7 @@
 
   function onReady(event: any & { detail: TableEvent }) {
     console.log('READY: ', event.detail);
+    console.log('PUBLIC API: ', tableEl?.pagination);
 
     tableFilter = event.detail;
     getCountries();
@@ -304,13 +305,18 @@
     console.log('CONTEXT MENU EVENT: ', event.detail);
   }
 
-  function onControlEvent(event: any & { detail: BasicControlEvent }) {
-    console.log('CONTROL EVENT 1: ', event.detail);
-  }
+  /**
+   * ! con el nuevo sistema esto no es necesario
+   * El public api tiene acceso a todos los controls
+  */
+  // function onControlEvent(event: any & { detail: BasicControlEvent }) {
+  //   console.log('CONTROL EVENT 1: ', event.detail);
+  // }
 </script>
 
 <main>
   <div class="content">
+    <!-- onControlEvent_1={onControlEvent} -->
     <dyn-table
       id="main-table"
       primaryKey="key"
@@ -318,7 +324,7 @@
       {columns}
       {count}
       data={filteredData}
-      filterable="simple"
+      filterable="basic"
       pageableType="pagination"
       resizable={true}
       selectableType="multiple"
@@ -333,7 +339,7 @@
       {onPageChange}
       {onContextMenuEvent}
       {onScrollEndEvent}
-      onControlEvent_1={onControlEvent}
+      
     >
       <div slot="context-menu" class="context-menu">
         <button class="context-menu-btn"> Editar </button>

@@ -39,9 +39,6 @@
   import type { PageEvent } from '../models/event/PageEvent';
   import type { StoreComponentData } from '../../core/models/StoreComponent';
   import type { SelectionEvent } from '../models/event/SelectionEvent';
-  import type { PaginationApi } from '../models/public-api/PaginationApi';
-  import type { SelectionApi } from '../models/public-api/SelectionApi';
-  import type { FilterApi } from '../models/public-api/FilterApi';
   import type { TableEvent } from '../models/event/TableEvent';
   import type { RowData } from '../models/RowData';
 
@@ -56,6 +53,7 @@
   import Pagination from './Pagination.svelte';
   import ContextMenu from './ContextMenu.svelte';
   import LoadingBody from './body/LoadingBody.svelte';
+  import { declarePublicApi } from '../services/public-api/declare';
 
   interface TableProps {
     columns?: Column[];
@@ -227,7 +225,7 @@
 
   /** Methods */
   onMount(() => {
-    publicApi();
+    declarePublicApi(el, paginationRef as Pagination);
 
     selectionStore.init(tableConfiguration);
     selectionStore.subscribe((selection: StoreComponentData<RowData>[]) => {
@@ -394,39 +392,6 @@
       selectionStore.clear();
       contextMenuVisible = false;
     }
-  }
-
-  /**
-   * PUBLIC API
-   */
-  function paginationApi(): PaginationApi {
-    return {
-      setPage: paginationRef?.setPage!,
-      resetPage: paginationRef?.resetPage!
-    };
-  }
-
-  function selectionApi(): SelectionApi {
-    return {
-      reset: selectionStore.clear
-    };
-  }
-
-  function filterApi(): FilterApi {
-    return {
-      reset: filterStore.clear
-    };
-  }
-
-  function publicApi() {
-    if (!el) return;
-
-    const host = (el?.getRootNode() as ShadowRoot)?.host;
-    if (!host) return;
-
-    (host as any).pagination = paginationApi();
-    (host as any).selection = selectionApi();
-    (host as any).filter = filterApi();
   }
 </script>
 

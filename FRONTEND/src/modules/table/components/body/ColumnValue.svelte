@@ -1,11 +1,11 @@
 <script lang="ts">
   import type { Column } from '../../models/column/Column';
   import type { RowEvent, RowEventType } from '../../models/event/RowEvent';
-  import type { TransformerTemplate } from '../../services/TransformerTemplate';
+  import type { TransformerTemplate } from '../../services/transformer/TransformerTemplate';
 
   import { TOOLTIP_DELAY } from '../../constant';
   import { tooltip, tooltipDelay, tooltipPosition } from '../../../tooltip/directives/tooltip';
-  import { TransformerFactory } from '../../services/TransformerFactory';
+  import { TransformerFactory } from '../../services/transformer/TransformerFactory';
 
   import BooleanComponent from './value/Boolean.svelte';
   import Avatar from './value/Avatar.svelte';
