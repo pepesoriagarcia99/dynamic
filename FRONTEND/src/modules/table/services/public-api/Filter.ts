@@ -1,28 +1,33 @@
-
 interface Control {
-    index: number;
+  index: number;
 }
 
 export class Filter {
-    private controls: Control[];
+  private tableRef: HTMLElement;
 
-    constructor() {
-        this.controls = [];
-    }
+  private controls: Control[];
 
-    reset() {
-        
-    }
+  constructor(tableRef: HTMLElement) {
+    this.tableRef = tableRef;
+    this.controls = [];
+  }
 
-    setOptions() {
+  reset() {}
 
-    }
+  setOptions() {}
 
-    onChange() {
+  // el detalle del evento debe ajustarse a los diferentes tipos de filtro -> string[] o un objeto en los tipos mas avanzados
+  onChange() {
+    // aqui debo emitir el CustomEvent del table
 
-    }
+    // this.tableRef.dispatchEvent(
+    //   new CustomEvent(FILTER_EVENT_NAME, {
+    //     detail: eventDetail as FilterEvent[],
+    //     bubbles: true,
+    //     composed: true
+    //   })
+    // );
+  }
 
-    onLoadMore() {
-
-    }
+  onLoadMore() {}
 }

@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
   import type { CommonControlProp } from '../models/CommonControlProp';
 
   interface MultipleSelectorOption {
@@ -453,4 +453,4 @@
   .multiple-selector-dropdown::-webkit-scrollbar-thumb:hover {
     background: var(--control-border-hover-color);
   }
-</style>
+</style> -->

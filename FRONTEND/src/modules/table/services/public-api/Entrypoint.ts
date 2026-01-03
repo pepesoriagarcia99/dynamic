@@ -62,20 +62,8 @@ export class Entrypoint {
 
   filter: Filter;
 
-  constructor(paginationRef: PaginationComponent) {
+  constructor(tableRef: HTMLElement, paginationRef: PaginationComponent) {
     this.pagination = new Pagination(paginationRef);
-    this.filter = new Filter();
+    this.filter = new Filter(tableRef);
   }
 }
-
-// export const declarePublicApi = (el: HTMLElement, paginationRef: Pagination) => {
-//   if (!el) return;
-
-//   const host = (el?.getRootNode() as ShadowRoot)?.host;
-//   if (!host) return;
-
-//   (host as any).filter = filter;
-//   (host as any).pagination = pagination(paginationRef);
-//   (host as any).selection = selection();
-//   (host as any).sort = sort();
-// };

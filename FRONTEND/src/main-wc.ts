@@ -29,6 +29,6 @@ export type { ContextMenuEvent } from './modules/table/models/event/ContextMenuE
 
 // Exportar API pública
 export type { PublicApi } from './modules/table/models/public-api/PublicApi';
-export type { FilterApi } from './modules/table/models/public-api/FilterApi';
-export type { PaginationApi } from './modules/table/models/public-api/PaginationApi';
-export type { SelectionApi } from './modules/table/models/public-api/SelectionApi';
+// export type { FilterApi } from './modules/table/models/public-api/FilterApi';
+// export type { PaginationApi } from './modules/table/models/public-api/PaginationApi';
+// export type { SelectionApi } from './modules/table/models/public-api/SelectionApi';

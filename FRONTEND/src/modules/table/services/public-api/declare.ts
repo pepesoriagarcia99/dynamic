@@ -7,7 +7,7 @@ export const declarePublicApi = (el: HTMLElement, paginationRef: Pagination) => 
   const host = (el?.getRootNode() as ShadowRoot)?.host;
   if (!host) return;
 
-  const entrypoint = new Entrypoint(paginationRef);
+  const entrypoint = new Entrypoint(el, paginationRef);
   (host as any).filter = entrypoint.filter;
   (host as any).pagination = entrypoint.pagination;
 //   (host as any).selection = selection();
