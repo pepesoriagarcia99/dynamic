@@ -1,14 +1,13 @@
 <script lang="ts">
   import type { Column } from '../../models/column/Column';
   import type { RowEvent, RowEventType } from '../../models/event/RowEvent';
-  import type { TransformerTemplate } from '../../services/transformer/TransformerTemplate';
 
   import { TOOLTIP_DELAY } from '../../constant';
   import { tooltip, tooltipDelay, tooltipPosition } from '../../../tooltip/directives/tooltip';
-  import { TransformerFactory } from '../../services/transformer/TransformerFactory';
 
   import BooleanComponent from './value/Boolean.svelte';
   import Avatar from './value/Avatar.svelte';
+  import type { ColorConfiguration } from '../../models/column/ColumnConfiguration';
 
   interface ColumnValueProps {
     column: Column;
@@ -24,6 +23,8 @@
   const isSimpleType = simpleTypes.has(column.type);
   const columnPartNames: string = `column column-${column.index}`;
   const columnValuePartNames: string = `column-value column-value-${column.index}`;
+  const value = $state<any>(getElementValue());
+  const style = $state<string>(getStyle());
 
   /** Methods */
 
@@ -39,8 +40,51 @@
   //   }
   // });
 
-  const transformer: TransformerTemplate = TransformerFactory.createTransformer(column);
-  let value: any = $state<any>(transformer.getValue(row));
+  // const transformer: TransformerTemplate = TransformerFactory.createTransformer(column);
+  // let value: any = $state<any>(transformer.getValue(row));
+
+  function getElementValue(): any {
+    let value: any;
+    const key = column.key;
+    let keys = key.split('.');
+
+    if (keys.length > 1) {
+      let currentValue = row;
+      for (const key of keys) {
+        const arrayIndexMatch = key.match(/\[(\d+)\]$/);
+
+        if (arrayIndexMatch) {
+          const index = parseInt(key.replaceAll(/[^\d]/g, ''));
+          currentValue = currentValue[index];
+        } else {
+          currentValue = currentValue[key];
+        }
+      }
+
+      value = currentValue;
+    } else {
+      value = row[key];
+    }
+
+    return value;
+  }
+
+  function getStyle(): string {
+    const configStyle: ColorConfiguration<any>[] = (column.configuration as any)?.colorConfiguration ?? [];
+    let style: string = '';
+
+    configStyle.forEach((config) => {
+      if (config.range) {
+        if (Number(value) >= Number(config.range.min) && Number(value) <= Number(config.range.max)) {
+          style = config.style as string;
+        }
+      } else if (config.value !== undefined && String(value) === String(config.value)) {
+        style = config.style as string;
+      }
+    });
+
+    return style;
+  }
 
   function onCellClick(event: MouseEvent, type: RowEventType) {
     event.stopPropagation();
@@ -76,7 +120,7 @@
     <div
       class={columnValuePartNames}
       part={columnValuePartNames}
-      style={transformer.getStyle()}
+      style={style}
       use:tooltip={value}
       use:tooltipPosition={'right'}
       use:tooltipDelay={TOOLTIP_DELAY}
