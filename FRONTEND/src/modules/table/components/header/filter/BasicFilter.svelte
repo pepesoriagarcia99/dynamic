@@ -1,24 +1,24 @@
 <script lang="ts">
   import { onMount } from 'svelte';
 
-  // import { CONTROL_EVENT_NAME } from '../../../constant';
+  import { CONTROL_EVENT_NAME } from '../../../constant';
 
   import type { Column } from '../../../models/column/Column';
-  // import type { BasicControlEvent } from '../../../models/event/ControlEvent';
-  // import type { StoreComponent, StoreComponentData } from '../../../../core/models/StoreComponent';
+  import type { BasicControlEvent } from '../../../models/event/ControlEvent';
+  import type { StoreComponent, StoreComponentData } from '../../../../core/models/StoreComponent';
 
-  // import { filterStore } from '../../../store/filter-store';
+  import { filterStore } from '../../../store/filter-store';
   import { loadingState } from '../../../store/loading-state.svelte';
 
   import Skeleton from '../../Skeleton.svelte';
   import BasicControl from '../../../../controls/components/BasicControl.svelte';
 
-  // interface Control {
-  //   column: Column;
-  //   storeComponent: StoreComponent<string>;
-  //   subscribeId?: string;
-  //   value: string;
-  // }
+  interface Control {
+    column: Column;
+    storeComponent: StoreComponent<string>;
+    subscribeId?: string;
+    value: string;
+  }
 
   interface FilterProps {
     columns: Column[];
@@ -28,7 +28,7 @@
   /** Inputs */
   let { columns }: FilterProps = $props();
   let trElement: HTMLTableRowElement | undefined = $state();
-  // let controls: Control[] = $state([]);
+  let controls: Control[] = $state([]);
 
   /** Methods */
   /**
@@ -37,37 +37,37 @@
    * * Se tiene que crear un elemento ControlApi, que dara acceso a las funciones genericas del control 
   */
   onMount(() => {
-    // controls = columns.map((column) => {
-    //   const control: Control = {
-    //     column,
-    //     storeComponent: filterStore.add(column.key, ''),
-    //     value: ''
-    //   };
+    controls = columns.map((column) => {
+      const control: Control = {
+        column,
+        storeComponent: filterStore.add(column.key, ''),
+        value: ''
+      };
 
-    //   const subscribeId = control.storeComponent.subscribe((change: StoreComponentData<string>) => {
-    //     control.value = change.value ?? '';
-    //   });
-    //   control.subscribeId = subscribeId;
+      const subscribeId = control.storeComponent.subscribe((change: StoreComponentData<string>) => {
+        control.value = change.value ?? '';
+      });
+      control.subscribeId = subscribeId;
 
-    //   return control;
-    // });
+      return control;
+    });
   });
 
   function onChange(control: Control, value: any) {
-    // control.storeComponent.setValue(value);
+    control.storeComponent.setValue(value);
 
-    // if (trElement) {
-      // trElement.dispatchEvent(
-      //   new CustomEvent(`${CONTROL_EVENT_NAME}_${control.column.index}`, {
-      //     detail: {
-      //       column: control.column,
-      //       value
-      //     } as BasicControlEvent,
-      //     bubbles: true,
-      //     composed: true
-      //   })
-      // );
-    // }
+    if (trElement) {
+      trElement.dispatchEvent(
+        new CustomEvent(`${CONTROL_EVENT_NAME}_${control.column.index}`, {
+          detail: {
+            column: control.column,
+            value
+          } as BasicControlEvent,
+          bubbles: true,
+          composed: true
+        })
+      );
+    }
   }
 </script>
 

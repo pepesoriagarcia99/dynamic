@@ -39,7 +39,6 @@ export class Store<T> extends Subject<StoreComponentData<T>[]> {
     const configuration = { autoCommit: this.#configuration.autoCommit };
     const storeComponent = new StoreComponent(this, configuration, key, initialValue);
     this.elements.push(storeComponent);
-    console.log("🚀 ~ Store ~ add ~ this.elements:", this.elements)
     return storeComponent;
   }
 

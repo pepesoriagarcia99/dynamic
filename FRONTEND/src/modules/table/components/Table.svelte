@@ -13,11 +13,10 @@
     DEFAULT_SORTABLE,
     VALID_SELECTABLE_TYPES,
     DEFAULT_PAGE_SIZE,
-    ROW_CLICK_EVENT_NAME,
     PAGE_CHANGE_EVENT_NAME,
     SORT_EVENT_NAME,
     FILTER_EVENT_NAME,
-    SELECTION_EVENT_NAME,
+    // SELECTION_EVENT_NAME,
     DEFAULT_RESIZABLE,
     VALID_SORTABLE_TYPES,
     VALID_FILTERABLE_TYPES,
@@ -38,9 +37,9 @@
   import type { SortEvent, SortOrder } from '../models/event/SortEvent';
   import type { PageEvent } from '../models/event/PageEvent';
   import type { StoreComponentData } from '../../core/models/StoreComponent';
-  import type { SelectionEvent } from '../models/event/SelectionEvent';
+  // import type { SelectionEvent } from '../models/event/SelectionEvent';
   import type { TableEvent } from '../models/event/TableEvent';
-  import type { RowData } from '../models/RowData';
+  // import type { RowData } from '../models/RowData';
 
   import { selectionStore } from '../store/selection-store';
   import { filterStore } from '../store/filter-store';
@@ -194,20 +193,20 @@
     })
   );
 
-  const parameterizedData: RowData[] = $derived(
-    data.map((r) => ({
-      ...r,
-      __ctx: {
-        isSelected: false
-      }
-      /**
-       * TODO: podria hacer un acceso dinamico al valor de la key primaria
-       */
-      // getPrimaryKeyValue() {
-      //   return this[tableConfiguration.primaryKey!]
-      // }
-    }))
-  );
+  // const parameterizedData: RowData[] = $derived(
+  //   data.map((r) => ({
+  //     ...r,
+  //     __ctx: {
+  //       isSelected: false
+  //     }
+  //     /**
+  //      * TODO: podria hacer un acceso dinamico al valor de la key primaria
+  //      */
+  //     // getPrimaryKeyValue() {
+  //     //   return this[tableConfiguration.primaryKey!]
+  //     // }
+  //   }))
+  // );
 
   const tableConfiguration: TableConfiguration = $derived({
     selectableType,
@@ -228,15 +227,16 @@
     declarePublicApi(el, paginationRef as Pagination);
 
     selectionStore.init(tableConfiguration);
-    selectionStore.subscribe((selection: StoreComponentData<RowData>[]) => {
-      el.dispatchEvent(
-        new CustomEvent(SELECTION_EVENT_NAME, {
-          detail: selection.filter((el) => el.value?.__ctx.isSelected === true) as SelectionEvent[],
-          bubbles: true,
-          composed: true
-        })
-      );
-    });
+    // selectionStore.subscribe((selection: StoreComponentData<RowData>[]) => {
+    //   el.dispatchEvent(
+    //     new CustomEvent(SELECTION_EVENT_NAME, {
+    //       // .filter((el) => el.value?.__ctx.isSelected === true)
+    //       detail: selection as SelectionEvent[],
+    //       bubbles: true,
+    //       composed: true
+    //     })
+    //   );
+    // });
 
     filterStore.subscribe((filters: StoreComponentData<string>[]) => {
       const eventDetail = mapColumnKey<FilterEvent>(filters);
@@ -332,40 +332,42 @@
     });
   }
 
-  function onRowClick(event: RowEvent) {
-    contextMenuVisible = false;
+  // function onRowClick(event: RowEvent) {
+  //   console.log('-----> ', event);
+    
+    // contextMenuVisible = false;
 
-    if (selectableType !== 'none') {
-      if (event.type === 'leftclick') {
-        selectionStore.onSelectToggle(event);
-      } else if (event.type === 'rightclick' && hasContextMenuSlot === true) {
-        /**
-         * Se procesa estado de la seleccion con el menucontextual activo
-         */
-        const selectionState = selectionStore.state().filter((el) => el.value?.__ctx.isSelected === true);
-        const selectionCount = selectionState.length;
+    // if (selectableType !== 'none') {
+    //   if (event.type === 'leftclick') {
+    //     selectionStore.onSelectToggle(event);
+    //   } else if (event.type === 'rightclick' && hasContextMenuSlot === true) {
+    //     /**
+    //      * Se procesa estado de la seleccion con el menucontextual activo
+    //      */
+    //     const selectionState = selectionStore.state().filter((el) => el.value?.__ctx.isSelected === true);
+    //     const selectionCount = selectionState.length;
 
-        const isRightclickHoverSelection = Boolean(selectionState.find((el) => el.key === event.row[primaryKey!]));
-        if (selectionCount === 0) {
-          selectionStore.onSelectToggle(event);
-        } else if (isRightclickHoverSelection === false) {
-          selectionStore.onSelectToggle(event);
-        }
+    //     const isRightclickHoverSelection = Boolean(selectionState.find((el) => el.key === event.row[primaryKey!]));
+    //     if (selectionCount === 0) {
+    //       selectionStore.onSelectToggle(event);
+    //     } else if (isRightclickHoverSelection === false) {
+    //       selectionStore.onSelectToggle(event);
+    //     }
 
-        // se muestra el menu contextual del usuario
-        contextMenuVisible = true;
-        contextMenuEvent = event; // este event es el concreto, usado calcular x e y del contextmenu
-      }
-    }
+    //     // se muestra el menu contextual del usuario
+    //     contextMenuVisible = true;
+    //     contextMenuEvent = event; // este event es el concreto, usado calcular x e y del contextmenu
+    //   }
+    // }
 
-    el.dispatchEvent(
-      new CustomEvent(ROW_CLICK_EVENT_NAME, {
-        detail: event as RowEvent,
-        bubbles: true,
-        composed: true
-      })
-    );
-  }
+    // el.dispatchEvent(
+    //   new CustomEvent(ROW_CLICK_EVENT_NAME, {
+    //     detail: event as RowEvent,
+    //     bubbles: true,
+    //     composed: true
+    //   })
+    // );
+  // }
 
   function onPageChange(event: PageEvent) {
     el.dispatchEvent(
@@ -418,14 +420,14 @@
               <td colspan={indexColumns.length} class="table-no-data" part="table-no-data"> No data available. </td>
             </tr>
           {:else}
-            {#each parameterizedData as row, i (row[primaryKey!])}
+            {#each data as row, index (row[primaryKey!])}
+            <!-- onClick={onRowClick} -->
               <Row
-                index={i}
+                {index}
                 columns={indexColumns}
                 {row}
                 {tableConfiguration}
                 contextMenu={hasContextMenuSlot}
-                onClick={onRowClick}
               />
             {/each}
             <!-- TODO: IDEA DE REFACTORING -->

@@ -29,5 +29,13 @@ export class Filter {
     // );
   }
 
+  onSelect() {
+
+  }
+
+  onSelectAll() {
+    
+  }
+
   onLoadMore() {}
 }

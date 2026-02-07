@@ -58,7 +58,8 @@
 
   onMount(() => {
     selectionStore.subscribe((selectionEvent: StoreComponentData<RowData>[]) => {
-      selection = selectionEvent.filter((e) => e.value?.__ctx.isSelected === true) as SelectionEvent[];
+      // filter((e) => e.value?.__ctx.isSelected === true)
+      selection = selectionEvent as SelectionEvent[];
     });
 
     const handleClickOutside = (e: MouseEvent) => {
