@@ -2,9 +2,9 @@
   import { onMount } from 'svelte';
   import type { RowEvent } from '../models/event/RowEvent';
   import { CONTEXT_MENU_EVENT_NAME } from '../constant';
-  import { selectionStore } from '../store/selection-store';
-  import type { StoreComponentData } from '../../core/models/StoreComponent';
-  import type { RowData } from '../models/RowData';
+  // import { selectionStore } from '../store/selection-store';
+  // import type { StoreComponentData } from '../../core/models/StoreComponent';
+  // import type { RowData } from '../models/RowData';
   import type { ContextMenuEvent } from '../models/event/ContextMenuEvent';
   import type { SelectionEvent } from '../models/event/SelectionEvent';
 
@@ -57,10 +57,10 @@
   });
 
   onMount(() => {
-    selectionStore.subscribe((selectionEvent: StoreComponentData<RowData>[]) => {
-      // filter((e) => e.value?.__ctx.isSelected === true)
-      selection = selectionEvent as SelectionEvent[];
-    });
+    // selectionStore.subscribe((selectionEvent: StoreComponentData<RowData>[]) => {
+    //   // filter((e) => e.value?.__ctx.isSelected === true)
+    //   selection = selectionEvent as SelectionEvent[];
+    // });
 
     const handleClickOutside = (e: MouseEvent) => {
       if (menuElement && !menuElement.contains(e.target as Node)) {

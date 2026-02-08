@@ -2,13 +2,12 @@
   import { onMount } from 'svelte';
   import type { Column } from '../../models/column/Column';
   import type { TableConfiguration } from '../../models/configuration/TableConfiguration';
-  import type { RowEvent } from '../../models/event/RowEvent';
+  // import type { RowEvent } from '../../models/event/RowEvent';
   import type { RowData } from '../../models/RowData';
 
   // import { selectionStore } from '../../store/selection-store';
   import ColumnValue from './ColumnValue.svelte';
-  import { ROW_CLICK_EVENT_NAME } from '../../constant';
-  import { selectionStore } from '../../store/selection-store';
+  // import { selectionStore } from '../../store/selection-store';
 
   interface RowProps {
     index?: number;
@@ -16,7 +15,6 @@
     row: RowData;
     tableConfiguration: TableConfiguration;
     contextMenu: boolean;
-    onClick?: (event: RowEvent) => void;
   }
 
   /** Inputs */
@@ -26,12 +24,10 @@
     row,
     tableConfiguration,
     contextMenu = false,
-    onClick = () => {}
   }: RowProps = $props();
 
   /** Values */
-  let el: HTMLElement;
-  const key = row[tableConfiguration.primaryKey!];
+  // const key = row[tableConfiguration.primaryKey!];
 
   let isSelected = $state<boolean>(false);
 
@@ -74,7 +70,7 @@
   // });
 
   onMount(() => {
-    isSelected = selectionStore.has(key)
+    // isSelected = selectionStore.has(key)
 
     // let subscribeId: string;
     // selectionComponent = selectionStore.get(key);
@@ -119,44 +115,32 @@
   //   });
   // }
 
-  function onCellClick(event: RowEvent) {
-    event.index = index;
-    onClick(event);
+  // function onCellClick(event: RowEvent) {
+  //   event.index = index;
+  //   onClick(event);
 
-    selectionStore.add(key, row);
-    isSelected = true;
+  //   selectionStore.add(key, row);
+  //   isSelected = true;
 
-    // selectionComponent = selectionStore.get(key);
+  //   // selectionComponent = selectionStore.get(key);
 
-    // if (!selectionComponent) {
-    //   selectionComponent = selectionStore.add(key, row);
-    //   // selectionComponent.subscribe((event) => {
-    //   //   isSelected = event.value?.__ctx.isSelected ?? false;
-    //   // });
-    // }
+  //   // if (!selectionComponent) {
+  //   //   selectionComponent = selectionStore.add(key, row);
+  //   //   // selectionComponent.subscribe((event) => {
+  //   //   //   isSelected = event.value?.__ctx.isSelected ?? false;
+  //   //   // });
+  //   // }
 
 
-
-    el.dispatchEvent(
-      new CustomEvent(ROW_CLICK_EVENT_NAME, {
-        detail: event as RowEvent,
-        bubbles: true,
-        composed: true
-      })
-    );
-  }
+  // }
 </script>
-
-<!-- TODO: IDEA DE REFACTORING -->
-<!-- En vez de regenerar los comoponentes Row, lo que hago es mutarlos -->
-<!-- style:display={!!row ? 'hidden' : 'none'} -->
 
 <!-- onclick={(e) => onRowClick('leftclick', e)}
   oncontextmenu={() => onRowClick('rightclick')}
   ondblclick={() => onRowClick('doubleclick')} -->
-<tr bind:this={el} part={rowStyle + ' ' + rowStaticStyle} class={rowStyle + ' ' + rowStaticStyle}>
+<tr part={rowStyle + ' ' + rowStaticStyle} class={rowStyle + ' ' + rowStaticStyle}>
   {#each columns as column}
-    <ColumnValue {column} {row} {contextMenu} onClick={onCellClick} />
+    <ColumnValue {column} {row} {contextMenu} />
   {/each}
 </tr>
 

@@ -14,6 +14,7 @@
   import type { TableEvent } from './modules/table/models/event/TableEvent';
   import type { ContextMenuEvent } from './modules/table/models/event/ContextMenuEvent';
 
+  // 30 c0lumnas
   let columns: Column[] = [
     { key: 'flags.png', name: 'Bandera', type: 'image', style: { width: '80px' } },
     {
@@ -144,6 +145,9 @@
         options: ['Africa', 'Antarctica', 'Asia', 'Europe', 'North America', 'Oceania', 'South America']
       }
     },
+    { key: 'region', name: 'Region', type: 'string' },
+    { key: 'region', name: 'Region', type: 'string' },
+    { key: 'region', name: 'Region', type: 'string' },
     { key: 'region', name: 'Region', type: 'string' },
     { key: 'region', name: 'Region', type: 'string' },
     { key: 'region', name: 'Region', type: 'string' },

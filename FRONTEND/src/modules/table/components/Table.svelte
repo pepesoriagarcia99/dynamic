@@ -13,9 +13,9 @@
     DEFAULT_SORTABLE,
     VALID_SELECTABLE_TYPES,
     DEFAULT_PAGE_SIZE,
-    PAGE_CHANGE_EVENT_NAME,
+    // PAGE_CHANGE_EVENT_NAME,
     SORT_EVENT_NAME,
-    FILTER_EVENT_NAME,
+    // FILTER_EVENT_NAME,
     // SELECTION_EVENT_NAME,
     DEFAULT_RESIZABLE,
     VALID_SORTABLE_TYPES,
@@ -35,7 +35,6 @@
   } from '../models/configuration/TableConfiguration';
   import type { FilterEvent } from '../models/event/FilterEvent';
   import type { SortEvent, SortOrder } from '../models/event/SortEvent';
-  import type { PageEvent } from '../models/event/PageEvent';
   import type { StoreComponentData } from '../../core/models/StoreComponent';
   // import type { SelectionEvent } from '../models/event/SelectionEvent';
   import type { TableEvent } from '../models/event/TableEvent';
@@ -226,7 +225,7 @@
   onMount(() => {
     declarePublicApi(el, paginationRef as Pagination);
 
-    selectionStore.init(tableConfiguration);
+    // selectionStore.init(tableConfiguration);
     // selectionStore.subscribe((selection: StoreComponentData<RowData>[]) => {
     //   el.dispatchEvent(
     //     new CustomEvent(SELECTION_EVENT_NAME, {
@@ -238,16 +237,16 @@
     //   );
     // });
 
-    filterStore.subscribe((filters: StoreComponentData<string>[]) => {
-      const eventDetail = mapColumnKey<FilterEvent>(filters);
-      el.dispatchEvent(
-        new CustomEvent(FILTER_EVENT_NAME, {
-          detail: eventDetail as FilterEvent[],
-          bubbles: true,
-          composed: true
-        })
-      );
-    });
+    // filterStore.subscribe((filters: StoreComponentData<string>[]) => {
+    //   const eventDetail = mapColumnKey<FilterEvent>(filters);
+    //   el.dispatchEvent(
+    //     new CustomEvent(FILTER_EVENT_NAME, {
+    //       detail: eventDetail as FilterEvent[],
+    //       bubbles: true,
+    //       composed: true
+    //     })
+    //   );
+    // });
 
     sortStore.init(tableConfiguration);
     sortStore.subscribe((sorts: StoreComponentData<SortOrder>[]) => {
@@ -369,16 +368,6 @@
     // );
   // }
 
-  function onPageChange(event: PageEvent) {
-    el.dispatchEvent(
-      new CustomEvent(PAGE_CHANGE_EVENT_NAME, {
-        detail: event as PageEvent,
-        bubbles: true,
-        composed: true
-      })
-    );
-  }
-
   function emitReady() {
     const event: TableEvent = {
       filter: mapColumnKey<FilterEvent>(filterStore.state().filter((e) => e.value) as FilterEvent[]),
@@ -449,7 +438,7 @@
 
     <div class="pagination-root" part="pagination-root">
       {#if pageableType === 'pagination' && count !== undefined}
-        <Pagination bind:this={paginationRef} {count} {pageSizeOptions} {pageSize} onChange={onPageChange} />
+        <Pagination bind:this={paginationRef} {count} {pageSizeOptions} {pageSize} />
       {/if}
     </div>
   </div>

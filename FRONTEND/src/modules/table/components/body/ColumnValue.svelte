@@ -2,7 +2,7 @@
   import type { Column } from '../../models/column/Column';
   import type { RowEvent, RowEventType } from '../../models/event/RowEvent';
 
-  import { TOOLTIP_DELAY } from '../../constant';
+  import { ROW_CLICK_EVENT_NAME, TOOLTIP_DELAY } from '../../constant';
   import { tooltip, tooltipDelay, tooltipPosition } from '../../../tooltip/directives/tooltip';
 
   import BooleanComponent from './value/Boolean.svelte';
@@ -13,12 +13,12 @@
     column: Column;
     row: any;
     contextMenu: boolean;
-    onClick: (event: RowEvent) => void;
   }
 
   /** Inputs */
-  const { column, row, contextMenu = false, onClick = () => {} }: ColumnValueProps = $props();
+  const { column, row, contextMenu = false }: ColumnValueProps = $props();
 
+  let el: HTMLElement;
   const simpleTypes = new Set(['string', 'number', 'date', 'selector']);
   const isSimpleType = simpleTypes.has(column.type);
   const columnPartNames: string = `column column-${column.index}`;
@@ -27,22 +27,6 @@
   const style = $state<string>(getStyle());
 
   /** Methods */
-
-  /**
-   * TODO: IDEA DE REFACTORING
-   * En vez de regenerar los comoponentes Row, lo que hago es mutarlos
-   */
-  // const transformer: TransformerTemplate = TransformerFactory.createTransformer(column);
-  // let value: any = $state<any>();
-  // $effect(() => {
-  //   if (row) {
-  //     value = transformer.getValue(row);
-  //   }
-  // });
-
-  // const transformer: TransformerTemplate = TransformerFactory.createTransformer(column);
-  // let value: any = $state<any>(transformer.getValue(row));
-
   function getElementValue(): any {
     let value: any;
     const key = column.key;
@@ -92,23 +76,30 @@
       event.preventDefault();
     }
 
-    onClick({
-      type,
-      row,
-      column,
-      ctx: {
-        CTRL: event.ctrlKey || event.metaKey,
-        SHIFT: event.shiftKey
-      },
-      mouse: {
-        x: event?.clientX,
-        y: event?.clientY
-      }
-    });
+    el.dispatchEvent(
+      new CustomEvent(ROW_CLICK_EVENT_NAME, {
+        detail: {
+          type,
+          row,
+          column,
+          ctx: {
+            CTRL: event.ctrlKey || event.metaKey,
+            SHIFT: event.shiftKey
+          },
+          mouse: {
+            x: event?.clientX,
+            y: event?.clientY
+          }
+        } as RowEvent,
+        bubbles: true,
+        composed: true
+      })
+    );
   }
 </script>
 
 <td
+  bind:this={el}
   class={columnPartNames}
   part={columnPartNames}
   style={column?.style as string}
@@ -120,7 +111,7 @@
     <div
       class={columnValuePartNames}
       part={columnValuePartNames}
-      style={style}
+      {style}
       use:tooltip={value}
       use:tooltipPosition={'right'}
       use:tooltipDelay={TOOLTIP_DELAY}

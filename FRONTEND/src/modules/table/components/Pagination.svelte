@@ -8,6 +8,7 @@
 
   import SelectorControl from '../../controls/components/SelectorControl.svelte';
   import { loadingState } from '../store/loading-state.svelte';
+  import { PAGE_CHANGE_EVENT_NAME } from '../constant';
 
   type PageActions = 'first' | 'last' | 'next' | 'previous';
 
@@ -15,14 +16,15 @@
     count: number;
     pageSizeOptions: number[];
     pageSize: number;
-    onChange?: (event: PageEvent) => void;
   }
 
-  let { count, pageSizeOptions, pageSize, onChange = () => {} }: PaginationProps = $props();
+  let { count, pageSizeOptions, pageSize }: PaginationProps = $props();
 
+  let el: HTMLElement;
   let currentPage: number = $state(1);
   let totalPages: number = $derived(Math.ceil(count / pageSize));
   let showPageNumbers: number[] = $state([]);
+
   $effect(() => {
     if (totalPages <= 5) {
       showPageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
@@ -53,10 +55,16 @@
   }
 
   function emitChange() {
-    onChange({
-      page: currentPage,
-      pageSize: pageSize
-    });
+    el.dispatchEvent(
+      new CustomEvent(PAGE_CHANGE_EVENT_NAME, {
+        detail: {
+          page: currentPage,
+          pageSize: pageSize
+        } as PageEvent,
+        bubbles: true,
+        composed: true
+      })
+    );
   }
 
   function getPartPageNumber(n: number) {
@@ -103,7 +111,7 @@
   }
 </script>
 
-<div class="pagination-content" part="pagination-content">
+<div bind:this={el} class="pagination-content" part="pagination-content">
   <button
     onclick={() => handlerAction('first')}
     disabled={currentPage === 1 || loadingState()}
