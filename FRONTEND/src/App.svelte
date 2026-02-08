@@ -13,18 +13,13 @@
   import type { PublicApi } from './modules/table/models/public-api/PublicApi';
   import type { TableEvent } from './modules/table/models/event/TableEvent';
   import type { ContextMenuEvent } from './modules/table/models/event/ContextMenuEvent';
-  // import type { BasicControlEvent } from './modules/table/models/event/ControlEvent';
 
   let columns: Column[] = [
     { key: 'flags.png', name: 'Bandera', type: 'image', style: { width: '80px' } },
     {
-      key: 'name.common',
+      key: 'avatar',
       name: 'Nombre nombre de columna my largo para probar que se ve correctamente jajjajajaja mortal',
       type: 'avatar',
-      configuration: {
-        pictureColumn: 'picture',
-        altText: 'Country flag'
-      },
       style: { 'max-width': '200px' },
       filterable: true
     },
@@ -36,9 +31,6 @@
       key: 'population',
       name: 'Poblacion',
       type: 'number',
-      configuration: {
-        suffix: ' P.'
-      },
       filterable: true,
       sortable: true
     },
@@ -47,28 +39,18 @@
       key: 'foundation',
       name: 'Fundacion',
       type: 'date',
-      configuration: { format: 'YYYY/MM/DD' },
       filterable: true,
       sortable: true
     },
     {
       key: 'foundation',
       name: 'Fundacion',
-      type: 'relative-date'
+      type: 'date'
     },
     {
       key: 'pib',
       name: 'PIB (USD)',
       type: 'number',
-      configuration: {
-        IntlNumberFormat: {
-          options: {
-            style: 'currency',
-            currency: 'USD',
-            currencyDisplay: 'narrowSymbol'
-          }
-        }
-      },
       filterable: true,
       sortable: true
     },
@@ -77,7 +59,6 @@
       name: 'Area',
       type: 'number',
       configuration: {
-        suffix: ' km²',
         colorConfiguration: [
           {
             range: { min: 0, max: 10000 },
@@ -212,7 +193,11 @@
             foundation: new Date().toISOString(),
             pib: Math.floor(Math.random() * 100000),
             density: densityValue > 1000 ? 'High' : densityValue > 100 ? 'Medium' : 'Low',
-            picture: `https://gravatar.com/avatar/${hash}?d=identicon`
+            avatar: {
+              picture: `https://gravatar.com/avatar/${hash}?d=identicon`,
+              alt: `Flag of ${item.name.common}`,
+              name: item.name.common
+            }
           };
         });
 
@@ -273,11 +258,11 @@
   function onFilterChange(event: any & { detail: FilterEvent }) {
     console.log('FILTERED: ', event.detail);
 
-    tableEl?.pagination.resetPage();
-    tableFilter.page.page = 1;
-    tableFilter.filter = event.detail;
+    // tableEl?.pagination.resetPage();
+    // tableFilter.page.page = 1;
+    // tableFilter.filter = event.detail;
 
-    transform();
+    // transform();
   }
 
   function onSortChange(event: any & { detail: SortEvent }) {
@@ -304,19 +289,10 @@
   function onContextMenuEvent(event: any & { detail: ContextMenuEvent }) {
     console.log('CONTEXT MENU EVENT: ', event.detail);
   }
-
-  /**
-   * ! con el nuevo sistema esto no es necesario
-   * El public api tiene acceso a todos los controls
-  */
-  // function onControlEvent(event: any & { detail: BasicControlEvent }) {
-  //   console.log('CONTROL EVENT 1: ', event.detail);
-  // }
 </script>
 
 <main>
   <div class="content">
-    <!-- onControlEvent_1={onControlEvent} -->
     <dyn-table
       id="main-table"
       primaryKey="key"

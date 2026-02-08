@@ -135,16 +135,14 @@
     <Avatar {value} />
   {:else if column.type === 'image'}
     <img
-      src={value?.src}
-      alt={value?.alt}
+      src={value}
+      alt={column.key}
       class={columnValuePartNames}
       part={columnValuePartNames}
       use:tooltip={value?.alt}
       use:tooltipPosition={'right'}
       use:tooltipDelay={TOOLTIP_DELAY}
     />
-  {:else if column.type === 'relative-date'}
-    <relative-time datetime={value}></relative-time>
   {/if}
 </td>
 
