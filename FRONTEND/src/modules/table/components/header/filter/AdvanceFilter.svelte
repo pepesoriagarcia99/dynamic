@@ -8,7 +8,7 @@
   import { loadingState } from '../../../store/loading-state.svelte';
   import { sortStore } from '../../../store/sort-store';
   import Skeleton from '../../Skeleton.svelte';
-  import { getColumnIndexOpen, setColumnIndexOpen } from '../../../store/advance-filter-open-state.svelte';
+  import { getColumnIndexOpen, setColumnIndexOpen } from '../../../store/advance-filter-state.svelte';
   import SelectorControl from '../../../../controls/components/SelectorControl.svelte';
 
   interface AdvanceFilterIconProps {
