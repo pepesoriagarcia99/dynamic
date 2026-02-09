@@ -8,7 +8,7 @@
   import type { StoreComponent, StoreComponentData } from '../../../../core/models/StoreComponent';
 
   import { filterStore } from '../../../store/filter-store';
-  import { loadingState } from '../../../store/loading-state.svelte';
+  import { loadingState } from '../../../context/loading-state.svelte';
 
   import Skeleton from '../../Skeleton.svelte';
   import BasicControl from '../../../../controls/components/BasicControl.svelte';

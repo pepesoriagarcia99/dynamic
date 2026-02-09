@@ -3,7 +3,7 @@
 
   import type { Column } from '../../../models/column/Column';
 
-  import { loadingState } from '../../../store/loading-state.svelte';
+  import { loadingState } from '../../../context/loading-state.svelte';
 
   import Skeleton from '../../Skeleton.svelte';
   import BasicControl from '../../../../controls/components/BasicControl.svelte';
@@ -60,7 +60,7 @@
           {/if}
         {:else if column.type === 'boolean'}
           <CheckControl id={column.key} {onChange} triState={true} />
-        {:else if column.type === 'date' || column.type === 'relative-date'}
+        {:else if column.type === 'date'}
           <DateControl id={column.key} {onChange} />
         {:else}
           <BasicControl id={column.key} type={column.type === 'number' ? 'number' : 'text'} {onChange} />

@@ -10,7 +10,7 @@
   import { sortStore } from '../../store/sort-store';
 
   import Skeleton from '../Skeleton.svelte';
-  import { loadingState } from '../../store/loading-state.svelte';
+  import { loadingState } from '../../context/loading-state.svelte';
 
   interface SortProps {
     column: Column;

@@ -43,7 +43,7 @@
   import { selectionStore } from '../store/selection-store';
   import { filterStore } from '../store/filter-store';
   import { sortStore } from '../store/sort-store';
-  import { setLoadingState } from '../store/loading-state.svelte';
+  import { setLoadingState } from '../context/loading-state.svelte';
   import { styleTransformer } from '../../../utils/style-transformer';
 
   import Header from './header/Header.svelte';

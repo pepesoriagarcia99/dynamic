@@ -7,7 +7,7 @@
   import nextPageIcon from '../../../assets/svg/right-arrow.svg';
 
   import SelectorControl from '../../controls/components/SelectorControl.svelte';
-  import { loadingState } from '../store/loading-state.svelte';
+  import { loadingState } from '../context/loading-state.svelte';
   import { PAGE_CHANGE_EVENT_NAME } from '../constant';
 
   type PageActions = 'first' | 'last' | 'next' | 'previous';

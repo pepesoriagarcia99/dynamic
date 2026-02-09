@@ -276,10 +276,15 @@
   }
 
   function onPageChange(event: any & { detail: PageEvent }) {
+    loading = true;
     console.log('PAGE: ', event.detail);
 
     tableFilter.page = event.detail;
-    transform();
+
+    setTimeout(() => {
+      transform();
+      loading = false;
+    }, 1000);
   }
 
   function onReady(event: any & { detail: TableEvent }) {
@@ -319,7 +324,6 @@
       {onPageChange}
       {onContextMenuEvent}
       {onScrollEndEvent}
-      
     >
       <div slot="context-menu" class="context-menu">
         <button class="context-menu-btn"> Editar </button>
