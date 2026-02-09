@@ -15,8 +15,7 @@
 </script>
 
 {#each { length: skeletonRows } as _, iRow (iRow)}
-  {@const isEven = iRow % 2 === 0}
-  {@const rowClass = isEven ? 'loading-row row-even' : 'loading-row row-odd'}
+  {@const rowClass = iRow % 2 === 0 ? 'loading-row row-even' : 'loading-row row-odd'}
   
   <tr class={rowClass} part={rowClass}>
     {#each columns as column, iCol (iCol)}
