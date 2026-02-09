@@ -1,8 +1,46 @@
-import type { FilterEvent } from "./FilterEvent";
-import type { PageEvent } from "./PageEvent";
-import type { SortEvent } from "./SortEvent";
+import type { RowData } from "../RowData";
 
-export interface TableEvent {
+
+/**
+ * Evento emitido por la selleccion
+ */
+export interface SelectionEvent {
+    key: string;
+    value: RowData;
+}
+
+/**
+ * Evento emitido por la paginacion
+ */
+export interface PageEvent {
+    page: number;
+    pageSize: number;
+}
+
+/**
+ * Evento emitido por el sort
+ */
+export type SortOrder = 'asc' | 'desc';
+export interface SortEvent {
+    key: string;
+    value: SortOrder | null;
+}
+
+
+
+/**
+ * Evento emitido por el filtro basic y simple
+ */
+
+export interface FilterEvent {
+    key: string;
+    value: string | null;
+}
+
+/**
+ * Evento emitido cuando la tabla esta ready
+ */
+export interface TableReadyEvent {
     filter: FilterEvent[],
     page: PageEvent,
     sort: SortEvent[]

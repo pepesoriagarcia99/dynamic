@@ -1,3 +1,9 @@
+/**
+ * Este es el evento emitido por el filter avanzado
+ * 
+ * TODO: esto se tiene que eliminar de aqui y meterse en TableEvent.ts
+ */
+
 export interface FilterItem {
     key: string;
     value: string | null;

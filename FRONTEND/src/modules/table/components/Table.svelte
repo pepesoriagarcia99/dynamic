@@ -13,10 +13,7 @@
     DEFAULT_SORTABLE,
     VALID_SELECTABLE_TYPES,
     DEFAULT_PAGE_SIZE,
-    // PAGE_CHANGE_EVENT_NAME,
     SORT_EVENT_NAME,
-    // FILTER_EVENT_NAME,
-    // SELECTION_EVENT_NAME,
     DEFAULT_RESIZABLE,
     VALID_SORTABLE_TYPES,
     VALID_FILTERABLE_TYPES,
@@ -33,12 +30,8 @@
     SortableType,
     TableConfiguration
   } from '../models/configuration/TableConfiguration';
-  import type { FilterEvent } from '../models/event/FilterEvent';
-  import type { SortEvent, SortOrder } from '../models/event/SortEvent';
   import type { StoreComponentData } from '../../core/models/StoreComponent';
-  // import type { SelectionEvent } from '../models/event/SelectionEvent';
-  import type { TableEvent } from '../models/event/TableEvent';
-  // import type { RowData } from '../models/RowData';
+  import type { FilterEvent, SortEvent, SortOrder, TableReadyEvent } from '../models/event/TableEvent';
 
   import { selectionStore } from '../store/selection-store';
   import { filterStore } from '../store/filter-store';
@@ -374,7 +367,7 @@
   // }
 
   function emitReady() {
-    const event: TableEvent = {
+    const event: TableReadyEvent = {
       filter: mapColumnKey<FilterEvent>(filterStore.state().filter((e) => e.value) as FilterEvent[]),
       page: paginationRef?.getState()!,
       sort: mapColumnKey<SortEvent>(sortStore.state().filter((e) => e.value))
