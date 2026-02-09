@@ -64,9 +64,18 @@ export interface Column {
    * Configuracion dinamica para las columnas
    */
   configuration?:
-    | StringColumnConfiguration
-    | NumberColumnConfiguration
-    | BooleanColumnConfiguration
-    | DateColumnConfiguration
-    | SelectorColumnConfiguration;
+  | StringColumnConfiguration
+  | NumberColumnConfiguration
+  | BooleanColumnConfiguration
+  | DateColumnConfiguration
+  | SelectorColumnConfiguration;
+
+  /**
+   * Función personalizada para obtener el valor de la columna a partir de una fila.
+   */
+  valueGetter?: (row: any) => any;
+  /**
+   * Función personalizada para obtener el estilo de la columna a partir de su valor.
+   */
+  styleGetter?: (value: any) => string;
 }

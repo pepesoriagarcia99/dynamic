@@ -52,6 +52,8 @@
   import ContextMenu from './ContextMenu.svelte';
   import LoadingBody from './body/LoadingBody.svelte';
   import { declarePublicApi } from '../services/public-api/declare';
+  import { buildStyleGetter } from '../services/Style';
+  import { buildValueGetter } from '../services/Value';
 
   interface TableProps {
     columns?: Column[];
@@ -187,7 +189,10 @@
         ...column,
         index,
         // si la tabla es resizable, la columna tambien lo es por omision
-        resizable: column.resizable ?? true
+        resizable: column.resizable ?? true,
+
+        valueGetter: buildValueGetter(column),
+        styleGetter: buildStyleGetter(column)
       };
     })
   );
@@ -333,39 +338,39 @@
 
   // function onRowClick(event: RowEvent) {
   //   console.log('-----> ', event);
-    
-    // contextMenuVisible = false;
 
-    // if (selectableType !== 'none') {
-    //   if (event.type === 'leftclick') {
-    //     selectionStore.onSelectToggle(event);
-    //   } else if (event.type === 'rightclick' && hasContextMenuSlot === true) {
-    //     /**
-    //      * Se procesa estado de la seleccion con el menucontextual activo
-    //      */
-    //     const selectionState = selectionStore.state().filter((el) => el.value?.__ctx.isSelected === true);
-    //     const selectionCount = selectionState.length;
+  // contextMenuVisible = false;
 
-    //     const isRightclickHoverSelection = Boolean(selectionState.find((el) => el.key === event.row[primaryKey!]));
-    //     if (selectionCount === 0) {
-    //       selectionStore.onSelectToggle(event);
-    //     } else if (isRightclickHoverSelection === false) {
-    //       selectionStore.onSelectToggle(event);
-    //     }
+  // if (selectableType !== 'none') {
+  //   if (event.type === 'leftclick') {
+  //     selectionStore.onSelectToggle(event);
+  //   } else if (event.type === 'rightclick' && hasContextMenuSlot === true) {
+  //     /**
+  //      * Se procesa estado de la seleccion con el menucontextual activo
+  //      */
+  //     const selectionState = selectionStore.state().filter((el) => el.value?.__ctx.isSelected === true);
+  //     const selectionCount = selectionState.length;
 
-    //     // se muestra el menu contextual del usuario
-    //     contextMenuVisible = true;
-    //     contextMenuEvent = event; // este event es el concreto, usado calcular x e y del contextmenu
-    //   }
-    // }
+  //     const isRightclickHoverSelection = Boolean(selectionState.find((el) => el.key === event.row[primaryKey!]));
+  //     if (selectionCount === 0) {
+  //       selectionStore.onSelectToggle(event);
+  //     } else if (isRightclickHoverSelection === false) {
+  //       selectionStore.onSelectToggle(event);
+  //     }
 
-    // el.dispatchEvent(
-    //   new CustomEvent(ROW_CLICK_EVENT_NAME, {
-    //     detail: event as RowEvent,
-    //     bubbles: true,
-    //     composed: true
-    //   })
-    // );
+  //     // se muestra el menu contextual del usuario
+  //     contextMenuVisible = true;
+  //     contextMenuEvent = event; // este event es el concreto, usado calcular x e y del contextmenu
+  //   }
+  // }
+
+  // el.dispatchEvent(
+  //   new CustomEvent(ROW_CLICK_EVENT_NAME, {
+  //     detail: event as RowEvent,
+  //     bubbles: true,
+  //     composed: true
+  //   })
+  // );
   // }
 
   function emitReady() {
@@ -410,27 +415,8 @@
             </tr>
           {:else}
             {#each data as row, index (row[primaryKey!])}
-            <!-- onClick={onRowClick} -->
-              <Row
-                {index}
-                columns={indexColumns}
-                {row}
-                {tableConfiguration}
-                contextMenu={hasContextMenuSlot}
-              />
+              <Row {index} columns={indexColumns} {row} {tableConfiguration} contextMenu={hasContextMenuSlot} />
             {/each}
-            <!-- TODO: IDEA DE REFACTORING -->
-            <!-- En vez de regenerar los comoponentes Row, lo que hago es mutarlos -->
-            <!-- {#each { length: pageSize } as _, i (i)}
-              <Row
-                index={i}
-                columns={indexColumns}
-                row={parameterizedData[i]}
-                {tableConfiguration}
-                contextMenu={hasContextMenuSlot}
-                onClick={onRowClick}
-              />
-            {/each} -->
           {/if}
         </tbody>
       </table>
