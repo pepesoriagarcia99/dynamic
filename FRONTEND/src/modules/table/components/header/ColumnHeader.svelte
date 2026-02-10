@@ -5,7 +5,7 @@
   import { TOOLTIP_DELAY } from '../../constant';
   import resizeIcon from '../../../../assets/svg/resize.svg';
 
-  import { tooltip, tooltipDelay, tooltipPosition } from '../../../tooltip/directives/tooltip';
+  import { tooltip } from '../../../tooltip/directives/tooltip';
   import { loadingState } from '../../context/loading-state.svelte';
 
   import AdvanceFilter from './filter/AdvanceFilter.svelte';
@@ -40,8 +40,16 @@
       .filter(Boolean)
       .join(' ')
   );
-  ;
-  const partNamesBtn: string = $derived(['column-header-btn' , 'column-header-btn', `column-header-btn-${column.index}`, isSortable ? 'column-header-btn-sortable' : null].filter(Boolean).join(' '));
+  const partNamesBtn: string = $derived(
+    [
+      'column-header-btn',
+      'column-header-btn',
+      `column-header-btn-${column.index}`,
+      isSortable ? 'column-header-btn-sortable' : null
+    ]
+      .filter(Boolean)
+      .join(' ')
+  );
   const partNamesName: string = $derived(
     ['column-header-name', isSorted ? 'column-header-name-sorted' : null, `column-header-name-${column.index}`]
       .filter(Boolean)
@@ -123,9 +131,7 @@
       <span
         class={partNamesName}
         part={partNamesName}
-        use:tooltip={column?.name}
-        use:tooltipPosition={'top'}
-        use:tooltipDelay={TOOLTIP_DELAY}>{column?.name}</span
+        {@attach tooltip({ value: column?.name, position: 'top', delay: TOOLTIP_DELAY })}>{column?.name}</span
       >
       {#if isSortable}
         <Sort bind:this={sortRef} {column} />

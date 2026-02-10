@@ -10,7 +10,7 @@
 
   import Avatar from './value/Avatar.svelte';
   import BooleanComponent from './value/Boolean.svelte';
-  import { tooltip, tooltipDelay, tooltipPosition } from '../../../tooltip/directives/tooltip';
+  import { tooltip } from '../../../tooltip/directives/tooltip';
 
   interface RowProps {
     index?: number;
@@ -108,12 +108,10 @@
       {#if simpleTypes.has(column.type)}
         {@const style = column.styleGetter!(value)}
         <div
+          {@attach tooltip({ value, position: 'right', delay: TOOLTIP_DELAY })}
           class={columnValuePartNames}
           part={columnValuePartNames}
           {style}
-          use:tooltip={value}
-          use:tooltipPosition={'right'}
-          use:tooltipDelay={TOOLTIP_DELAY}
         >
           {value}
         </div>
@@ -125,13 +123,11 @@
         <Avatar {value} />
       {:else if column.type === 'image'}
         <img
+          {@attach tooltip({ value, position: 'right', delay: TOOLTIP_DELAY })}
           src={value}
           alt={column.key}
           class={columnValuePartNames}
           part={columnValuePartNames}
-          use:tooltip={value?.alt}
-          use:tooltipPosition={'right'}
-          use:tooltipDelay={TOOLTIP_DELAY}
         />
       {/if}
     </td>

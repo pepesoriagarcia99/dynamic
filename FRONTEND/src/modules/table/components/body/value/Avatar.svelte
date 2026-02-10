@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { tooltip, tooltipDelay, tooltipPosition } from '../../../../tooltip/directives/tooltip';
+  import { tooltip } from '../../../../tooltip/directives/tooltip';
   import { TOOLTIP_DELAY } from '../../../constant';
 
   interface AvatarProps {
@@ -13,11 +13,9 @@
 <div class="avatar-container" part="avatar-container">
   <img src={value?.picture} alt={value?.alt} class="avatar-picture" part="avatar-picture" />
   <span
+    {@attach tooltip({ value: value?.name ?? '', position: 'right', delay: TOOLTIP_DELAY })}
     class="avatar-name"
-    part="avatar-name"
-    use:tooltip={value?.name ?? ''}
-    use:tooltipPosition={'right'}
-    use:tooltipDelay={TOOLTIP_DELAY}>{value?.name}</span
+    part="avatar-name">{value?.name}</span
   >
 </div>
 
