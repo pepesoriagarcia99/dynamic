@@ -6,13 +6,20 @@
 
   import { onMount } from 'svelte';
   import type { RowEvent } from './modules/table/models/event/RowEvent';
-  import type { SelectionEvent } from './modules/table/models/event/SelectionEvent';
-  import type { FilterEvent } from './modules/table/models/event/FilterEvent';
-  import type { SortEvent } from './modules/table/models/event/SortEvent';
-  import type { PageEvent } from './modules/table/models/event/PageEvent';
   import type { PublicApi } from './modules/table/models/public-api/PublicApi';
-  import type { TableEvent } from './modules/table/models/event/TableEvent';
+  import type {
+    FilterEvent,
+    PageEvent,
+    SelectionEvent,
+    SortEvent,
+    TableReadyEvent
+  } from './modules/table/models/event/TableEvent';
   import type { ContextMenuEvent } from './modules/table/models/event/ContextMenuEvent';
+  import BasicControl from './modules/controls/components/BasicControl.svelte';
+  import SelectorControl from './modules/controls/components/SelectorControl.svelte';
+  import CheckControl from './modules/controls/components/CheckControl.svelte';
+
+  let showTable: boolean = $state(true);
 
   // 30 c0lumnas
   let columns: Column[] = [
@@ -170,7 +177,7 @@
 
   let tableEl: (HTMLElement & PublicApi) | null;
 
-  let tableFilter: TableEvent;
+  let tableFilter: TableReadyEvent;
 
   function hashString(str: string): string {
     let hash = 0;
@@ -287,7 +294,7 @@
     }, 1000);
   }
 
-  function onReady(event: any & { detail: TableEvent }) {
+  function onReady(event: any & { detail: TableReadyEvent }) {
     console.log('READY: ', event.detail);
     console.log('PUBLIC API: ', tableEl?.pagination);
 
@@ -301,8 +308,13 @@
 </script>
 
 <main>
+  <div>
+    <label for="toggle-table">Mostrar tabla</label>
+    <input type="checkbox" id="toggle-table" checked={showTable} onchange={() => (showTable = !showTable)} />
+  </div>
   <div class="content">
     <dyn-table
+      class:hidden={!showTable}
       id="main-table"
       primaryKey="key"
       {loading}
@@ -330,13 +342,63 @@
         <button class="context-menu-btn"> Eliminar </button>
       </div>
     </dyn-table>
+
+    <div class:hidden={showTable}>
+      <h3>Basico tipo text</h3>
+      <BasicControl
+        label="Control externo de prueba"
+        placeholder="Escribe algo y presiona enter"
+        value={'valor test'}
+        type="text"
+        tooltip="Este es un tooltip de explicacion para el control externo"
+        onChange={(value: any) => alert(`Valor ingresado: ${value}`)}
+      />
+
+      <h3>Basico tipo number</h3>
+      <BasicControl
+        label="Control externo de prueba"
+        placeholder="Escribe algo y presiona enter"
+        value={'valor test'}
+        type="number"
+        tooltip="Este es un tooltip de explicacion para el control externo"
+        onChange={(value: any) => alert(`Valor ingresado: ${value}`)}
+      />
+
+      <h3>Selector</h3>
+      <SelectorControl
+        label="Selector externo de prueba"
+        placeholder="Selecciona una opcion"
+        options={['option1', 'option2', 'option3']}
+        value={'option1'}
+        tooltip="Este es un tooltip de explicacion para el selector externo"
+        onChange={(value: any) => alert(`Valor seleccionado: ${value}`)}
+      />
+
+      <h3>Check 3 estados</h3>
+      <CheckControl
+        label="Check externo de prueba"
+        value={true}
+        tooltip="Este es un tooltip de explicacion para el check externo"
+        triState={true}
+        onChange={(value: any) => alert(`Valor seleccionado: ${value}`)}
+      />
+
+      <h3>Check 2 estados</h3>
+      <CheckControl
+        label="Check externo de prueba"
+        value={true}
+        tooltip="Este es un tooltip de explicacion para el check externo"
+        triState={false}
+        onChange={(value: any) => alert(`Valor seleccionado: ${value}`)}
+      />
+    </div>
   </div>
 </main>
 
 <style>
   .content {
     margin: 1rem;
-    height: calc(100vh - 2rem);
+    height: calc(100vh - 4rem);
     width: calc(100vw - 2rem);
   }
 
@@ -370,5 +432,9 @@
 
   .context-menu-btn:hover {
     background: gainsboro;
+  }
+
+  .hidden {
+    display: none;
   }
 </style>
