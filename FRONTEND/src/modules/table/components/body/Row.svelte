@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onDestroy, onMount } from 'svelte';
 
   import { ROW_CLICK_EVENT_NAME, TOOLTIP_DELAY } from '../../constant';
 
@@ -11,6 +11,7 @@
   import BooleanComponent from './value/Boolean.svelte';
   import { tooltip } from '../../../tooltip/directives/tooltip';
   import { getTableConfigurationContext } from '../../context/table-configuration-state.svelte';
+  import { getSelectionContext } from '../../context/selection-state.svelte';
 
   interface RowProps {
     index?: number;
@@ -26,9 +27,12 @@
   let el: HTMLElement;
   const simpleTypes = new Set(['string', 'number', 'date', 'selector']);
   const tableConfiguration = getTableConfigurationContext();
+  const selection = getSelectionContext();
+  const key = String(row[tableConfiguration.primaryKey!]);
 
   /** State */
-  let isSelected = $state<boolean>(false);
+  const signal = selection.register(key);
+  const isSelected = $derived(signal.value);
 
   /** Computed */
   let rowStaticStyle: string = `${index % 2 === 0 ? 'row-even' : 'row-odd'}`;
@@ -61,11 +65,22 @@
     // };
   });
 
+  onDestroy(() => {
+    selection.unregister(key);
+  });
+
   function onRowClick(event: MouseEvent, type: RowEventType, column?: Column) {
     event.stopPropagation();
 
     if (tableConfiguration.hasContextMenu) {
       event.preventDefault();
+    }
+
+    if (tableConfiguration.selectableType !== 'none' && type === 'leftclick') {
+      selection.toggle(key, row, {
+        ctrl: event.ctrlKey || event.metaKey,
+        shift: event.shiftKey
+      });
     }
 
     el.dispatchEvent(

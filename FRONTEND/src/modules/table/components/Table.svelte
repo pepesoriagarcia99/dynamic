@@ -47,6 +47,7 @@
   import { buildValueGetter } from '../services/Value';
   import { initLoadingContext } from '../context/loading-state.svelte';
   import { initTableConfigurationContext } from '../context/table-configuration-state.svelte';
+  import { initSelectionContext } from '../context/selection-state.svelte';
 
   interface TableProps {
     columns?: Column[];
@@ -82,7 +83,15 @@
   }: TableProps = $props();
 
   initLoadingContext(() => loading);
-
+  initSelectionContext(selectableType, (selected) => {
+    el.dispatchEvent(
+      new CustomEvent('selection', {
+        detail: selected,
+        bubbles: true,
+        composed: true
+      })
+    );
+  });
   initTableConfigurationContext({
     selectableType,
     selectAll,
