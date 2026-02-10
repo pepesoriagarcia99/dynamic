@@ -27,9 +27,9 @@
   let startWidth: number = $state(0);
   let thElement: HTMLTableCellElement | null = $state(null);
 
-  const isSortable: boolean = $derived(column.sortable === true && tableConfiguration().sortableType !== 'none');
+  const isSortable: boolean = $derived(column.sortable === true && tableConfiguration.sortableType !== 'none');
   const isAdvanceFilterable: boolean = $derived(
-    column.filterable === true && tableConfiguration().filterable === 'advanced'
+    column.filterable === true && tableConfiguration.filterable === 'advanced'
   );
   const isSorted: boolean = $derived(sortRef?.getSortDirection() !== null && isSortable);
 
@@ -120,7 +120,7 @@
   }
 
   function handleHeaderClick(event: MouseEvent) {
-    if (tableConfiguration().filterable !== 'advanced') {
+    if (tableConfiguration.filterable !== 'advanced') {
       event.stopPropagation();
       sortRef?.toggleSort();
     }
@@ -146,7 +146,7 @@
   </button>
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-  {#if tableConfiguration().resizable === true && column.resizable === true && loadingState() === false}
+  {#if tableConfiguration.resizable === true && column.resizable === true && loadingState() === false}
     <div class={partNamesResize} part={partNamesResize} onmousedown={handleResizeMouseDown} role="separator">
       <img src={resizeIcon} class={partNamesResizeIcon} part={partNamesResizeIcon} alt="resize" />
     </div>

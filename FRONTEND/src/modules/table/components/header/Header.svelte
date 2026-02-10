@@ -29,9 +29,9 @@
 
   {#if hasDefaultSlot}
     <slot />
-  {:else if tableConfiguration().filterable === 'basic'}
+  {:else if tableConfiguration.filterable === 'basic'}
     <BasicFilter {columns} />
-  {:else if tableConfiguration().filterable === 'simple'}
+  {:else if tableConfiguration.filterable === 'simple'}
     <SimpleFilter {columns} />
   {/if}
 </thead>

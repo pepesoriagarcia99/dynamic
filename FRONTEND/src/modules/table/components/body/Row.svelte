@@ -33,7 +33,7 @@
   /** Computed */
   let rowStaticStyle: string = `${index % 2 === 0 ? 'row-even' : 'row-odd'}`;
   const rowStyle: string = $derived(
-    ['row', isSelected ? 'row-selected' : tableConfiguration().selectableType !== 'none' ? 'row-selectable' : null]
+    ['row', isSelected ? 'row-selected' : tableConfiguration.selectableType !== 'none' ? 'row-selectable' : null]
       .filter(Boolean)
       .join(' ')
   );
@@ -64,7 +64,7 @@
   function onRowClick(event: MouseEvent, type: RowEventType, column?: Column) {
     event.stopPropagation();
 
-    if (tableConfiguration().hasContextMenu) {
+    if (tableConfiguration.hasContextMenu) {
       event.preventDefault();
     }
 

@@ -4,13 +4,11 @@
 
   const TABLE_CONFIGURATION_KEY = Symbol('table-configuration');
 
-  type TableConfigurationGetter = () => TableConfiguration;
-
-  export function initTableConfigurationContext(getter: TableConfigurationGetter): void {
-    setContext(TABLE_CONFIGURATION_KEY, getter);
+  export function initTableConfigurationContext(config: TableConfiguration): void {
+    setContext(TABLE_CONFIGURATION_KEY, Object.freeze(config));
   }
 
-  export function getTableConfigurationContext(): TableConfigurationGetter {
-    return getContext<TableConfigurationGetter>(TABLE_CONFIGURATION_KEY);
+  export function getTableConfigurationContext(): Readonly<TableConfiguration> {
+    return getContext<Readonly<TableConfiguration>>(TABLE_CONFIGURATION_KEY);
   }
 </script>

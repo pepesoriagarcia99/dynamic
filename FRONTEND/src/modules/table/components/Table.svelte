@@ -27,8 +27,7 @@
     FilterableType,
     PageableType,
     SelectableType,
-    SortableType,
-    TableConfiguration
+    SortableType
   } from '../models/configuration/TableConfiguration';
   import type { StoreComponentData } from '../../core/models/StoreComponent';
   import type { FilterEvent, SortEvent, /*SortOrder,*/ TableReadyEvent } from '../models/event/TableEvent';
@@ -84,7 +83,7 @@
 
   initLoadingContext(() => loading);
 
-    const tableConfiguration: TableConfiguration = $derived({
+  initTableConfigurationContext({
     selectableType,
     selectAll,
     filterable,
@@ -92,10 +91,8 @@
     pageableType,
     primaryKey,
     resizable,
-    hasContextMenu: $$slots['context-menu']
+    hasContextMenu: !!$$slots['context-menu']
   });
-
-  initTableConfigurationContext(() => tableConfiguration);
 
   /** Values */
   let el: HTMLElement;
