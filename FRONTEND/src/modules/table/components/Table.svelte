@@ -13,7 +13,7 @@
     DEFAULT_SORTABLE,
     VALID_SELECTABLE_TYPES,
     DEFAULT_PAGE_SIZE,
-    SORT_EVENT_NAME,
+    // SORT_EVENT_NAME,
     DEFAULT_RESIZABLE,
     VALID_SORTABLE_TYPES,
     VALID_FILTERABLE_TYPES,
@@ -31,7 +31,7 @@
     TableConfiguration
   } from '../models/configuration/TableConfiguration';
   import type { StoreComponentData } from '../../core/models/StoreComponent';
-  import type { FilterEvent, SortEvent, SortOrder, TableReadyEvent } from '../models/event/TableEvent';
+  import type { FilterEvent, SortEvent, /*SortOrder,*/ TableReadyEvent } from '../models/event/TableEvent';
 
   import { selectionStore } from '../store/selection-store';
   import { filterStore } from '../store/filter-store';
@@ -190,21 +190,6 @@
     })
   );
 
-  // const parameterizedData: RowData[] = $derived(
-  //   data.map((r) => ({
-  //     ...r,
-  //     __ctx: {
-  //       isSelected: false
-  //     }
-  //     /**
-  //      * TODO: podria hacer un acceso dinamico al valor de la key primaria
-  //      */
-  //     // getPrimaryKeyValue() {
-  //     //   return this[tableConfiguration.primaryKey!]
-  //     // }
-  //   }))
-  // );
-
   const tableConfiguration: TableConfiguration = $derived({
     selectableType,
     selectAll,
@@ -246,17 +231,17 @@
     //   );
     // });
 
-    sortStore.init(tableConfiguration);
-    sortStore.subscribe((sorts: StoreComponentData<SortOrder>[]) => {
-      const eventDetail = mapColumnKey<SortEvent>(sorts);
-      el.dispatchEvent(
-        new CustomEvent(SORT_EVENT_NAME, {
-          detail: eventDetail as SortEvent[],
-          bubbles: true,
-          composed: true
-        })
-      );
-    });
+    // sortStore.init(tableConfiguration);
+    // sortStore.subscribe((sorts: StoreComponentData<SortOrder>[]) => {
+    //   const eventDetail = mapColumnKey<SortEvent>(sorts);
+    //   el.dispatchEvent(
+    //     new CustomEvent(SORT_EVENT_NAME, {
+    //       detail: eventDetail as SortEvent[],
+    //       bubbles: true,
+    //       composed: true
+    //     })
+    //   );
+    // });
 
     window.addEventListener('keydown', handleKeyDown);
 
@@ -397,7 +382,9 @@
   <div class="table-container" part="table-container">
     <div class="table-scroll" part="table-scroll" onscroll={handleScroll}>
       <table class="table" part="table">
-        <Header columns={indexColumns} {tableConfiguration} />
+        <Header columns={indexColumns} {tableConfiguration} >
+          <slot name="filter" />
+        </Header>
 
         <tbody class="tbody" part="tbody">
           {#if loading === true}

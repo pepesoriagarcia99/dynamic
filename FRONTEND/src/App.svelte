@@ -337,6 +337,40 @@
       {onContextMenuEvent}
       {onScrollEndEvent}
     >
+      <tr slot="filter">
+        <th> Hola </th>
+        <th></th>
+        <th>
+          <input placeholder="Filtrar por continente" />
+        </th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
       <div slot="context-menu" class="context-menu">
         <button class="context-menu-btn"> Editar </button>
         <button class="context-menu-btn"> Eliminar </button>

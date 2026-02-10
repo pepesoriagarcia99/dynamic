@@ -6,7 +6,7 @@
   // import type { StoreComponentData } from '../../core/models/StoreComponent';
   // import type { RowData } from '../models/RowData';
   import type { ContextMenuEvent } from '../models/event/ContextMenuEvent';
-  import type { SelectionEvent } from '../models/event/SelectionEvent';
+  import type { SelectionEvent } from '../models/event/TableEvent';
 
   interface ContextMenuProps {
     visible?: boolean;

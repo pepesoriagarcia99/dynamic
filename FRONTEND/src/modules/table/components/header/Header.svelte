@@ -12,9 +12,13 @@
 
   /** Inputs */
   const { columns, tableConfiguration }: HeaderProps = $props();
+
+  /** States */
+  let hasDefaultSlot: boolean = $derived($$slots['default']);
+
 </script>
 
-<thead class="thead" part="thead">
+<thead class="thead" part="thead" >
   <tr class="thead-tr" part="thead-tr">
     {#each columns as column}
       <ColumnHeader
@@ -24,7 +28,9 @@
     {/each}
   </tr>
 
-  {#if tableConfiguration.filterable === 'basic'}
+  {#if hasDefaultSlot}
+    <slot />
+  {:else if tableConfiguration.filterable === 'basic'}
     <BasicFilter {columns} />
   {:else if tableConfiguration.filterable === 'simple'}
     <SimpleFilter {columns} />
