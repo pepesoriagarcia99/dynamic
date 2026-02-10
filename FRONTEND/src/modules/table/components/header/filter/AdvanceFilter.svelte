@@ -4,12 +4,12 @@
   import advanceFilterFillIcon from '../../../../../assets/svg/advance-filter-fill.svg';
   import type { StoreComponent } from '../../../../core/models/StoreComponent';
   import type { Column } from '../../../models/column/Column';
-  import type { SortOrder } from '../../../models/event/SortEvent';
   import { loadingState } from '../../../context/loading-state.svelte';
   import { sortStore } from '../../../store/sort-store';
   import Skeleton from '../../Skeleton.svelte';
   import { getColumnIndexOpen, setColumnIndexOpen } from '../../../context/advance-filter-state.svelte';
   import SelectorControl from '../../../../controls/components/SelectorControl.svelte';
+  import type { SortOrder } from '../../../models/event/TableEvent';
 
   interface AdvanceFilterIconProps {
     column: Column;

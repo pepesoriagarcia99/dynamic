@@ -17,11 +17,10 @@
     columns?: Column[];
     row: RowData;
     tableConfiguration: TableConfiguration;
-    contextMenu: boolean;
   }
 
   /** Inputs */
-  const { index = 0, columns = [], row, tableConfiguration, contextMenu = false }: RowProps = $props();
+  const { index = 0, columns = [], row, tableConfiguration }: RowProps = $props();
 
   /** Values */
   // const key = row[tableConfiguration.primaryKey!];
@@ -62,9 +61,10 @@
     // };
   });
 
-  function onCellClick(event: MouseEvent, type: RowEventType, column?: Column) {
+  function onRowClick(event: MouseEvent, type: RowEventType, column?: Column) {
     event.stopPropagation();
-    if (contextMenu) {
+
+    if (tableConfiguration.hasContextMenu) {
       event.preventDefault();
     }
 
@@ -101,9 +101,9 @@
       class={columnPartNames}
       part={columnPartNames}
       style={column?.style as string}
-      onclick={(event) => onCellClick(event, 'leftclick', column)}
-      oncontextmenu={(event) => onCellClick(event, 'rightclick', column)}
-      ondblclick={(event) => onCellClick(event, 'doubleclick', column)}
+      onclick={(event) => onRowClick(event, 'leftclick', column)}
+      oncontextmenu={(event) => onRowClick(event, 'rightclick', column)}
+      ondblclick={(event) => onRowClick(event, 'doubleclick', column)}
     >
       {#if simpleTypes.has(column.type)}
         {@const style = column.styleGetter!(value)}

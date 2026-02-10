@@ -2,7 +2,6 @@
   import { onMount } from 'svelte';
   import type { Column } from '../../models/column/Column';
   import type { StoreComponent } from '../../../core/models/StoreComponent';
-  import type { SortOrder } from '../../models/event/SortEvent';
 
   import sortIcon from '../../../../assets/svg/sort.svg';
   import sortTopIcon from '../../../../assets/svg/sort-top.svg';
@@ -11,6 +10,7 @@
 
   import Skeleton from '../Skeleton.svelte';
   import { loadingState } from '../../context/loading-state.svelte';
+  import type { SortOrder } from '../../models/event/TableEvent';
 
   interface SortProps {
     column: Column;

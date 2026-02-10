@@ -11,20 +11,20 @@
   let {
     id = crypto.randomUUID(),
     label,
-    placeholder = 'Type to search...',
+    // placeholder = 'Type to search...',
     value = $bindable(undefined),
     disabled = false,
     options = [],
     maxVisibleOptions = 5,
-    style = '',
+    // style = '',
     filterFunction = defaultFilter,
-    onChange = () => {}
+    // onChange = () => {}
   }: AutoCompleteControlProps = $props();
 
   let searchValue = $state('');
   let isOpen = $state(false);
-  let highlightedIndex = $state(-1);
-  let inputElement: HTMLInputElement;
+  // let highlightedIndex = $state(-1);
+  // let inputElement: HTMLInputElement;
   let dropdownElement: HTMLDivElement | null = $state(null);
 
   const inputId: string = $derived(`autocomplete-control-${id}`);
@@ -32,16 +32,16 @@
   const partNamesContainer: string = $derived(
     `control-container autocomplete-control-container autocomplete-control-container-${id}`
   );
-  const partNamesInput: string = $derived(
-    `control-item autocomplete-control-input autocomplete-control-input-${id}`
-  );
+  // const partNamesInput: string = $derived(
+  //   `control-item autocomplete-control-input autocomplete-control-input-${id}`
+  // );
   const partNamesLabel: string = $derived(
     `control-label autocomplete-control-label autocomplete-control-label-${id}`
   );
   const partNamesDropdown: string = $derived(
     `autocomplete-dropdown autocomplete-dropdown-${id}`
   );
-  const partNamesOption: string = $derived(`autocomplete-option autocomplete-option-${id}`);
+  // const partNamesOption: string = $derived(`autocomplete-option autocomplete-option-${id}`);
 
   const filteredOptions = $derived(
     searchValue.trim() === ''
@@ -55,89 +55,89 @@
     return option.toLowerCase().includes(searchValue.toLowerCase());
   }
 
-  function handleInput() {
-    isOpen = true;
-    highlightedIndex = -1;
-  }
+  // function handleInput() {
+  //   isOpen = true;
+  //   highlightedIndex = -1;
+  // }
 
-  function handleFocus() {
-    isOpen = true;
-  }
+  // function handleFocus() {
+  //   isOpen = true;
+  // }
 
-  function handleBlur(event: FocusEvent) {
-    // Delay to allow click on option
-    setTimeout(() => {
-      if (!dropdownElement?.contains(event.relatedTarget as Node)) {
-        isOpen = false;
-        highlightedIndex = -1;
-      }
-    }, 150);
-  }
+  // function handleBlur(event: FocusEvent) {
+  //   // Delay to allow click on option
+  //   setTimeout(() => {
+  //     if (!dropdownElement?.contains(event.relatedTarget as Node)) {
+  //       isOpen = false;
+  //       highlightedIndex = -1;
+  //     }
+  //   }, 150);
+  // }
 
-  function selectOption(option: string) {
-    value = option;
-    searchValue = option;
-    isOpen = false;
-    highlightedIndex = -1;
-    onChange(value);
-  }
+  // function selectOption(option: string) {
+  //   value = option;
+  //   searchValue = option;
+  //   isOpen = false;
+  //   highlightedIndex = -1;
+  //   onChange(value);
+  // }
 
-  function keydownHandler(event: KeyboardEvent) {
-    if (!isOpen && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
-      isOpen = true;
-      event.preventDefault();
-      return;
-    }
+  // function keydownHandler(event: KeyboardEvent) {
+  //   if (!isOpen && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
+  //     isOpen = true;
+  //     event.preventDefault();
+  //     return;
+  //   }
 
-    switch (event.key) {
-      case 'ArrowDown':
-        event.preventDefault();
-        highlightedIndex = Math.min(highlightedIndex + 1, filteredOptions.length - 1);
-        scrollToHighlighted();
-        break;
+  //   switch (event.key) {
+  //     case 'ArrowDown':
+  //       event.preventDefault();
+  //       highlightedIndex = Math.min(highlightedIndex + 1, filteredOptions.length - 1);
+  //       scrollToHighlighted();
+  //       break;
 
-      case 'ArrowUp':
-        event.preventDefault();
-        highlightedIndex = Math.max(highlightedIndex - 1, -1);
-        scrollToHighlighted();
-        break;
+  //     case 'ArrowUp':
+  //       event.preventDefault();
+  //       highlightedIndex = Math.max(highlightedIndex - 1, -1);
+  //       scrollToHighlighted();
+  //       break;
 
-      case 'Enter':
-        event.preventDefault();
-        if (isOpen && highlightedIndex >= 0 && filteredOptions[highlightedIndex]) {
-          selectOption(filteredOptions[highlightedIndex]);
-        } else if (!isOpen) {
-          onChange(value);
-        }
-        break;
+  //     case 'Enter':
+  //       event.preventDefault();
+  //       if (isOpen && highlightedIndex >= 0 && filteredOptions[highlightedIndex]) {
+  //         selectOption(filteredOptions[highlightedIndex]);
+  //       } else if (!isOpen) {
+  //         onChange(value);
+  //       }
+  //       break;
 
-      case 'Escape':
-        event.preventDefault();
-        isOpen = false;
-        highlightedIndex = -1;
-        inputElement?.blur();
-        break;
+  //     case 'Escape':
+  //       event.preventDefault();
+  //       isOpen = false;
+  //       highlightedIndex = -1;
+  //       inputElement?.blur();
+  //       break;
 
-      case 'Tab':
-        isOpen = false;
-        highlightedIndex = -1;
-        break;
-    }
-  }
+  //     case 'Tab':
+  //       isOpen = false;
+  //       highlightedIndex = -1;
+  //       break;
+  //   }
+  // }
 
-  function scrollToHighlighted() {
-    if (dropdownElement && highlightedIndex >= 0) {
-      const optionElements = dropdownElement.querySelectorAll('.autocomplete-option');
-      const highlightedElement = optionElements[highlightedIndex] as HTMLElement;
-      if (highlightedElement) {
-        highlightedElement.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-      }
-    }
-  }
+  // function scrollToHighlighted() {
+  //   if (dropdownElement && highlightedIndex >= 0) {
+  //     const optionElements = dropdownElement.querySelectorAll('.autocomplete-option');
+  //     const highlightedElement = optionElements[highlightedIndex] as HTMLElement;
+  //     if (highlightedElement) {
+  //       highlightedElement.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  //     }
+  //   }
+  // }
 
-  function handleOptionMouseEnter(index: number) {
-    highlightedIndex = index;
-  }
+  // function handleOptionMouseEnter(index: number) {
+  //   highlightedIndex = index;
+  // }
 </script>
 
 <div class={partNamesContainer} part={partNamesContainer}>
@@ -145,7 +145,7 @@
     <label for={inputId} class={partNamesLabel} part={partNamesLabel}>{label}</label>
   {/if}
   <div class="autocomplete-wrapper">
-    <input
+    <!-- <input
       bind:this={inputElement}
       id={inputId}
       aria-label={inputId}
@@ -163,7 +163,7 @@
       onblur={handleBlur}
       onkeydown={keydownHandler}
       {disabled}
-    />
+    /> -->
     {#if isOpen && filteredOptions.length > 0 && !disabled}
       <div
         bind:this={dropdownElement}
@@ -173,7 +173,7 @@
         role="listbox"
         style="max-height: {maxVisibleOptions * 2.5}rem;"
       >
-        {#each filteredOptions as option, index}
+        <!-- {#each filteredOptions as option, index}
           <div
             class="{partNamesOption} {highlightedIndex === index ? 'highlighted' : ''}"
             part={partNamesOption}
@@ -185,7 +185,7 @@
           >
             {option}
           </div>
-        {/each}
+        {/each} -->
       </div>
     {/if}
   </div>

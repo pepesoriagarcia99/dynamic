@@ -10,7 +10,7 @@
   import SelectorControl from '../../../../controls/components/SelectorControl.svelte';
   import CheckControl from '../../../../controls/components/CheckControl.svelte';
   import DateControl from '../../../../controls/components/DateControl.svelte';
-  import MultipleSelectorControl from '../../../../controls/components/MultipleSelectorControl.svelte';
+  // import MultipleSelectorControl from '../../../../controls/components/MultipleSelectorControl.svelte';
   import AutoCompleteControl from '../../../../controls/components/AutoCompleteControl.svelte';
 
   interface FilterProps {
@@ -55,8 +55,8 @@
             <SelectorControl options={configuration.options!} {onChange} />
           {:else if configuration.filterType === 'auto-complete'}
             <AutoCompleteControl options={configuration.options!} {onChange} />
-            {:else if configuration.filterType === 'multi-selector'}
-            <MultipleSelectorControl options={configuration.options!} {onChange} />
+            <!-- {:else if configuration.filterType === 'multi-selector'}
+            <MultipleSelectorControl options={configuration.options!} {onChange} /> -->
           {/if}
         {:else if column.type === 'boolean'}
           <CheckControl id={column.key} {onChange} triState={true} />
