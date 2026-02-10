@@ -47,6 +47,7 @@
   import { buildStyleGetter } from '../services/Style';
   import { buildValueGetter } from '../services/Value';
   import { initLoadingContext } from '../context/loading-state.svelte';
+  import { initTableConfigurationContext } from '../context/table-configuration-state.svelte';
 
   interface TableProps {
     columns?: Column[];
@@ -82,6 +83,19 @@
   }: TableProps = $props();
 
   initLoadingContext(() => loading);
+
+    const tableConfiguration: TableConfiguration = $derived({
+    selectableType,
+    selectAll,
+    filterable,
+    sortableType,
+    pageableType,
+    primaryKey,
+    resizable,
+    hasContextMenu: $$slots['context-menu']
+  });
+
+  initTableConfigurationContext(() => tableConfiguration);
 
   /** Values */
   let el: HTMLElement;
@@ -191,18 +205,6 @@
       };
     })
   );
-
-  const tableConfiguration: TableConfiguration = $derived({
-    selectableType,
-    selectAll,
-    filterable,
-    sortableType,
-    pageableType,
-    primaryKey,
-    resizable,
-
-    hasContextMenu: hasContextMenuSlot
-  });
 
   /** Methods */
   onMount(() => {
@@ -382,7 +384,7 @@
   <div class="table-container" part="table-container">
     <div class="table-scroll" part="table-scroll" onscroll={handleScroll}>
       <table class="table" part="table">
-        <Header columns={indexColumns} {tableConfiguration} >
+        <Header columns={indexColumns} >
           <slot name="filter" />
         </Header>
 
@@ -395,7 +397,7 @@
             </tr>
           {:else}
             {#each data as row, index (row[primaryKey!])}
-              <Row {index} columns={indexColumns} {row} {tableConfiguration} />
+              <Row {index} columns={indexColumns} {row} />
             {/each}
           {/if}
         </tbody>

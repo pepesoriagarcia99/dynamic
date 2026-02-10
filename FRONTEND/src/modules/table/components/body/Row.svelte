@@ -4,28 +4,28 @@
   import { ROW_CLICK_EVENT_NAME, TOOLTIP_DELAY } from '../../constant';
 
   import type { Column } from '../../models/column/Column';
-  import type { TableConfiguration } from '../../models/configuration/TableConfiguration';
   import type { RowData } from '../../models/RowData';
   import type { RowEvent, RowEventType } from '../../models/event/RowEvent';
 
   import Avatar from './value/Avatar.svelte';
   import BooleanComponent from './value/Boolean.svelte';
   import { tooltip } from '../../../tooltip/directives/tooltip';
+  import { getTableConfigurationContext } from '../../context/table-configuration-state.svelte';
 
   interface RowProps {
     index?: number;
     columns?: Column[];
     row: RowData;
-    tableConfiguration: TableConfiguration;
   }
 
   /** Inputs */
-  const { index = 0, columns = [], row, tableConfiguration }: RowProps = $props();
+  const { index = 0, columns = [], row }: RowProps = $props();
 
   /** Values */
   // const key = row[tableConfiguration.primaryKey!];
   let el: HTMLElement;
   const simpleTypes = new Set(['string', 'number', 'date', 'selector']);
+  const tableConfiguration = getTableConfigurationContext();
 
   /** State */
   let isSelected = $state<boolean>(false);
@@ -33,7 +33,7 @@
   /** Computed */
   let rowStaticStyle: string = `${index % 2 === 0 ? 'row-even' : 'row-odd'}`;
   const rowStyle: string = $derived(
-    ['row', isSelected ? 'row-selected' : tableConfiguration.selectableType !== 'none' ? 'row-selectable' : null]
+    ['row', isSelected ? 'row-selected' : tableConfiguration().selectableType !== 'none' ? 'row-selectable' : null]
       .filter(Boolean)
       .join(' ')
   );
@@ -64,7 +64,7 @@
   function onRowClick(event: MouseEvent, type: RowEventType, column?: Column) {
     event.stopPropagation();
 
-    if (tableConfiguration.hasContextMenu) {
+    if (tableConfiguration().hasContextMenu) {
       event.preventDefault();
     }
 

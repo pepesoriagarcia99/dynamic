@@ -1,20 +1,20 @@
 <script lang="ts">
   import type { Column } from '../../models/column/Column';
-  import type { TableConfiguration } from '../../models/configuration/TableConfiguration';
   import ColumnHeader from './ColumnHeader.svelte';
   import BasicFilter from './filter/BasicFilter.svelte';
   import SimpleFilter from './filter/SimpleFilter.svelte';
+  import { getTableConfigurationContext } from '../../context/table-configuration-state.svelte';
 
   interface HeaderProps {
     columns: Column[];
-    tableConfiguration: TableConfiguration;
   }
 
   /** Inputs */
-  const { columns, tableConfiguration }: HeaderProps = $props();
+  const { columns }: HeaderProps = $props();
 
   /** States */
   let hasDefaultSlot: boolean = $derived($$slots['default']);
+  const tableConfiguration = getTableConfigurationContext();
 
 </script>
 
@@ -23,16 +23,15 @@
     {#each columns as column}
       <ColumnHeader
         {column}
-        {tableConfiguration}
       />
     {/each}
   </tr>
 
   {#if hasDefaultSlot}
     <slot />
-  {:else if tableConfiguration.filterable === 'basic'}
+  {:else if tableConfiguration().filterable === 'basic'}
     <BasicFilter {columns} />
-  {:else if tableConfiguration.filterable === 'simple'}
+  {:else if tableConfiguration().filterable === 'simple'}
     <SimpleFilter {columns} />
   {/if}
 </thead>
