@@ -1,5 +1,4 @@
 <script lang="ts">
-  import type { PageEvent } from '../models/event/PageEvent';
 
   import firstPageIcon from '../../../assets/svg/arrow-to-left.svg';
   import lastPageIcon from '../../../assets/svg/arrow-to-right.svg';
@@ -7,8 +6,9 @@
   import nextPageIcon from '../../../assets/svg/right-arrow.svg';
 
   import SelectorControl from '../../controls/components/SelectorControl.svelte';
-  import { loadingState } from '../context/loading-state.svelte';
   import { PAGE_CHANGE_EVENT_NAME } from '../constant';
+  import { getLoadingContext } from '../context/loading-state.svelte';
+  import type { PageEvent } from '../models/event/TableEvent';
 
   type PageActions = 'first' | 'last' | 'next' | 'previous';
 
@@ -20,10 +20,12 @@
 
   let { count, pageSizeOptions, pageSize }: PaginationProps = $props();
 
+  const loadingState = getLoadingContext();
   let el: HTMLElement;
   let currentPage: number = $state(1);
   let totalPages: number = $derived(Math.ceil(count / pageSize));
   let showPageNumbers: number[] = $state([]);
+
 
   $effect(() => {
     if (totalPages <= 5) {

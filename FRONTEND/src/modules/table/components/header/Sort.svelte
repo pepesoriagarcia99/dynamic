@@ -9,7 +9,7 @@
   import { sortStore } from '../../store/sort-store';
 
   import Skeleton from '../Skeleton.svelte';
-  import { loadingState } from '../../context/loading-state.svelte';
+  import { getLoadingContext } from '../../context/loading-state.svelte';
   import type { SortOrder } from '../../models/event/TableEvent';
 
   interface SortProps {
@@ -20,6 +20,7 @@
   let { column }: SortProps = $props();
 
   /** Values */
+  const loadingState = getLoadingContext();
   let sortDirection = $state<SortOrder | null>(null);
   const partNamesIcon: string = $derived(
     ['sort-icon', sortDirection !== null ? 'sort-icon-active' : null, `sort-icon-${column.index}`]

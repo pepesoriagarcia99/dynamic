@@ -4,7 +4,7 @@
   import advanceFilterFillIcon from '../../../../../assets/svg/advance-filter-fill.svg';
   import type { StoreComponent } from '../../../../core/models/StoreComponent';
   import type { Column } from '../../../models/column/Column';
-  import { loadingState } from '../../../context/loading-state.svelte';
+  import { getLoadingContext } from '../../../context/loading-state.svelte';
   import { sortStore } from '../../../store/sort-store';
   import Skeleton from '../../Skeleton.svelte';
   import { getColumnIndexOpen, setColumnIndexOpen } from '../../../context/advance-filter-state.svelte';
@@ -18,6 +18,8 @@
   /** Inputs */
   let { column }: AdvanceFilterIconProps = $props();
 
+  /** States */
+  const loadingState = getLoadingContext();
   let showModal = $state<boolean>(false);
   let buttonRef: HTMLButtonElement | null = $state(null);
 

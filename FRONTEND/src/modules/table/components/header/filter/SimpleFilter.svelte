@@ -3,7 +3,7 @@
 
   import type { Column } from '../../../models/column/Column';
 
-  import { loadingState } from '../../../context/loading-state.svelte';
+  import { getLoadingContext } from '../../../context/loading-state.svelte';
 
   import Skeleton from '../../Skeleton.svelte';
   import BasicControl from '../../../../controls/components/BasicControl.svelte';
@@ -20,6 +20,9 @@
 
   /** Inputs */
   let { columns }: FilterProps = $props();
+
+  /** States */
+  const loadingState = getLoadingContext();
 
   /** Methods */
   onMount(() => {

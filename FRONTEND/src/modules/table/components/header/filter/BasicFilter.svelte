@@ -8,7 +8,7 @@
   import type { StoreComponent, StoreComponentData } from '../../../../core/models/StoreComponent';
 
   import { filterStore } from '../../../store/filter-store';
-  import { loadingState } from '../../../context/loading-state.svelte';
+  import { getLoadingContext } from '../../../context/loading-state.svelte';
 
   import Skeleton from '../../Skeleton.svelte';
   import BasicControl from '../../../../controls/components/BasicControl.svelte';
@@ -27,6 +27,9 @@
 
   /** Inputs */
   let { columns }: FilterProps = $props();
+
+  /** States */
+  const loadingState = getLoadingContext();
   let trElement: HTMLTableRowElement | undefined = $state();
   let controls: Control[] = $state([]);
 

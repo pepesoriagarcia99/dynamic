@@ -36,7 +36,6 @@
   import { selectionStore } from '../store/selection-store';
   import { filterStore } from '../store/filter-store';
   import { sortStore } from '../store/sort-store';
-  import { setLoadingState } from '../context/loading-state.svelte';
   import { styleTransformer } from '../../../utils/style-transformer';
 
   import Header from './header/Header.svelte';
@@ -47,6 +46,7 @@
   import { declarePublicApi } from '../services/public-api/declare';
   import { buildStyleGetter } from '../services/Style';
   import { buildValueGetter } from '../services/Value';
+  import { initLoadingContext } from '../context/loading-state.svelte';
 
   interface TableProps {
     columns?: Column[];
@@ -80,6 +80,8 @@
     pageSize = DEFAULT_PAGE_SIZE,
     resizable = DEFAULT_RESIZABLE
   }: TableProps = $props();
+
+  initLoadingContext(() => loading);
 
   /** Values */
   let el: HTMLElement;
@@ -197,11 +199,9 @@
     sortableType,
     pageableType,
     primaryKey,
-    resizable
-  });
+    resizable,
 
-  $effect(() => {
-    setLoadingState(loading);
+    hasContextMenu: hasContextMenuSlot
   });
 
   /** Methods */
@@ -395,7 +395,7 @@
             </tr>
           {:else}
             {#each data as row, index (row[primaryKey!])}
-              <Row {index} columns={indexColumns} {row} {tableConfiguration} contextMenu={hasContextMenuSlot} />
+              <Row {index} columns={indexColumns} {row} {tableConfiguration} />
             {/each}
           {/if}
         </tbody>

@@ -1,11 +1,15 @@
 <script module lang="ts">
-  let _loading = $state(false);
+  import { setContext, getContext } from 'svelte';
 
-  export function loadingState() {
-    return _loading;
+  const LOADING_KEY = Symbol('loading');
+
+  type LoadingGetter = () => boolean;
+
+  export function initLoadingContext(getter: LoadingGetter): void {
+    setContext(LOADING_KEY, getter);
   }
 
-  export function setLoadingState(value: boolean) {
-    _loading = value;
+  export function getLoadingContext(): LoadingGetter {
+    return getContext<LoadingGetter>(LOADING_KEY);
   }
 </script>

@@ -6,7 +6,7 @@
   import resizeIcon from '../../../../assets/svg/resize.svg';
 
   import { tooltip } from '../../../tooltip/directives/tooltip';
-  import { loadingState } from '../../context/loading-state.svelte';
+  import { getLoadingContext } from '../../context/loading-state.svelte';
 
   import AdvanceFilter from './filter/AdvanceFilter.svelte';
   import Sort from './Sort.svelte';
@@ -18,7 +18,9 @@
 
   /** Inputs */
   const { column, tableConfiguration }: ColumnHeaderProps = $props();
+
   /** States */
+  const loadingState = getLoadingContext();
   let sortRef: Sort | null = $state<Sort | null>(null);
   let isResizing: boolean = $state(false);
   let startX: number = $state(0);
