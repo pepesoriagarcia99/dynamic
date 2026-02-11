@@ -1,4 +1,5 @@
 <script lang="ts">
+  // import { untrack } from 'svelte';
   import type { Column } from '../../models/column/Column';
   import Skeleton from '../Skeleton.svelte';
 
@@ -11,17 +12,17 @@
   const { columns, pageSize = 100 }: LoadingBodyProps = $props();
 
   // Optimización: usar array directo en lugar de Array.from con mapeo
-  let skeletonRows = pageSize ?? 100;
+  // let skeletonRows = untrack(() => pageSize) ?? 100;
+
+  const colClasses = $derived(columns?.map((_, iCol) => `loading-column loading-column-${iCol}`) ?? []);
 </script>
 
-{#each { length: skeletonRows } as _, iRow (iRow)}
+{#each { length: pageSize } as _, iRow (iRow)}
   {@const rowClass = iRow % 2 === 0 ? 'loading-row row-even' : 'loading-row row-odd'}
-  
+
   <tr class={rowClass} part={rowClass}>
     {#each columns as column, iCol (iCol)}
-      {@const colClass = `loading-column loading-column-${iCol}`}
-      
-      <td class={colClass} part={colClass}>
+      <td class={colClasses[iCol]} part={colClasses[iCol]}>
         <div class="loading-column-value" part="loading-column-value">
           {#if column.type === 'avatar'}
             <div class="loading-column-avatar" part="loading-column-avatar">

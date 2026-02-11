@@ -16,7 +16,7 @@ import type { ColorConfiguration } from "../models/column/ColumnConfiguration";
 export function buildStyleGetter(column: Column): (value: any) => string {
   // Extraemos la configuración de estilos una sola vez
   // Evitamos accesos profundos en cada celda
-  const configStyle: ColorConfiguration<any>[] =
+  const configStyle: ColorConfiguration[] =
     (column.configuration as any)?.colorConfiguration ?? [];
 
   // Fast-path:

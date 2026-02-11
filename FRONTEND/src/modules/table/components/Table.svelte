@@ -8,7 +8,7 @@
     DEFAULT_FILTERABLE,
     DEFAULT_PAGE_SIZE_OPTIONS,
     DEFAULT_PAGEABLE,
-    DEFAULT_SELECT_ALL,
+    // DEFAULT_SELECT_ALL,
     DEFAULT_SELECTABLE_TYPE,
     DEFAULT_SORTABLE,
     VALID_SELECTABLE_TYPES,
@@ -17,11 +17,11 @@
     DEFAULT_RESIZABLE,
     VALID_SORTABLE_TYPES,
     VALID_FILTERABLE_TYPES,
-    SCROLL_END_EVENT_NAME,
+    // SCROLL_END_EVENT_NAME,
     VALID_PAGEABLE_TYPES,
     READY_EVENT_NAME,
     LOADING_STATE,
-    CONTEXT_MENU_VISIBLE_STATE,
+    // CONTEXT_MENU_VISIBLE_STATE,
     TABLE_CONFIGURATION
   } from '../constant';
   import type { Column } from '../models/column/Column';
@@ -32,34 +32,37 @@
     SelectableType,
     SortableType
   } from '../models/configuration/TableConfiguration';
-  import type { StoreComponentData } from '../../core/models/StoreComponent';
-  import type { FilterEvent, SortEvent, /*SortOrder,*/ TableReadyEvent } from '../models/event/TableEvent';
+  // import type { StoreComponentData } from '../../core/models/StoreComponent';
+  import type { /*FilterEvent, SortEvent, SortOrder,*/ TableReadyEvent } from '../models/event/TableEvent';
 
-  import { selectionStore } from '../store/selection-store';
-  import { filterStore } from '../store/filter-store';
-  import { sortStore } from '../store/sort-store';
-  import { styleTransformer } from '../../../utils/style-transformer';
+  // import { selectionStore } from '../store/selection-store';
+  // import { filterStore } from '../store/filter-store';
+  // import { sortStore } from '../store/sort-store';
+  // import { styleTransformer } from '../../../utils/style-transformer';
 
   import Header from './header/Header.svelte';
   import Row from './body/Row.svelte';
   import Pagination from './Pagination.svelte';
   import ContextMenu from './ContextMenu.svelte';
   import LoadingBody from './body/LoadingBody.svelte';
-  import { declarePublicApi } from '../services/public-api/declare';
-  import { buildStyleGetter } from '../services/Style';
-  import { buildValueGetter } from '../services/Value';
+  import { columnCompiler } from '../services/column-compiler';
+  // import { declarePublicApi } from '../services/public-api/declare';
+  // import { buildStyleGetter } from '../services/Style';
+  // import { buildValueGetter } from '../services/Value';
+  // import type { ColorConfiguration } from '../models/column/ColumnConfiguration';
   // import { initLoadingContext } from '../context/loading-state.svelte';
   // import { initTableConfigurationContext } from '../context/table-configuration-state.svelte';
 
   interface TableProps {
-    columns?: Column[];
+    primaryKey: string;
+    columns: Column[];
+
     loading?: boolean;
     count?: number;
-    primaryKey?: string;
     data?: any[];
     selectableType?: SelectableType;
-    selectAll?: boolean;
-    filterable?: FilterableType;
+    // selectAll?: boolean;
+    filterableType?: FilterableType;
     sortableType?: SortableType;
     pageableType?: PageableType;
     pageSizeOptions?: number[];
@@ -69,108 +72,94 @@
 
   /** Inputs */
   let {
-    columns = [],
-    loading = false,
-    count,
+    columns,
     primaryKey,
+    loading = false,
+    count = undefined,
     data = [],
     selectableType = DEFAULT_SELECTABLE_TYPE,
-    selectAll = DEFAULT_SELECT_ALL,
-    filterable = DEFAULT_FILTERABLE,
+    // selectAll = DEFAULT_SELECT_ALL,
+    filterableType = DEFAULT_FILTERABLE,
     sortableType = DEFAULT_SORTABLE,
     pageableType = DEFAULT_PAGEABLE,
+
     pageSizeOptions = DEFAULT_PAGE_SIZE_OPTIONS,
     pageSize = DEFAULT_PAGE_SIZE,
     resizable = DEFAULT_RESIZABLE
   }: TableProps = $props();
-  console.log('🚀 ~ resizable:', resizable);
-
-  // initLoadingContext(() => loading);
-  // initSelectionContext(selectableType, (selected) => {
-  //   el.dispatchEvent(
-  //     new CustomEvent('selection', {
-  //       detail: selected,
-  //       bubbles: true,
-  //       composed: true
-  //     })
-  //   );
-  // });
-
-  // initTableConfigurationContext({
-  //   selectableType,
-  //   selectAll,
-  //   filterable,
-  //   sortableType,
-  //   pageableType,
-  //   primaryKey,
-  //   resizable
-  // });
 
   /** Values */
   let el: HTMLElement;
-  let wasAtBottom = false;
-  let scrollTimeout: number | undefined;
+  // let wasAtBottom = false;
+  // let scrollTimeout: number | undefined;
 
   /** States */
   let paginationRef: Pagination | null = $state<Pagination | null>(null);
   let contextMenuVisible = $state(false);
   let contextMenuEvent = $state<RowEvent | undefined>(undefined);
+
   let hasContextMenuSlot = $derived($$slots['context-menu']);
-  const indexColumns: Column[] = $derived(
-    /**
-     * TODO: Revisar tipado Typescript
-     * TODO: Revisar rendimiento de esto
-     */
-    columns.map((column, index) => {
-      if (typeof column.style === 'object') {
-        column.style = styleTransformer.toString(column.style);
-      }
+  const compiledColumns = $derived(columns.map(columnCompiler));
 
-      // @ts-ignore
-      if (column.configuration?.colorConfiguration) {
-        // @ts-ignore
-        column.configuration?.colorConfiguration.forEach((colorConfig: any) => {
-          if (typeof colorConfig.style === 'object') {
-            colorConfig.style = styleTransformer.toString(colorConfig.style);
-          }
-        });
-      }
+  // const optimizedColumns: OptimizedColumn[] = $derived(
+  //   /**
+  //    * TODO: Revisar tipado Typescript
+  //    * TODO: Revisar rendimiento de esto
+  //    */
+  //   columns.map((column, index) => {
+  //     const optimizationColumn: OptimizedColumn = column as OptimizedColumn;
+  //     optimizationColumn.optimization = {
+  //       style: {
+  //         td: `column column-${index}`,
+  //         val: `column-value column-value-${index}`
+  //       },
+  //       valueGetter: buildValueGetter(column),
+  //       // styleGetter: buildStyleGetter(column)
+  //     };
 
-      return {
-        ...column,
-        index,
-        // si la tabla es resizable, la columna tambien lo es por omision
-        resizable: column.resizable ?? true,
+  //     // if (column.style) {
+  //     //   optimizationColumn.optimization.style.custom = styleTransformer.toString(column.style);
+  //     // }
 
-        valueGetter: buildValueGetter(column),
-        styleGetter: buildStyleGetter(column)
-      };
-    })
-  );
+  //     // if (optimizationColumn?.configuration?.colorConfiguration && column?.configuration?.colorConfiguration) {
+  //     //   optimizationColumn.optimization.configuration = {
+  //     //     colorConfiguration: []
+  //     //   };
+
+  //     //   column.configuration?.colorConfiguration.forEach((colorConfig: ColorConfiguration) => {
+  //     //     optimizationColumn.optimization.configuration!.colorConfiguration!.push({
+  //     //       style: styleTransformer.toString(colorConfig.style)
+  //     //     });
+  //     //   });
+  //     // }
+
+  //     // optimizationColumn.resizable = column.resizable ?? untrack(() => resizable);
+
+  //     return optimizationColumn;
+  //   })
+  // );
 
   /** Contexts */
-  setContext(LOADING_STATE, () => loading);
-  setContext(CONTEXT_MENU_VISIBLE_STATE, () => ({ has: hasContextMenuSlot, visible: contextMenuVisible }));
-  setContext(TABLE_CONFIGURATION, {
+  setContext(TABLE_CONFIGURATION, () => ({
     selectableType,
-    selectAll,
-    filterable,
+    filterableType,
     sortableType,
     pageableType,
     primaryKey,
     resizable
-  });
+  }));
+  setContext(LOADING_STATE, () => loading);
 
   /** Checks */
-  // Validacion de configuracion de columnas
+  // Validacion de configuracion requerida
   $effect(() => {
     if (!Array.isArray(columns) || columns.length === 0) {
       throw new Error('The "columns" property must be a non-empty array.');
     }
 
-    // Valida que no se use la columna reservada "__ctx"
-    if (columns.findIndex((col) => col.key === '__ctx') !== -1) {
-      throw new Error('The column "__ctx" is reserved for internal functionality and cannot be used.');
+    // Valida que exista la prop primaryKey
+    if (!primaryKey) {
+      throw new Error('The "primaryKey" property must be defined and non-empty.');
     }
   });
 
@@ -183,10 +172,10 @@
       );
     }
 
-    // selectAll no puede ser true si selectableType es none
-    if (selectAll === true && selectableType === 'none') {
-      throw new Error('The "selectAll" property cannot be true when "selectableType" is "none".');
-    }
+    // // selectAll no puede ser true si selectableType es none
+    // if (selectAll === true && selectableType === 'none') {
+    //   throw new Error('The "selectAll" property cannot be true when "selectableType" is "none".');
+    // }
 
     if (selectableType !== 'none' && !primaryKey) {
       throw new Error('The "primaryKey" property must be defined when "selectableType" is not "none".');
@@ -221,7 +210,7 @@
   // validacion de configuracion de filtro
   $effect(() => {
     // Valida los tipos de estados del filtro
-    if (filterable && !VALID_FILTERABLE_TYPES.includes(filterable)) {
+    if (filterableType && !VALID_FILTERABLE_TYPES.includes(filterableType)) {
       throw new Error(
         `The "filterable" property must be one of the following values: ${VALID_FILTERABLE_TYPES.join(', ')}.`
       );
@@ -230,7 +219,7 @@
 
   /** Methods */
   onMount(() => {
-    declarePublicApi(el, paginationRef as Pagination);
+    // declarePublicApi(el, paginationRef as Pagination);
 
     // selectionStore.init(tableConfiguration);
     // selectionStore.subscribe((selection: StoreComponentData<RowData>[]) => {
@@ -287,56 +276,76 @@
     }
   }
 
-  /**
-   * TODO: Posible necesidad de optimizacion.
-   */
-  function handleScroll(event: Event) {
+  function handleScroll(/*event: Event*/) {
     if (contextMenuVisible && hasContextMenuSlot) {
       contextMenuVisible = false;
       contextMenuEvent = undefined;
     }
 
-    if (pageableType === 'infinite') {
-      // Throttle del evento de scroll
-      if (scrollTimeout) return;
+    // if (pageableType === 'infinite') {
+    //   // Throttle del evento de scroll
+    //   if (scrollTimeout) return;
 
-      scrollTimeout = window.setTimeout(() => {
-        const target = event.target as HTMLElement;
-        const scrollTop = target.scrollTop;
-        const scrollHeight = target.scrollHeight;
-        const clientHeight = target.clientHeight;
+    //   scrollTimeout = window.setTimeout(() => {
+    //     const target = event.target as HTMLElement;
+    //     const scrollTop = target.scrollTop;
+    //     const scrollHeight = target.scrollHeight;
+    //     const clientHeight = target.clientHeight;
 
-        const isAtBottom = scrollTop + clientHeight >= scrollHeight - 5;
+    //     const isAtBottom = scrollTop + clientHeight >= scrollHeight - 5;
 
-        if (isAtBottom && !wasAtBottom) {
-          el.dispatchEvent(
-            new CustomEvent(SCROLL_END_EVENT_NAME, {
-              bubbles: true,
-              composed: true
-            })
-          );
-        }
+    //     if (isAtBottom && !wasAtBottom) {
+    //       el.dispatchEvent(
+    //         new CustomEvent(SCROLL_END_EVENT_NAME, {
+    //           bubbles: true,
+    //           composed: true
+    //         })
+    //       );
+    //     }
 
-        wasAtBottom = isAtBottom;
-        scrollTimeout = undefined;
-      }, 100);
+    //     wasAtBottom = isAtBottom;
+    //     scrollTimeout = undefined;
+    //   }, 100);
+    // }
+  }
+
+  function handleKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Escape') {
+      // selectionStore.clear();
+      contextMenuVisible = false;
     }
   }
 
   /**
    * EVENTS
    */
-  function mapColumnKey<T>(storeEvent: StoreComponentData<any>[]): T[] {
-    return storeEvent.map((event) => {
-      const { key, value } = event;
-
-      const column = indexColumns.find((col) => String(col.index) === key);
-      return {
-        key: column?.key || key,
-        value
-      } as T;
-    });
+  function emitReady() {
+    el.dispatchEvent(
+      new CustomEvent(READY_EVENT_NAME, {
+        detail: {
+          page: paginationRef!.getState(),
+          filter: [],
+          sort: []
+          // filter: mapColumnKey<FilterEvent>(filterStore.state().filter((e) => e.value) as FilterEvent[]),
+          // sort: mapColumnKey<SortEvent>(sortStore.state().filter((e) => e.value))
+        } as TableReadyEvent,
+        bubbles: true,
+        composed: true
+      })
+    );
   }
+
+  // function mapColumnKey<T>(storeEvent: StoreComponentData<any>[]): T[] {
+  //   return storeEvent.map((event) => {
+  //     const { key, value } = event;
+
+  //     const column = indexColumns.find((col) => String(col.index) === key);
+  //     return {
+  //       key: column?.key || key,
+  //       value
+  //     } as T;
+  //   });
+  // }
 
   // function onRowClick(event: RowEvent) {
   //   console.log('-----> ', event);
@@ -374,23 +383,6 @@
   //   })
   // );
   // }
-
-  function emitReady() {
-    const event: TableReadyEvent = {
-      filter: mapColumnKey<FilterEvent>(filterStore.state().filter((e) => e.value) as FilterEvent[]),
-      page: paginationRef?.getState()!,
-      sort: mapColumnKey<SortEvent>(sortStore.state().filter((e) => e.value))
-    };
-
-    el.dispatchEvent(new CustomEvent(READY_EVENT_NAME, { detail: event, bubbles: true, composed: true }));
-  }
-
-  function handleKeyDown(event: KeyboardEvent) {
-    if (event.key === 'Escape') {
-      selectionStore.clear();
-      contextMenuVisible = false;
-    }
-  }
 </script>
 
 <!-- TODO: CREAR LOS SLOTS -->
@@ -406,22 +398,26 @@
   <div class="table-container" part="table-container">
     <div class="table-scroll" part="table-scroll" onscroll={handleScroll}>
       <table class="table" part="table">
-        <Header columns={indexColumns}>
-          <slot name="filter" />
+        <Header columns={compiledColumns}>
         </Header>
 
-        <tbody class="tbody" part="tbody">
-          {#if loading === true}
-            <LoadingBody columns={indexColumns} {pageSize} />
-          {:else if data.length === 0 && loading === false}
-            <tr>
-              <td colspan={indexColumns.length} class="table-no-data" part="table-no-data"> No data available. </td>
-            </tr>
-          {:else}
-            {#each data as row, index (row[primaryKey!])}
-              <Row {index} columns={indexColumns} {row} />
-            {/each}
-          {/if}
+        <!-- tbody de carga -->
+        <tbody class="tbody" part="tbody" class:tbody-hidden={!loading}>
+          <LoadingBody {columns} {pageSize} />
+        </tbody>
+
+        <!-- tbody cuando no hay datos -->
+        <tbody class="tbody" part="tbody" class:tbody-hidden={loading || data.length > 0}>
+          <tr>
+            <td colspan={columns.length} class="table-no-data" part="table-no-data"> No data available. </td>
+          </tr>
+        </tbody>
+
+        <!-- tbody de datos -->
+        <tbody class="tbody" part="tbody" class:tbody-hidden={loading || data.length === 0}>
+          {#each data as row, index (row[primaryKey])}
+            <Row {index} columns={compiledColumns} {row} />
+          {/each}
         </tbody>
       </table>
     </div>
@@ -571,6 +567,10 @@
     padding: 16px;
     text-align: left;
     vertical-align: top;
+  }
+
+  .tbody-hidden {
+    display: none;
   }
 
   .pagination-root {

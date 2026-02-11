@@ -3,9 +3,9 @@ import type { Style } from "../modules/table/models/column/Style";
 
 class StyleTransformer {
 
-    toString(columnStyle?: Style): string | undefined {
+    toString(columnStyle?: Style): string {
         if (!columnStyle) {
-            return undefined;
+            return '';
         }
 
         let styleString = '';

@@ -1,29 +1,15 @@
 import type { Style } from "./Style";
 
-export interface ColorConfiguration<T> {
+export interface ColorConfiguration {
   range?: {
-    min: T;
-    max: T;
+    min: any;
+    max: any;
   };
 
-  value?: T;
-  style: Style | string;
+  value?: any;
+  style: Style;
 }
 
-export interface NumberColumnConfiguration {
-  colorConfiguration?: ColorConfiguration<number>[];
-}
-
-export interface StringColumnConfiguration {
-  colorConfiguration?: Omit<ColorConfiguration<string>, 'range'>[];
-}
-
-export interface DateColumnConfiguration {
-  colorConfiguration?: ColorConfiguration<Date>[];
-}
-
-export interface SelectorColumnConfiguration {
-  options: Array<string>,
-  filterType: 'simple-selector' | 'search-selector' | 'multi-selector' | 'auto-complete';
-  colorConfiguration?: Omit<ColorConfiguration<string>, 'range'>[];
+export interface ColumnConfiguration {
+  colorConfiguration?: ColorConfiguration[];
 }

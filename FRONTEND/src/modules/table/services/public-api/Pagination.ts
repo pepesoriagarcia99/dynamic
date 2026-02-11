@@ -1,4 +1,4 @@
-import type PaginationComponent from '../components/Pagination.svelte';
+import type { default as PaginationComponent } from '../../components/Pagination.svelte';
 
 export class Pagination {
 
@@ -8,4 +8,7 @@ export class Pagination {
         this.paginationRef = paginationRef;
     }
 
+    public reset() {
+        this.paginationRef.resetPage(true);
+    }
 }

@@ -1,15 +1,15 @@
-import type Pagination from "../../components/Pagination.svelte";
-import { Entrypoint } from "./Entrypoint";
+import type { default as PaginationComponent } from '../../components/Pagination.svelte';
+import { Pagination } from '../../services/public-api/Pagination';
 
-export const declarePublicApi = (el: HTMLElement, paginationRef: Pagination) => {
+export const declarePublicApi = (el: HTMLElement, paginationRef: PaginationComponent) => {
   if (!el) return;
 
   const host = (el?.getRootNode() as ShadowRoot)?.host;
   if (!host) return;
 
-  const entrypoint = new Entrypoint(el, paginationRef);
-  (host as any).filter = entrypoint.filter;
-  (host as any).pagination = entrypoint.pagination;
-//   (host as any).selection = selection();
-//   (host as any).sort = sort();
+  (host as any).pagination = new Pagination(paginationRef);
+  // (host as any).filter = entrypoint.filter;
+
+  //   (host as any).selection = selection();
+  //   (host as any).sort = sort();
 };

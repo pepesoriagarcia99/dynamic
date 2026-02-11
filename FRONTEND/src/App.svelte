@@ -6,7 +6,6 @@
 
   import { onMount } from 'svelte';
   import type { RowEvent } from './modules/table/models/event/RowEvent';
-  import type { PublicApi } from './modules/table/models/public-api/PublicApi';
   import type {
     FilterEvent,
     PageEvent,
@@ -18,6 +17,7 @@
   import BasicControl from './modules/controls/components/BasicControl.svelte';
   import SelectorControl from './modules/controls/components/SelectorControl.svelte';
   import CheckControl from './modules/controls/components/CheckControl.svelte';
+  import type { PublicApi } from './main-wc';
 
   let showTable: boolean = $state(true);
 
@@ -124,8 +124,7 @@
               'font-weight': '600'
             }
           }
-        ],
-        options: ['Low', 'Medium', 'High']
+        ]
       },
       filterable: true,
       sortable: true
@@ -136,10 +135,10 @@
       type: 'selector',
       filterable: true,
       sortable: false,
-      configuration: {
-        filterType: 'auto-complete',
-        options: ['Africa', 'Antarctica', 'Asia', 'Europe', 'North America', 'Oceania', 'South America']
-      }
+      // configuration: {
+      //   filterType: 'auto-complete',
+      //   options: ['Africa', 'Antarctica', 'Asia', 'Europe', 'North America', 'Oceania', 'South America']
+      // }
     },
     {
       key: 'region',
@@ -147,10 +146,10 @@
       type: 'selector',
       filterable: true,
       sortable: false,
-      configuration: {
-        filterType: 'multi-selector',
-        options: ['Africa', 'Antarctica', 'Asia', 'Europe', 'North America', 'Oceania', 'South America']
-      }
+      // configuration: {
+      //   filterType: 'multi-selector',
+      //   options: ['Africa', 'Antarctica', 'Asia', 'Europe', 'North America', 'Oceania', 'South America']
+      // }
     },
     { key: 'region', name: 'Region', type: 'string' },
     { key: 'region', name: 'Region', type: 'string' },
@@ -269,7 +268,7 @@
   function onFilterChange(event: any & { detail: FilterEvent }) {
     console.log('FILTERED: ', event.detail);
 
-    // tableEl?.pagination.resetPage();
+    // tableEl?.pagination.reset();
     // tableFilter.page.page = 1;
     // tableFilter.filter = event.detail;
 
@@ -308,9 +307,20 @@
 </script>
 
 <main>
-  <div>
-    <label for="toggle-table">Mostrar tabla</label>
-    <input type="checkbox" id="toggle-table" checked={showTable} onchange={() => (showTable = !showTable)} />
+  <div class="toolbar">
+    <label class="toggle-label" for="toggle-table">
+      <input type="checkbox" id="toggle-table" checked={showTable} onchange={() => (showTable = !showTable)} />
+      Mostrar tabla
+    </label>
+    <button onclick={() => tableEl?.pagination.reset()} disabled={loading}>
+      Resetear paginación
+    </button>
+    <!-- <button onclick={() => tableEl?.filter.reset()} disabled={loading}>
+      Resetear Filtros
+    </button>
+    <button onclick={() => tableEl?.selection.reset()} disabled={loading}>
+      Resetear Selección
+    </button> -->
   </div>
   <div class="content">
     <dyn-table
@@ -321,7 +331,7 @@
       {columns}
       {count}
       data={filteredData}
-      filterable="basic"
+      filterableType="none"
       pageableType="pagination"
       resizable={true}
       selectableType="multiple"
@@ -337,40 +347,6 @@
       {onContextMenuEvent}
       {onScrollEndEvent}
     >
-      <tr slot="filter">
-        <th> Hola </th>
-        <th></th>
-        <th>
-          <input placeholder="Filtrar por continente" />
-        </th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-      </tr>
       <div slot="context-menu" class="context-menu">
         <button class="context-menu-btn"> Editar </button>
         <button class="context-menu-btn"> Eliminar </button>
@@ -430,9 +406,28 @@
 </main>
 
 <style>
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 16px;
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.875rem;
+    color: #374151;
+    cursor: pointer;
+    user-select: none;
+  }
+
   .content {
     margin: 1rem;
-    height: calc(100vh - 4rem);
+    height: calc(100vh - 6rem);
     width: calc(100vw - 2rem);
   }
 
@@ -466,6 +461,34 @@
 
   .context-menu-btn:hover {
     background: gainsboro;
+  }
+
+  button {
+    padding: 8px 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: linear-gradient(to bottom, #ffffff, #f3f4f6);
+    color: #374151;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+
+  button:hover {
+    background: linear-gradient(to bottom, #f9fafb, #e5e7eb);
+    border-color: #9ca3af;
+  }
+
+  button:active {
+    background: #e5e7eb;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 
   .hidden {

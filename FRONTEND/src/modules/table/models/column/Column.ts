@@ -1,9 +1,4 @@
-import type {
-  DateColumnConfiguration,
-  NumberColumnConfiguration,
-  SelectorColumnConfiguration,
-  StringColumnConfiguration,
-} from './ColumnConfiguration';
+import type { ColumnConfiguration } from './ColumnConfiguration';
 import type { Style } from './Style';
 
 export type ColumnType = 'string' | 'number' | 'boolean' | 'date' | 'image' | 'avatar' | 'selector';
@@ -14,11 +9,6 @@ export type ColumnType = 'string' | 'number' | 'boolean' | 'date' | 'image' | 'a
  * Define las propiedades y configuraciones de una columna en una tabla.
  */
 export interface Column {
-  /**
-   * Identificador numerico de la columna.
-   */
-  index?: number;
-
   /**
    * Clave unica de la columna.
    * Debe ser el nombre real de la columna o un valor mapeado en back con el valor de la columna para generar la query.
@@ -42,7 +32,7 @@ export interface Column {
   /**
    * Estilo personalizado para la columna.
    */
-  style?: Style | string;
+  style?: Style;
 
   /**
    * Indica si la columna es ordenable.
@@ -62,18 +52,42 @@ export interface Column {
   /**
    * Configuracion dinamica para las columnas
    */
-  configuration?:
-  | StringColumnConfiguration
-  | NumberColumnConfiguration
-  | DateColumnConfiguration
-  | SelectorColumnConfiguration;
-
-  /**
-   * Función personalizada para obtener el valor de la columna a partir de una fila.
-   */
-  valueGetter?: (row: any) => any;
-  /**
-   * Función personalizada para obtener el estilo de la columna a partir de su valor.
-   */
-  styleGetter?: (value: any) => string;
+  configuration?: ColumnConfiguration;
 }
+
+export interface ColumnCompiled extends Column {
+  compiled: {
+    class: {
+      column: string;
+      columnValue: string;
+    },
+    style: {
+      column?: string;
+    },
+    valueGetter: (row: any) => any;
+  }
+}
+
+// export interface OptimizedColumn extends Column {
+//   optimization: {
+//     style: {
+//       custom?: string;
+
+//       td: string;
+//       val: string;
+//     }
+
+//     configuration?: {
+//       colorConfiguration?: { style: string }[];
+//     }
+
+//     /**
+//      * Función personalizada para obtener el valor de la columna a partir de una fila.
+//      */
+//     valueGetter?: (row: any) => any;
+//     /**
+//      * Función personalizada para obtener el estilo de la columna a partir de su valor.
+//      */
+//     styleGetter?: (value: any) => string;
+//   }
+// }

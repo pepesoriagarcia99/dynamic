@@ -1,23 +1,22 @@
 <script lang="ts">
-  import { getContext, onDestroy, onMount } from 'svelte';
+  import { getContext } from 'svelte';
 
   import { ROW_CLICK_EVENT_NAME, TABLE_CONFIGURATION, TOOLTIP_DELAY } from '../../constant';
 
-  import type { Column } from '../../models/column/Column';
+  import type { Column, ColumnCompiled } from '../../models/column/Column';
   import type { RowData } from '../../models/RowData';
   import type { RowEvent, RowEventType } from '../../models/event/RowEvent';
+  import type { TableConfiguration } from '../../models/configuration/TableConfiguration';
+  import type { ContextMenuConfiguration } from '../../models/configuration/ContextMenuConfiguration';
+
+  import { tooltip } from '../../../tooltip/directives/tooltip';
 
   import Avatar from './value/Avatar.svelte';
   import BooleanComponent from './value/Boolean.svelte';
-  import { tooltip } from '../../../tooltip/directives/tooltip';
-  // import { register, unregister, toggle } from '../../context/selection-state.svelte';
-  import type { TableConfiguration } from '../../models/configuration/TableConfiguration';
-  import type { ContextMenuConfiguration } from '../../models/configuration/ContextMenuConfiguration';
-  // import { getSelectionContext } from '../../context/selection-state.svelte';
 
   interface RowProps {
     index?: number;
-    columns?: Column[];
+    columns?: ColumnCompiled[];
     row: RowData;
   }
 
@@ -25,56 +24,23 @@
   const { index = 0, columns = [], row }: RowProps = $props();
 
   /** Values */
-  // const key = row[tableConfiguration.primaryKey!];
   let el: HTMLElement;
   const simpleTypes = new Set(['string', 'number', 'date', 'selector']);
-  // const selection = getSelectionContext();
-  // const key = String(row[tableConfiguration.primaryKey!]);
+  const tableConfiguration: () => TableConfiguration = getContext(TABLE_CONFIGURATION);
 
-  /** State */
-  const tableConfiguration: TableConfiguration = getContext(TABLE_CONFIGURATION);
+  /** States */
   const contextMenuConfiguration: () => ContextMenuConfiguration = getContext(TABLE_CONFIGURATION);
 
-
-
   const isSelected = $state(false);
-  // register(key, isSelected);
 
-
-  /** Computed */
   let rowStaticStyle: string = `${index % 2 === 0 ? 'row-even' : 'row-odd'}`;
   const rowStyle: string = $derived(
-    ['row', isSelected ? 'row-selected' : tableConfiguration.selectableType !== 'none' ? 'row-selectable' : null]
+    ['row', isSelected ? 'row-selected' : tableConfiguration().selectableType !== 'none' ? 'row-selectable' : null]
       .filter(Boolean)
       .join(' ')
   );
 
   /** Methods */
-  onMount(() => {
-    // isSelected = selectionStore.has(key)
-    // let subscribeId: string;
-    // selectionComponent = selectionStore.get(key);
-    // isSelected = !!selectionComponent;
-    // if (selectionComponent) {
-    // isSelected = selectionComponent.value?.__ctx.isSelected ?? false;
-    // selectionComponent.subscribe((event) => {
-    //   isSelected = event.value?.__ctx.isSelected ?? false;
-    // });
-    // }
-    // else {
-    //   selectionComponent = selectionStore.add(key, row);
-    //   subscribeId = selectionComponent.subscribe((event) => {
-    //     isSelected = event.value?.__ctx.isSelected ?? false;
-    //   });
-    // }
-    // return () => {
-    //   selectionComponent.unsubscribe(subscribeId);
-    // };
-  });
-
-  onDestroy(() => {
-    // unregister(key);
-  });
 
   function onRowClick(event: MouseEvent, type: RowEventType, column?: Column) {
     event.stopPropagation();
@@ -111,31 +77,29 @@
 
 <tr bind:this={el} part={rowStyle + ' ' + rowStaticStyle} class={rowStyle + ' ' + rowStaticStyle}>
   {#each columns as column}
-    {@const value = column.valueGetter!(row)}
-
-    {@const columnPartNames: string = `column column-${column.index}` }
-    {@const columnValuePartNames: string = `column-value column-value-${column.index}` }
+    {@const value = column.compiled.valueGetter(row)}
 
     <td
-      class={columnPartNames}
-      part={columnPartNames}
-      style={column?.style as string}
+      style={column.compiled.style?.column}
+      class={column.compiled.class.column}
+      part={column.compiled.class.column}
       onclick={(event) => onRowClick(event, 'leftclick', column)}
       oncontextmenu={(event) => onRowClick(event, 'rightclick', column)}
       ondblclick={(event) => onRowClick(event, 'doubleclick', column)}
     >
       {#if simpleTypes.has(column.type)}
-        {@const style = column.styleGetter!(value)}
+        <!-- {@const style = column.compiled.styleGetter!(value)} -->
+
+        <!-- {style} -->
         <div
           {@attach tooltip({ value, position: 'right', delay: TOOLTIP_DELAY })}
-          class={columnValuePartNames}
-          part={columnValuePartNames}
-          {style}
+          class={column.compiled.class.columnValue}
+          part={column.compiled.class.columnValue}
         >
           {value}
         </div>
       {:else if column.type === 'boolean'}
-        <div class={columnValuePartNames} part={columnValuePartNames}>
+        <div class={column.compiled.class.columnValue} part={column.compiled.class.columnValue}>
           <BooleanComponent {value} />
         </div>
       {:else if column.type === 'avatar'}
@@ -145,8 +109,8 @@
           {@attach tooltip({ value, position: 'right', delay: TOOLTIP_DELAY })}
           src={value}
           alt={column.key}
-          class={columnValuePartNames}
-          part={columnValuePartNames}
+          class={column.compiled.class.columnValue}
+          part={column.compiled.class.columnValue}
         />
       {/if}
     </td>

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Column } from '../../models/column/Column';
+  import type { ColumnCompiled } from '../../models/column/Column';
 
   import { LOADING_STATE, TABLE_CONFIGURATION, TOOLTIP_DELAY } from '../../constant';
   import resizeIcon from '../../../../assets/svg/resize.svg';
@@ -12,32 +12,33 @@
   import type { TableConfiguration } from '../../models/configuration/TableConfiguration';
 
   interface ColumnHeaderProps {
-    column: Column;
+    index: number;
+    column: ColumnCompiled;
   }
 
   /** Inputs */
-  const { column }: ColumnHeaderProps = $props();
+  const { index, column }: ColumnHeaderProps = $props();
 
   /** States */
   const loading: () => boolean = getContext(LOADING_STATE);
-  const tableConfiguration: TableConfiguration = getContext(TABLE_CONFIGURATION);
-  
+  const tableConfiguration: () => TableConfiguration = getContext(TABLE_CONFIGURATION);
+
   let sortRef: Sort | null = $state<Sort | null>(null);
   let isResizing: boolean = $state(false);
   let startX: number = $state(0);
   let startWidth: number = $state(0);
   let thElement: HTMLTableCellElement | null = $state(null);
 
-  const isSortable: boolean = $derived(column.sortable === true && tableConfiguration.sortableType !== 'none');
+  const isSortable: boolean = $derived(column.sortable === true && tableConfiguration().sortableType !== 'none');
   const isAdvanceFilterable: boolean = $derived(
-    column.filterable === true && tableConfiguration.filterable === 'advanced'
+    column.filterable === true && tableConfiguration().filterable === 'advanced'
   );
   const isSorted: boolean = $derived(sortRef?.getSortDirection() !== null && isSortable);
 
   const partNamesTh: string = $derived(
     [
       'column-header-th',
-      `column-header-th-${column.index}`,
+      `column-header-th-${index}`,
       isSorted ? 'column-header-th-sorted' : isSortable ? 'column-header-th-sortable' : null
     ]
       .filter(Boolean)
@@ -47,29 +48,29 @@
     [
       'column-header-btn',
       'column-header-btn',
-      `column-header-btn-${column.index}`,
+      `column-header-btn-${index}`,
       isSortable ? 'column-header-btn-sortable' : null
     ]
       .filter(Boolean)
       .join(' ')
   );
   const partNamesName: string = $derived(
-    ['column-header-name', isSorted ? 'column-header-name-sorted' : null, `column-header-name-${column.index}`]
+    ['column-header-name', isSorted ? 'column-header-name-sorted' : null, `column-header-name-${index}`]
       .filter(Boolean)
       .join(' ')
   );
   const partNamesResizeIcon: string = $derived(
     [
       'column-header-resize-icon',
-      `column-header-resize-icon-${column.index}`,
+      `column-header-resize-icon-${index}`,
       isSorted ? 'column-header-resize-icon-sorted' : null
     ]
       .filter(Boolean)
       .join(' ')
   );
 
-  const partNamesResize: string = `column-header-resize column-header-resize-${column.index}`;
-  const partNamesContent: string = `column-header-content column-header-content-${column.index}`;
+  const partNamesResize: string = `column-header-resize column-header-resize-${index}`;
+  const partNamesContent: string = `column-header-content column-header-content-${index}`;
 
   /** Methods */
   function handleResizeMouseDown(event: MouseEvent) {
@@ -121,14 +122,14 @@
   }
 
   function handleHeaderClick(event: MouseEvent) {
-    if (tableConfiguration.filterable !== 'advanced') {
+    if (tableConfiguration().filterable !== 'advanced') {
       event.stopPropagation();
       sortRef?.toggleSort();
     }
   }
 </script>
 
-<th bind:this={thElement} class={partNamesTh} part={partNamesTh} style={column?.style as string}>
+<th bind:this={thElement} class={partNamesTh} part={partNamesTh} style={column.compiled.style?.column}>
   <button class={partNamesBtn} part={partNamesBtn} onclick={(e) => handleHeaderClick(e)}>
     <div class={partNamesContent} part={partNamesContent}>
       <span
@@ -147,7 +148,7 @@
   </button>
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-  {#if tableConfiguration.resizable === true && column.resizable === true && loading() === false}
+  {#if loading() === false && tableConfiguration().resizable === true && (column.resizable === true || column.resizable === undefined)}
     <div class={partNamesResize} part={partNamesResize} onmousedown={handleResizeMouseDown} role="separator">
       <img src={resizeIcon} class={partNamesResizeIcon} part={partNamesResizeIcon} alt="resize" />
     </div>

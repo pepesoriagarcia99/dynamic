@@ -1,39 +1,37 @@
 <script lang="ts">
   import { getContext } from 'svelte';
   import { TABLE_CONFIGURATION } from '../../constant';
-  import type { Column } from '../../models/column/Column';
+  import type { ColumnCompiled } from '../../models/column/Column';
   import ColumnHeader from './ColumnHeader.svelte';
   import BasicFilter from './filter/BasicFilter.svelte';
   import SimpleFilter from './filter/SimpleFilter.svelte';
   import type { TableConfiguration } from '../../models/configuration/TableConfiguration';
 
   interface HeaderProps {
-    columns: Column[];
+    columns: ColumnCompiled[];
   }
 
   /** Inputs */
   const { columns }: HeaderProps = $props();
 
   /** States */
-  let hasDefaultSlot: boolean = $derived($$slots['default']);
-  const tableConfiguration: TableConfiguration = getContext(TABLE_CONFIGURATION);
+  const tableConfiguration: () => TableConfiguration = getContext(TABLE_CONFIGURATION);
 
 </script>
 
 <thead class="thead" part="thead" >
   <tr class="thead-tr" part="thead-tr">
-    {#each columns as column}
+    {#each columns as column, index}
       <ColumnHeader
+        {index}
         {column}
       />
     {/each}
   </tr>
 
-  {#if hasDefaultSlot}
-    <slot />
-  {:else if tableConfiguration.filterable === 'basic'}
+  {#if tableConfiguration().filterable === 'basic'}
     <BasicFilter {columns} />
-  {:else if tableConfiguration.filterable === 'simple'}
+  {:else if tableConfiguration().filterable === 'simple'}
     <SimpleFilter {columns} />
   {/if}
 </thead>
