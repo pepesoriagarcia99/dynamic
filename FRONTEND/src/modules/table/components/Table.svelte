@@ -3,7 +3,7 @@
 <script lang="ts">
   import '../../tooltip/styles/tooltip.css';
 
-  import { onMount } from 'svelte';
+  import { onMount, setContext } from 'svelte';
   import {
     DEFAULT_FILTERABLE,
     DEFAULT_PAGE_SIZE_OPTIONS,
@@ -19,7 +19,10 @@
     VALID_FILTERABLE_TYPES,
     SCROLL_END_EVENT_NAME,
     VALID_PAGEABLE_TYPES,
-    READY_EVENT_NAME
+    READY_EVENT_NAME,
+    LOADING_STATE,
+    CONTEXT_MENU_VISIBLE_STATE,
+    TABLE_CONFIGURATION
   } from '../constant';
   import type { Column } from '../models/column/Column';
   import type { RowEvent } from '../models/event/RowEvent';
@@ -45,9 +48,8 @@
   import { declarePublicApi } from '../services/public-api/declare';
   import { buildStyleGetter } from '../services/Style';
   import { buildValueGetter } from '../services/Value';
-  import { initLoadingContext } from '../context/loading-state.svelte';
-  import { initTableConfigurationContext } from '../context/table-configuration-state.svelte';
-  import { initSelectionContext } from '../context/selection-state.svelte';
+  // import { initLoadingContext } from '../context/loading-state.svelte';
+  // import { initTableConfigurationContext } from '../context/table-configuration-state.svelte';
 
   interface TableProps {
     columns?: Column[];
@@ -81,35 +83,83 @@
     pageSize = DEFAULT_PAGE_SIZE,
     resizable = DEFAULT_RESIZABLE
   }: TableProps = $props();
+  console.log('🚀 ~ resizable:', resizable);
 
-  initLoadingContext(() => loading);
-  initSelectionContext(selectableType, (selected) => {
-    el.dispatchEvent(
-      new CustomEvent('selection', {
-        detail: selected,
-        bubbles: true,
-        composed: true
-      })
-    );
-  });
-  initTableConfigurationContext({
+  // initLoadingContext(() => loading);
+  // initSelectionContext(selectableType, (selected) => {
+  //   el.dispatchEvent(
+  //     new CustomEvent('selection', {
+  //       detail: selected,
+  //       bubbles: true,
+  //       composed: true
+  //     })
+  //   );
+  // });
+
+  // initTableConfigurationContext({
+  //   selectableType,
+  //   selectAll,
+  //   filterable,
+  //   sortableType,
+  //   pageableType,
+  //   primaryKey,
+  //   resizable
+  // });
+
+  /** Values */
+  let el: HTMLElement;
+  let wasAtBottom = false;
+  let scrollTimeout: number | undefined;
+
+  /** States */
+  let paginationRef: Pagination | null = $state<Pagination | null>(null);
+  let contextMenuVisible = $state(false);
+  let contextMenuEvent = $state<RowEvent | undefined>(undefined);
+  let hasContextMenuSlot = $derived($$slots['context-menu']);
+  const indexColumns: Column[] = $derived(
+    /**
+     * TODO: Revisar tipado Typescript
+     * TODO: Revisar rendimiento de esto
+     */
+    columns.map((column, index) => {
+      if (typeof column.style === 'object') {
+        column.style = styleTransformer.toString(column.style);
+      }
+
+      // @ts-ignore
+      if (column.configuration?.colorConfiguration) {
+        // @ts-ignore
+        column.configuration?.colorConfiguration.forEach((colorConfig: any) => {
+          if (typeof colorConfig.style === 'object') {
+            colorConfig.style = styleTransformer.toString(colorConfig.style);
+          }
+        });
+      }
+
+      return {
+        ...column,
+        index,
+        // si la tabla es resizable, la columna tambien lo es por omision
+        resizable: column.resizable ?? true,
+
+        valueGetter: buildValueGetter(column),
+        styleGetter: buildStyleGetter(column)
+      };
+    })
+  );
+
+  /** Contexts */
+  setContext(LOADING_STATE, () => loading);
+  setContext(CONTEXT_MENU_VISIBLE_STATE, () => ({ has: hasContextMenuSlot, visible: contextMenuVisible }));
+  setContext(TABLE_CONFIGURATION, {
     selectableType,
     selectAll,
     filterable,
     sortableType,
     pageableType,
     primaryKey,
-    resizable,
-    hasContextMenu: !!$$slots['context-menu']
+    resizable
   });
-
-  /** Values */
-  let el: HTMLElement;
-  let paginationRef: Pagination | null = $state<Pagination | null>(null);
-  let contextMenuVisible = $state(false);
-  let contextMenuEvent = $state<RowEvent | undefined>(undefined);
-  let wasAtBottom = false;
-  let scrollTimeout: number | undefined;
 
   /** Checks */
   // Validacion de configuracion de columnas
@@ -177,40 +227,6 @@
       );
     }
   });
-
-  /** States */
-  let hasContextMenuSlot = $derived($$slots['context-menu']);
-  const indexColumns: Column[] = $derived(
-    /**
-     * TODO: Revisar tipado Typescript
-     * TODO: Revisar rendimiento de esto
-     */
-    columns.map((column, index) => {
-      if (typeof column.style === 'object') {
-        column.style = styleTransformer.toString(column.style);
-      }
-
-      // @ts-ignore
-      if (column.configuration?.colorConfiguration) {
-        // @ts-ignore
-        column.configuration?.colorConfiguration.forEach((colorConfig: any) => {
-          if (typeof colorConfig.style === 'object') {
-            colorConfig.style = styleTransformer.toString(colorConfig.style);
-          }
-        });
-      }
-
-      return {
-        ...column,
-        index,
-        // si la tabla es resizable, la columna tambien lo es por omision
-        resizable: column.resizable ?? true,
-
-        valueGetter: buildValueGetter(column),
-        styleGetter: buildStyleGetter(column)
-      };
-    })
-  );
 
   /** Methods */
   onMount(() => {
@@ -390,7 +406,7 @@
   <div class="table-container" part="table-container">
     <div class="table-scroll" part="table-scroll" onscroll={handleScroll}>
       <table class="table" part="table">
-        <Header columns={indexColumns} >
+        <Header columns={indexColumns}>
           <slot name="filter" />
         </Header>
 

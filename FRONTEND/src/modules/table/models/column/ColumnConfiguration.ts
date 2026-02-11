@@ -22,8 +22,6 @@ export interface DateColumnConfiguration {
   colorConfiguration?: ColorConfiguration<Date>[];
 }
 
-export interface BooleanColumnConfiguration {}
-
 export interface SelectorColumnConfiguration {
   options: Array<string>,
   filterType: 'simple-selector' | 'search-selector' | 'multi-selector' | 'auto-complete';

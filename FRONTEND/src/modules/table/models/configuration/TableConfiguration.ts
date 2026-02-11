@@ -22,6 +22,4 @@ export interface TableConfiguration {
     pageableType: PageableType; 
     primaryKey?: string; // Clave primaria de la fila
     resizable: boolean; // Si esta activo permite redimensionar las columnas
-
-    hasContextMenu: boolean; // Si es true significa que hay configurado un menu contextual
 }

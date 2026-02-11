@@ -1,9 +1,8 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { getContext, onMount } from 'svelte';
 
   import type { Column } from '../../../models/column/Column';
 
-  import { getLoadingContext } from '../../../context/loading-state.svelte';
 
   import Skeleton from '../../Skeleton.svelte';
   import BasicControl from '../../../../controls/components/BasicControl.svelte';
@@ -12,6 +11,7 @@
   import DateControl from '../../../../controls/components/DateControl.svelte';
   // import MultipleSelectorControl from '../../../../controls/components/MultipleSelectorControl.svelte';
   import AutoCompleteControl from '../../../../controls/components/AutoCompleteControl.svelte';
+  import { LOADING_STATE } from '../../../constant';
 
   interface FilterProps {
     columns: Column[];
@@ -22,7 +22,7 @@
   let { columns }: FilterProps = $props();
 
   /** States */
-  const loadingState = getLoadingContext();
+  const loading: () => boolean = getContext(LOADING_STATE);
 
   /** Methods */
   onMount(() => {
@@ -49,7 +49,7 @@
         part="column-filter-th column-filter-th-{column.index}"
         style={column?.style as string}
       >
-        {#if loadingState() === true}
+        {#if loading() === true}
           <div style="padding: 0 8px;">
             <Skeleton height="34px" />
           </div>

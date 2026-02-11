@@ -1,5 +1,4 @@
 import type {
-  BooleanColumnConfiguration,
   DateColumnConfiguration,
   NumberColumnConfiguration,
   SelectorColumnConfiguration,
@@ -66,7 +65,6 @@ export interface Column {
   configuration?:
   | StringColumnConfiguration
   | NumberColumnConfiguration
-  | BooleanColumnConfiguration
   | DateColumnConfiguration
   | SelectorColumnConfiguration;
 

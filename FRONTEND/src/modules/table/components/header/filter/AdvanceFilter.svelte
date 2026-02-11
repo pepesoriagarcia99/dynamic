@@ -1,15 +1,15 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { getContext, onMount } from 'svelte';
   import advanceFilterIcon from '../../../../../assets/svg/advance-filter.svg';
   import advanceFilterFillIcon from '../../../../../assets/svg/advance-filter-fill.svg';
   import type { StoreComponent } from '../../../../core/models/StoreComponent';
   import type { Column } from '../../../models/column/Column';
-  import { getLoadingContext } from '../../../context/loading-state.svelte';
   import { sortStore } from '../../../store/sort-store';
   import Skeleton from '../../Skeleton.svelte';
   import { getColumnIndexOpen, setColumnIndexOpen } from '../../../context/advance-filter-state.svelte';
   import SelectorControl from '../../../../controls/components/SelectorControl.svelte';
   import type { SortOrder } from '../../../models/event/TableEvent';
+  import { LOADING_STATE } from '../../../constant';
 
   interface AdvanceFilterIconProps {
     column: Column;
@@ -19,7 +19,7 @@
   let { column }: AdvanceFilterIconProps = $props();
 
   /** States */
-  const loadingState = getLoadingContext();
+  const loading: () => boolean = getContext(LOADING_STATE);
   let showModal = $state<boolean>(false);
   let buttonRef: HTMLButtonElement | null = $state(null);
 
@@ -89,7 +89,7 @@
 <svelte:window on:click={handleClickOutside} />
 
 <div class={partNamesContainer} part={partNamesContainer}>
-  {#if loadingState() === true}
+  {#if loading() === true}
     <Skeleton width="26px" height="26px" />
   {:else}
     <button

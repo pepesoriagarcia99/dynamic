@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { onDestroy, onMount } from 'svelte';
+  import { getContext, onDestroy, onMount } from 'svelte';
 
-  import { ROW_CLICK_EVENT_NAME, TOOLTIP_DELAY } from '../../constant';
+  import { ROW_CLICK_EVENT_NAME, TABLE_CONFIGURATION, TOOLTIP_DELAY } from '../../constant';
 
   import type { Column } from '../../models/column/Column';
   import type { RowData } from '../../models/RowData';
@@ -10,8 +10,10 @@
   import Avatar from './value/Avatar.svelte';
   import BooleanComponent from './value/Boolean.svelte';
   import { tooltip } from '../../../tooltip/directives/tooltip';
-  import { getTableConfigurationContext } from '../../context/table-configuration-state.svelte';
-  import { getSelectionContext } from '../../context/selection-state.svelte';
+  // import { register, unregister, toggle } from '../../context/selection-state.svelte';
+  import type { TableConfiguration } from '../../models/configuration/TableConfiguration';
+  import type { ContextMenuConfiguration } from '../../models/configuration/ContextMenuConfiguration';
+  // import { getSelectionContext } from '../../context/selection-state.svelte';
 
   interface RowProps {
     index?: number;
@@ -26,13 +28,18 @@
   // const key = row[tableConfiguration.primaryKey!];
   let el: HTMLElement;
   const simpleTypes = new Set(['string', 'number', 'date', 'selector']);
-  const tableConfiguration = getTableConfigurationContext();
-  const selection = getSelectionContext();
-  const key = String(row[tableConfiguration.primaryKey!]);
+  // const selection = getSelectionContext();
+  // const key = String(row[tableConfiguration.primaryKey!]);
 
   /** State */
-  const signal = selection.register(key);
-  const isSelected = $derived(signal.value);
+  const tableConfiguration: TableConfiguration = getContext(TABLE_CONFIGURATION);
+  const contextMenuConfiguration: () => ContextMenuConfiguration = getContext(TABLE_CONFIGURATION);
+
+
+
+  const isSelected = $state(false);
+  // register(key, isSelected);
+
 
   /** Computed */
   let rowStaticStyle: string = `${index % 2 === 0 ? 'row-even' : 'row-odd'}`;
@@ -66,22 +73,19 @@
   });
 
   onDestroy(() => {
-    selection.unregister(key);
+    // unregister(key);
   });
 
   function onRowClick(event: MouseEvent, type: RowEventType, column?: Column) {
     event.stopPropagation();
 
-    if (tableConfiguration.hasContextMenu) {
+    if (contextMenuConfiguration().has) {
       event.preventDefault();
     }
 
-    if (tableConfiguration.selectableType !== 'none' && type === 'leftclick') {
-      selection.toggle(key, row, {
-        ctrl: event.ctrlKey || event.metaKey,
-        shift: event.shiftKey
-      });
-    }
+    // if (tableConfiguration.selectableType !== 'none' && type === 'leftclick') {
+    //   toggle(key);
+    // }
 
     el.dispatchEvent(
       new CustomEvent(ROW_CLICK_EVENT_NAME, {

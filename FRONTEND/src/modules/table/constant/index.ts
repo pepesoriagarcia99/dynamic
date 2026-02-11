@@ -23,3 +23,7 @@ export const SCROLL_END_EVENT_NAME = 'ScrollEndEvent';
 export const CONTROL_EVENT_NAME = 'ControlEvent';
 
 export const TOOLTIP_DELAY = 250;
+
+export const LOADING_STATE = Symbol('loading');
+export const CONTEXT_MENU_VISIBLE_STATE = Symbol('context-menu-visible');
+export const TABLE_CONFIGURATION = Symbol('table-configuration'); // Este elemento es estatico

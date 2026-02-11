@@ -1,14 +1,13 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { getContext, onMount } from 'svelte';
 
-  import { CONTROL_EVENT_NAME } from '../../../constant';
+  import { CONTROL_EVENT_NAME, LOADING_STATE } from '../../../constant';
 
   import type { Column } from '../../../models/column/Column';
   import type { BasicControlEvent } from '../../../models/event/ControlEvent';
   import type { StoreComponent, StoreComponentData } from '../../../../core/models/StoreComponent';
 
   import { filterStore } from '../../../store/filter-store';
-  import { getLoadingContext } from '../../../context/loading-state.svelte';
 
   import Skeleton from '../../Skeleton.svelte';
   import BasicControl from '../../../../controls/components/BasicControl.svelte';
@@ -29,7 +28,7 @@
   let { columns }: FilterProps = $props();
 
   /** States */
-  const loadingState = getLoadingContext();
+  const loading: () => boolean = getContext(LOADING_STATE);
   let trElement: HTMLTableRowElement | undefined = $state();
   let controls: Control[] = $state([]);
 
@@ -82,7 +81,7 @@
         part="column-filter-th column-filter-th-{control.column.index}"
         style={control.column?.style as string}
       >
-        {#if loadingState() === true}
+        {#if loading() === true}
           <div style="padding: 0 8px;">
             <Skeleton height="34px" />
           </div>

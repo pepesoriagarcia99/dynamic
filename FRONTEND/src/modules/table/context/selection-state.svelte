@@ -1,4 +1,4 @@
-<script module lang="ts">
+<!-- <script module lang="ts">
   import { setContext, getContext } from 'svelte';
   import type { RowData } from '../models/RowData';
   import type { SelectableType } from '../models/configuration/TableConfiguration';
@@ -182,5 +182,24 @@
 
   export function getSelectionContext(): SelectionContext {
     return getContext<SelectionContext>(SELECTION_KEY);
+  }
+</script> -->
+
+<script module lang="ts">
+  const elements = new Map<string, any>();
+
+  export function register(key: string, signal: any) {
+    elements.set(key, signal);
+  }
+
+  export function unregister(key: string) {
+    elements.delete(key);
+  }
+
+  export function toggle(key: string) {
+    const signal = elements.get(key);
+    if (signal) {
+      signal.value = !signal.value;
+    }
   }
 </script>

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { getContext, onMount } from 'svelte';
   import type { Column } from '../../models/column/Column';
   import type { StoreComponent } from '../../../core/models/StoreComponent';
 
@@ -9,8 +9,8 @@
   import { sortStore } from '../../store/sort-store';
 
   import Skeleton from '../Skeleton.svelte';
-  import { getLoadingContext } from '../../context/loading-state.svelte';
   import type { SortOrder } from '../../models/event/TableEvent';
+  import { LOADING_STATE } from '../../constant';
 
   interface SortProps {
     column: Column;
@@ -20,7 +20,7 @@
   let { column }: SortProps = $props();
 
   /** Values */
-  const loadingState = getLoadingContext();
+  const loading: () => boolean = getContext(LOADING_STATE);
   let sortDirection = $state<SortOrder | null>(null);
   const partNamesIcon: string = $derived(
     ['sort-icon', sortDirection !== null ? 'sort-icon-active' : null, `sort-icon-${column.index}`]
@@ -54,7 +54,7 @@
 </script>
 
 <div class={partNamesContainer} part={partNamesContainer}>
-  {#if loadingState() === true}
+  {#if loading() === true}
     <Skeleton width="26px" height="26px" />
   {:else}
     <button onclick={(e) => toggleSort(e)} aria-label="Sort" class={partNamesButton} part={partNamesButton}>

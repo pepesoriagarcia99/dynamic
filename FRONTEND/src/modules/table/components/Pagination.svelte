@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { getContext } from 'svelte';
+
 
   import firstPageIcon from '../../../assets/svg/arrow-to-left.svg';
   import lastPageIcon from '../../../assets/svg/arrow-to-right.svg';
@@ -6,8 +8,7 @@
   import nextPageIcon from '../../../assets/svg/right-arrow.svg';
 
   import SelectorControl from '../../controls/components/SelectorControl.svelte';
-  import { PAGE_CHANGE_EVENT_NAME } from '../constant';
-  import { getLoadingContext } from '../context/loading-state.svelte';
+  import { LOADING_STATE, PAGE_CHANGE_EVENT_NAME } from '../constant';
   import type { PageEvent } from '../models/event/TableEvent';
 
   type PageActions = 'first' | 'last' | 'next' | 'previous';
@@ -20,7 +21,7 @@
 
   let { count, pageSizeOptions, pageSize }: PaginationProps = $props();
 
-  const loadingState = getLoadingContext();
+  const loading: () => boolean = getContext(LOADING_STATE);
   let el: HTMLElement;
   let currentPage: number = $state(1);
   let totalPages: number = $derived(Math.ceil(count / pageSize));
@@ -116,7 +117,7 @@
 <div bind:this={el} class="pagination-content" part="pagination-content">
   <button
     onclick={() => handlerAction('first')}
-    disabled={currentPage === 1 || loadingState()}
+    disabled={currentPage === 1 || loading()}
     aria-label="first-page"
     class="pagination-action-btn first-page-btn"
     part="pagination-action-btn first-page-btn"
@@ -126,20 +127,20 @@
 
   <button
     onclick={() => handlerAction('previous')}
-    disabled={currentPage === 1 || loadingState()}
+    disabled={currentPage === 1 || loading()}
     aria-label="previous-page"
     class="pagination-action-btn previous-page-btn"
     part="pagination-action-btn previous-page-btn"
   >
     <img src={previousPageIcon} alt="previous page" class="previous-page-icon" part="previous-page-icon" />
   </button>
-  {#if loadingState() === true && showPageNumbers.length === 0}
+  {#if loading() === true && showPageNumbers.length === 0}
     <span class="pagination-page-num-loading" part="pagination-page-num-loading">...</span>
   {:else}
     {#each showPageNumbers as n}
       <button
         onclick={() => setPage(n)}
-        disabled={loadingState()}
+        disabled={loading()}
         aria-label="page-number"
         class={getPartPageNumberBtn(n)}
         part={getPartPageNumberBtn(n)}
@@ -150,7 +151,7 @@
   {/if}
   <button
     onclick={() => handlerAction('next')}
-    disabled={currentPage === totalPages || loadingState()}
+    disabled={currentPage === totalPages || loading()}
     aria-label="next-page"
     class="pagination-action-btn next-page-btn"
     part="pagination-action-btn next-page-btn"
@@ -159,7 +160,7 @@
   </button>
   <button
     onclick={() => handlerAction('last')}
-    disabled={currentPage === totalPages || loadingState()}
+    disabled={currentPage === totalPages || loading()}
     aria-label="last-page"
     class="pagination-action-btn last-page-btn"
     part="pagination-action-btn last-page-btn"
@@ -171,7 +172,7 @@
     options={pageSizeOptions}
     bind:value={pageSize}
     onChange={onChangePageSize}
-    disabled={loadingState()}
+    disabled={loading()}
   />
 </div>
 

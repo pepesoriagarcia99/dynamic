@@ -1,9 +1,11 @@
 <script lang="ts">
+  import { getContext } from 'svelte';
+  import { TABLE_CONFIGURATION } from '../../constant';
   import type { Column } from '../../models/column/Column';
   import ColumnHeader from './ColumnHeader.svelte';
   import BasicFilter from './filter/BasicFilter.svelte';
   import SimpleFilter from './filter/SimpleFilter.svelte';
-  import { getTableConfigurationContext } from '../../context/table-configuration-state.svelte';
+  import type { TableConfiguration } from '../../models/configuration/TableConfiguration';
 
   interface HeaderProps {
     columns: Column[];
@@ -14,7 +16,7 @@
 
   /** States */
   let hasDefaultSlot: boolean = $derived($$slots['default']);
-  const tableConfiguration = getTableConfigurationContext();
+  const tableConfiguration: TableConfiguration = getContext(TABLE_CONFIGURATION);
 
 </script>
 

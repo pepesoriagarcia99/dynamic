@@ -1,15 +1,15 @@
 <script lang="ts">
   import type { Column } from '../../models/column/Column';
 
-  import { TOOLTIP_DELAY } from '../../constant';
+  import { LOADING_STATE, TABLE_CONFIGURATION, TOOLTIP_DELAY } from '../../constant';
   import resizeIcon from '../../../../assets/svg/resize.svg';
 
   import { tooltip } from '../../../tooltip/directives/tooltip';
-  import { getLoadingContext } from '../../context/loading-state.svelte';
 
   import AdvanceFilter from './filter/AdvanceFilter.svelte';
   import Sort from './Sort.svelte';
-  import { getTableConfigurationContext } from '../../context/table-configuration-state.svelte';
+  import { getContext } from 'svelte';
+  import type { TableConfiguration } from '../../models/configuration/TableConfiguration';
 
   interface ColumnHeaderProps {
     column: Column;
@@ -19,8 +19,9 @@
   const { column }: ColumnHeaderProps = $props();
 
   /** States */
-  const loadingState = getLoadingContext();
-  const tableConfiguration = getTableConfigurationContext();
+  const loading: () => boolean = getContext(LOADING_STATE);
+  const tableConfiguration: TableConfiguration = getContext(TABLE_CONFIGURATION);
+  
   let sortRef: Sort | null = $state<Sort | null>(null);
   let isResizing: boolean = $state(false);
   let startX: number = $state(0);
@@ -146,7 +147,7 @@
   </button>
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-  {#if tableConfiguration.resizable === true && column.resizable === true && loadingState() === false}
+  {#if tableConfiguration.resizable === true && column.resizable === true && loading() === false}
     <div class={partNamesResize} part={partNamesResize} onmousedown={handleResizeMouseDown} role="separator">
       <img src={resizeIcon} class={partNamesResizeIcon} part={partNamesResizeIcon} alt="resize" />
     </div>
