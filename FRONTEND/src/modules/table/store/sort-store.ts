@@ -1,6 +1,6 @@
 import { Store } from "../../core/models/Store";
 import type { TableConfiguration } from "../models/configuration/TableConfiguration";
-import type { SortOrder } from "../models/event/SortEvent";
+import type { SortOrder } from "../models/event/TableEvent";
 
 /**
  * Store para gestionar la ordenacion de columnas en la tabla

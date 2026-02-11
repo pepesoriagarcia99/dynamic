@@ -1,3 +1,3 @@
-export interface SortApi {
-    reset: () => void
-}
+// export interface SortApi {
+//     reset: () => void
+// }

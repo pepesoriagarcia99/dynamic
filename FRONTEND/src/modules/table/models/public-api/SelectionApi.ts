@@ -1,3 +1,3 @@
-export interface SelectionApi {
-    reset: () => void
-}
+// export interface SelectionApi {
+//     reset: () => void
+// }
