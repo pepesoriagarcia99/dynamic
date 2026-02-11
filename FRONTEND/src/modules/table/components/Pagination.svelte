@@ -19,10 +19,16 @@
     pageSize: number;
   }
 
+  /** Inputs */
   let { count, pageSizeOptions, pageSize }: PaginationProps = $props();
 
-  const loading: () => boolean = getContext(LOADING_STATE);
+  /** Values */
   let el: HTMLElement;
+
+  /** Contexts */
+  const loading: () => boolean = getContext(LOADING_STATE);
+
+  /** States */
   let currentPage: number = $state(1);
   let totalPages: number = $derived(Math.ceil(count / pageSize));
   let showPageNumbers: number[] = $state([]);
@@ -97,13 +103,10 @@
 
   /**
    * Resetea la página actual a 1
-   * @param emitEvent Indica si se debe emitir el evento de cambio de página
    */
-  export function resetPage(emitEvent?: boolean) {
+  export function resetPage() {
     currentPage = 1;
-    if (emitEvent) {
-      emitChange();
-    }
+    emitChange();
   }
 
   export function getState() {
