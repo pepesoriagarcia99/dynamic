@@ -12,7 +12,7 @@ export interface SelectionEvent {
 /**
  * Evento emitido por la paginacion
  */
-export interface PageEvent {
+export interface PaginationEvent {
     page: number;
     pageSize: number;
 }
@@ -42,6 +42,6 @@ export interface FilterEvent {
  */
 export interface TableReadyEvent {
     filter: FilterEvent[],
-    page: PageEvent,
+    pagination: PaginationEvent,
     sort: SortEvent[]
 }

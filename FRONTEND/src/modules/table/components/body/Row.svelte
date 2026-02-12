@@ -7,7 +7,7 @@
   import type { RowData } from '../../models/RowData';
   import type { RowEvent, RowEventType } from '../../models/event/RowEvent';
   import type { TableConfiguration } from '../../models/configuration/TableConfiguration';
-  import type { ContextMenuConfiguration } from '../../models/configuration/ContextMenuConfiguration';
+  // import type { ContextMenuConfiguration } from '../../models/configuration/ContextMenuConfiguration';
 
   import { tooltip } from '../../../tooltip/directives/tooltip';
 
@@ -18,24 +18,23 @@
     index?: number;
     columns?: ColumnCompiled[];
     row: RowData;
+    selected: boolean;
+    ontoggle: (event: RowEvent) => void;
   }
-
-  /** Inputs */
-  const { index = 0, columns = [], row }: RowProps = $props();
-
+  /** Inputs */ 
+  const { index = 0, columns = [], row, selected, ontoggle }: RowProps = $props();
+  
   /** Values */
   let el: HTMLElement;
   const simpleTypes = new Set(['string', 'number', 'date', 'selector']);
-  const tableConfiguration: () => TableConfiguration = getContext(TABLE_CONFIGURATION);
 
   /** States */
-  const contextMenuConfiguration: () => ContextMenuConfiguration = getContext(TABLE_CONFIGURATION);
-
-  const isSelected = $state(false);
+  // const contextMenuConfiguration: () => ContextMenuConfiguration = getContext(TABLE_CONFIGURATION);
+  const tableConfiguration: () => TableConfiguration = getContext(TABLE_CONFIGURATION);
 
   let rowStaticStyle: string = `${index % 2 === 0 ? 'row-even' : 'row-odd'}`;
   const rowStyle: string = $derived(
-    ['row', isSelected ? 'row-selected' : tableConfiguration().selectableType !== 'none' ? 'row-selectable' : null]
+    ['row', selected ? 'row-selected' : tableConfiguration().selectableType !== 'none' ? 'row-selectable' : null]
       .filter(Boolean)
       .join(' ')
   );
@@ -45,29 +44,24 @@
   function onRowClick(event: MouseEvent, type: RowEventType, column?: Column) {
     event.stopPropagation();
 
-    if (contextMenuConfiguration().has) {
-      event.preventDefault();
-    }
+    const customEventDetail: RowEvent = {
+      type,
+      row,
+      column,
+      ctx: {
+        CTRL: event.ctrlKey || event.metaKey,
+        SHIFT: event.shiftKey
+      },
+      mouse: {
+        x: event?.clientX,
+        y: event?.clientY
+      }
+    };
 
-    // if (tableConfiguration.selectableType !== 'none' && type === 'leftclick') {
-    //   toggle(key);
-    // }
-
+    ontoggle(customEventDetail);
     el.dispatchEvent(
       new CustomEvent(ROW_CLICK_EVENT_NAME, {
-        detail: {
-          type,
-          row,
-          column,
-          ctx: {
-            CTRL: event.ctrlKey || event.metaKey,
-            SHIFT: event.shiftKey
-          },
-          mouse: {
-            x: event?.clientX,
-            y: event?.clientY
-          }
-        } as RowEvent,
+        detail: customEventDetail,
         bubbles: true,
         composed: true
       })
@@ -107,8 +101,8 @@
       {:else if column.type === 'image'}
         <img
           {@attach tooltip({ value, position: 'right', delay: TOOLTIP_DELAY })}
-          src={value}
-          alt={column.key}
+          src={value.src}
+          alt={value?.alt}
           class={column.compiled.class.columnValue}
           part={column.compiled.class.columnValue}
         />

@@ -8,22 +8,19 @@
     DEFAULT_FILTERABLE,
     DEFAULT_PAGE_SIZE_OPTIONS,
     DEFAULT_PAGEABLE,
-    // DEFAULT_SELECT_ALL,
     DEFAULT_SELECTABLE_TYPE,
     DEFAULT_SORTABLE,
     VALID_SELECTABLE_TYPES,
     DEFAULT_PAGE_SIZE,
-    // SORT_EVENT_NAME,
     DEFAULT_RESIZABLE,
     VALID_SORTABLE_TYPES,
     VALID_FILTERABLE_TYPES,
-    // SCROLL_END_EVENT_NAME,
     VALID_PAGEABLE_TYPES,
     READY_EVENT_NAME,
     LOADING_STATE,
-    // CONTEXT_MENU_VISIBLE_STATE,
     TABLE_CONFIGURATION
   } from '../constant';
+
   import type { Column } from '../models/column/Column';
   import type { RowEvent } from '../models/event/RowEvent';
   import type {
@@ -32,26 +29,14 @@
     SelectableType,
     SortableType
   } from '../models/configuration/TableConfiguration';
-  // import type { StoreComponentData } from '../../core/models/StoreComponent';
-  import type { /*FilterEvent, SortEvent, SortOrder,*/ TableReadyEvent } from '../models/event/TableEvent';
-
-  // import { selectionStore } from '../store/selection-store';
-  // import { filterStore } from '../store/filter-store';
-  // import { sortStore } from '../store/sort-store';
-  // import { styleTransformer } from '../../../utils/style-transformer';
+  import type { TableReadyEvent } from '../models/event/TableEvent';
 
   import Header from './header/Header.svelte';
-  import Row from './body/Row.svelte';
   import Pagination from './Pagination.svelte';
   import ContextMenu from './ContextMenu.svelte';
   import LoadingBody from './body/LoadingBody.svelte';
   import { columnCompiler } from '../services/column-compiler';
-  // import { declarePublicApi } from '../services/public-api/declare';
-  // import { buildStyleGetter } from '../services/Style';
-  // import { buildValueGetter } from '../services/Value';
-  // import type { ColorConfiguration } from '../models/column/ColumnConfiguration';
-  // import { initLoadingContext } from '../context/loading-state.svelte';
-  // import { initTableConfigurationContext } from '../context/table-configuration-state.svelte';
+  import Body from './body/Body.svelte';
 
   interface TableProps {
     primaryKey: string;
@@ -221,41 +206,6 @@
   onMount(() => {
     // declarePublicApi(el, paginationRef as Pagination);
 
-    // selectionStore.init(tableConfiguration);
-    // selectionStore.subscribe((selection: StoreComponentData<RowData>[]) => {
-    //   el.dispatchEvent(
-    //     new CustomEvent(SELECTION_EVENT_NAME, {
-    //       // .filter((el) => el.value?.__ctx.isSelected === true)
-    //       detail: selection as SelectionEvent[],
-    //       bubbles: true,
-    //       composed: true
-    //     })
-    //   );
-    // });
-
-    // filterStore.subscribe((filters: StoreComponentData<string>[]) => {
-    //   const eventDetail = mapColumnKey<FilterEvent>(filters);
-    //   el.dispatchEvent(
-    //     new CustomEvent(FILTER_EVENT_NAME, {
-    //       detail: eventDetail as FilterEvent[],
-    //       bubbles: true,
-    //       composed: true
-    //     })
-    //   );
-    // });
-
-    // sortStore.init(tableConfiguration);
-    // sortStore.subscribe((sorts: StoreComponentData<SortOrder>[]) => {
-    //   const eventDetail = mapColumnKey<SortEvent>(sorts);
-    //   el.dispatchEvent(
-    //     new CustomEvent(SORT_EVENT_NAME, {
-    //       detail: eventDetail as SortEvent[],
-    //       bubbles: true,
-    //       composed: true
-    //     })
-    //   );
-    // });
-
     window.addEventListener('keydown', handleKeyDown);
 
     emitReady();
@@ -323,7 +273,7 @@
     el.dispatchEvent(
       new CustomEvent(READY_EVENT_NAME, {
         detail: {
-          page: paginationRef!.getState(),
+          pagination: paginationRef!.getState(),
           filter: [],
           sort: []
           // filter: mapColumnKey<FilterEvent>(filterStore.state().filter((e) => e.value) as FilterEvent[]),
@@ -398,8 +348,7 @@
   <div class="table-container" part="table-container">
     <div class="table-scroll" part="table-scroll" onscroll={handleScroll}>
       <table class="table" part="table">
-        <Header columns={compiledColumns}>
-        </Header>
+        <Header columns={compiledColumns}></Header>
 
         <!-- tbody de carga -->
         <tbody class="tbody" part="tbody" class:tbody-hidden={!loading}>
@@ -415,9 +364,7 @@
 
         <!-- tbody de datos -->
         <tbody class="tbody" part="tbody" class:tbody-hidden={loading || data.length === 0}>
-          {#each data as row, index (row[primaryKey])}
-            <Row {index} columns={compiledColumns} {row} />
-          {/each}
+          <Body {primaryKey} columns={compiledColumns} {data} />
         </tbody>
       </table>
     </div>

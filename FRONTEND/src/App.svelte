@@ -8,7 +8,7 @@
   import type { RowEvent } from './modules/table/models/event/RowEvent';
   import type {
     FilterEvent,
-    PageEvent,
+    PaginationEvent,
     SelectionEvent,
     SortEvent,
     TableReadyEvent
@@ -21,80 +21,146 @@
 
   let showTable: boolean = $state(true);
 
-  // 30 c0lumnas
+  // 20 columnas
   let columns: Column[] = [
-    { key: 'flags.png', name: 'Bandera', type: 'image', style: { width: '80px' } },
     {
       key: 'avatar',
-      name: 'Nombre nombre de columna my largo para probar que se ve correctamente jajjajajaja mortal',
-      type: 'avatar',
-      style: { 'max-width': '200px' },
-      filterable: true
+      name: 'Avatar',
+      type: 'avatar'
     },
-    { key: 'continents.[0]', name: 'Continente', type: 'string', sortable: true },
-    { key: 'region', name: 'Region', type: 'string', sortable: true },
-    { key: 'subregion', name: 'Subregion', type: 'string', filterable: true },
-    { key: 'capital.[0]', name: 'Capital', type: 'string', filterable: true },
     {
-      key: 'population',
-      name: 'Poblacion',
-      type: 'number',
-      filterable: true,
-      sortable: true
-    },
-    { key: 'unMember', name: 'ONU', type: 'boolean', filterable: true, sortable: true },
-    {
-      key: 'foundation',
-      name: 'Fundacion',
-      type: 'date',
+      key: 'firstName',
+      name: 'Nombre',
+      type: 'string',
       filterable: true,
       sortable: true
     },
     {
-      key: 'foundation',
-      name: 'Fundacion',
-      type: 'date'
-    },
-    {
-      key: 'pib',
-      name: 'PIB (USD)',
-      type: 'number',
+      key: 'lastName',
+      name: 'Apellido',
+      type: 'string',
       filterable: true,
       sortable: true
     },
     {
-      key: 'area',
-      name: 'Area',
-      type: 'number',
+      key: 'email',
+      name: 'Email',
+      type: 'string',
+      filterable: true,
+      sortable: true
+    },
+    {
+      key: 'phone',
+      name: 'Telefono',
+      type: 'string',
+      filterable: true,
+      sortable: true
+    },
+    {
+      key: 'username',
+      name: 'Nombre de usuario',
+      type: 'string',
+      filterable: true,
+      sortable: true
+    },
+    {
+      key: 'dateOfBirth',
+      name: 'Fecha de nacimiento',
+      type: 'string',
+      filterable: true,
+      sortable: true
+    },
+    {
+      key: 'gender',
+      name: 'Género',
+      type: 'string',
+      filterable: true,
+      sortable: true,
       configuration: {
         colorConfiguration: [
           {
-            range: { min: 0, max: 10000 },
+            value: 'female',
             style: {
-              color: 'green'
+              color: '#000000',
+              'background-color': '#FF00C8',
+              'border-radius': '4px',
+              'font-weight': '600'
             }
           },
           {
-            range: { min: 10001, max: 100000 },
+            value: 'male',
             style: {
-              color: 'orange'
-            }
-          },
-          {
-            range: { min: 100001, max: Infinity },
-            style: {
-              color: 'red'
+              color: '#FFFFFF',
+              'background-color': '#0059FF',
+              'border-radius': '4px',
+              'font-weight': '600'
             }
           }
         ]
-      },
+      }
+    },
+    {
+      key: 'address.street',
+      name: 'Calle',
+      type: 'string',
       filterable: true,
       sortable: true
     },
     {
-      key: 'density',
-      name: 'Densidad de poblacion',
-      type: 'selector',
+      key: 'address.city',
+      name: 'Ciudad',
+      type: 'string',
+      filterable: true,
+      sortable: true
+    },
+    {
+      key: 'address.state',
+      name: 'Estado',
+      type: 'string',
+      filterable: true,
+      sortable: true
+    },
+    {
+      key: 'address.zipCode',
+      name: 'Código Postal',
+      type: 'string',
+      filterable: true,
+      sortable: true
+    },
+    {
+      key: 'address.country',
+      name: 'País',
+      type: 'string',
+      filterable: true,
+      sortable: true
+    },
+    {
+      key: 'preferences.timezone',
+      name: 'Zona horaria',
+      type: 'string',
+      filterable: true,
+      sortable: true
+    },
+    {
+      key: 'employment.company',
+      name: 'Compañia empleadora',
+      type: 'string',
+      filterable: true,
+      sortable: true
+    },
+    {
+      key: 'employment.position',
+      name: 'Puesto de empleo',
+      type: 'string',
+      filterable: true,
+      sortable: true
+    },
+    {
+      key: 'status',
+      name: 'Estado',
+      type: 'string',
+      filterable: true,
+      sortable: true,
       configuration: {
         colorConfiguration: [
           {
@@ -102,15 +168,6 @@
             style: {
               color: '#065F46',
               'background-color': '#D1FAE5',
-              'border-radius': '4px',
-              'font-weight': '600'
-            }
-          },
-          {
-            value: 'Medium',
-            style: {
-              color: '#854D0E',
-              'background-color': '#FEF9C3',
               'border-radius': '4px',
               'font-weight': '600'
             }
@@ -125,128 +182,115 @@
             }
           }
         ]
-      },
+      }
+    },
+    {
+      key: 'isVerified',
+      name: 'Verificado',
+      type: 'boolean',
       filterable: true,
       sortable: true
     },
     {
-      key: 'region',
-      name: 'Region',
-      type: 'selector',
+      key: 'subscription.plan',
+      name: 'Plan de suscripción',
+      type: 'string',
       filterable: true,
-      sortable: false,
-      // configuration: {
-      //   filterType: 'auto-complete',
-      //   options: ['Africa', 'Antarctica', 'Asia', 'Europe', 'North America', 'Oceania', 'South America']
-      // }
+      sortable: true,
+      configuration: {
+        colorConfiguration: [
+          {
+            value: 'pro',
+            style: {
+              color: '#065F46',
+              'background-color': '#D1FAE5',
+              'border-radius': '4px',
+              'font-weight': '600'
+            }
+          },
+          {
+            value: 'basic',
+            style: {
+              color: '#854D0E',
+              'background-color': '#FEF9C3',
+              'border-radius': '4px',
+              'font-weight': '600'
+            }
+          }
+        ]
+      }
     },
     {
-      key: 'region',
-      name: 'Region',
-      type: 'selector',
+      key: 'rating',
+      name: 'Calificación',
+      type: 'string',
       filterable: true,
-      sortable: false,
-      // configuration: {
-      //   filterType: 'multi-selector',
-      //   options: ['Africa', 'Antarctica', 'Asia', 'Europe', 'North America', 'Oceania', 'South America']
-      // }
-    },
-    { key: 'region', name: 'Region', type: 'string' },
-    { key: 'region', name: 'Region', type: 'string' },
-    { key: 'region', name: 'Region', type: 'string' },
-    { key: 'region', name: 'Region', type: 'string' },
-    { key: 'region', name: 'Region', type: 'string' },
-    { key: 'region', name: 'Region', type: 'string' },
-    { key: 'region', name: 'Region', type: 'string' },
-    { key: 'region', name: 'Region', type: 'string' },
-    { key: 'region', name: 'Region', type: 'string' },
-    { key: 'region', name: 'Region', type: 'string' },
-    { key: 'region', name: 'Region', type: 'string' },
-    { key: 'region', name: 'Region', type: 'string' },
-    { key: 'region', name: 'Region', type: 'string' },
-    { key: 'region', name: 'Region', type: 'string' },
-    { key: 'region', name: 'Region', type: 'string' },
-    { key: 'region', name: 'Region', type: 'string' }
+      sortable: true,
+      configuration: {
+        colorConfiguration: [
+          {
+            range: { min: 7, max: 10 },
+            style: {
+              color: 'green'
+            }
+          },
+          {
+            range: { min: 5, max: 6.99 },
+            style: {
+              color: 'orange'
+            }
+          },
+          {
+            range: { min: 0, max: 4.99 },
+            style: {
+              color: 'red'
+            }
+          }
+        ]
+      }
+    }
   ];
 
   let loading: boolean = $state(false);
   let count: number | undefined = $state<number | undefined>(0);
-  let data: any[] = $state<any[]>([]);
-  let filteredData: any[] = $state<any[]>([]);
+  let data: any[] = $state([]);
 
   let tableEl: (HTMLElement & PublicApi) | null;
 
   let tableFilter: TableReadyEvent;
 
-  function hashString(str: string): string {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-      const char = str.charCodeAt(i);
-      hash = (hash << 5) - hash + char;
-      hash = hash & hash; // Convert to 32bit integer
-    }
-    return Math.abs(hash).toString(16);
-  }
-
-  function getCountries() {
+  function getUsers() {
     loading = true;
-    return fetch('https://restcountries.com/v3.1/independent?status=true')
+
+    const url = new URL('http://localhost:3001/api/users');
+    url.searchParams.set('page', String(tableFilter.pagination.page));
+    url.searchParams.set('limit', String(tableFilter.pagination.pageSize));
+
+    // Filtros como header en formato JSON string
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json'
+    };
+
+    if (tableFilter.filter) {
+      headers['X-Filters'] = JSON.stringify(tableFilter.filter);
+    }
+
+    if (tableFilter.sort) {
+      headers['X-Sorts'] = JSON.stringify(tableFilter.sort);
+    }
+
+    return fetch(url)
       .then((res) => res.json())
       .then((res) => {
-        count = res.length * 4;
-        data = [...res, ...res, ...res, ...res].map((item: any, index: number) => {
-          const densityValue = item.population / item.area;
-          const hash = hashString(item.name.common);
-          return {
-            ...item,
-            key: index.toString(),
-            foundation: new Date().toISOString(),
-            pib: Math.floor(Math.random() * 100000),
-            density: densityValue > 1000 ? 'High' : densityValue > 100 ? 'Medium' : 'Low',
-            avatar: {
-              picture: `https://gravatar.com/avatar/${hash}?d=identicon`,
-              alt: `Flag of ${item.name.common}`,
-              name: item.name.common
-            }
-          };
-        });
-
-        transform();
+        count = res.count;
+        data = res.data;
       })
-      .catch(console.error)
+      .catch(() => {
+        console.error('Error fetching users');
+      })
       .finally(() => {
         loading = false;
-        setTimeout(() => {
-          loading = false;
-        }, 2000);
       });
-  }
-
-  function transform() {
-    let dataFrame = data;
-
-    //filter
-    const filters = tableFilter.filter;
-    if (filters.length > 0) {
-      dataFrame = dataFrame.filter((row: any) => {
-        return filters.every(({ key, value }) => {
-          const cellValue = key
-            .split('.')
-            .reduce((obj, k) => (obj && obj[k] !== 'undefined' ? obj[k] : undefined), row);
-          if (cellValue === undefined || cellValue === null) return false;
-          if (!value) return true;
-
-          return cellValue.toString().toLowerCase().includes(value.toString().toLowerCase());
-        });
-      });
-    }
-
-    // paginacion
-    const page = tableFilter.page;
-    const start = (page.page - 1) * page.pageSize;
-    const end = start + page.pageSize;
-
-    filteredData = dataFrame.slice(start, end);
   }
 
   onMount(() => {
@@ -267,38 +311,23 @@
 
   function onFilterChange(event: any & { detail: FilterEvent }) {
     console.log('FILTERED: ', event.detail);
-
-    // tableEl?.pagination.reset();
-    // tableFilter.page.page = 1;
-    // tableFilter.filter = event.detail;
-
-    // transform();
   }
 
   function onSortChange(event: any & { detail: SortEvent }) {
     console.log('SORTED: ', event.detail);
-
-    tableFilter.sort = event.detail;
   }
 
-  function onPageChange(event: any & { detail: PageEvent }) {
-    loading = true;
+  function onPageChange(event: any & { detail: PaginationEvent }) {
     console.log('PAGE: ', event.detail);
 
-    tableFilter.page = event.detail;
-
-    setTimeout(() => {
-      transform();
-      loading = false;
-    }, 1000);
+    tableFilter.pagination = event.detail;
+    getUsers();
   }
 
   function onReady(event: any & { detail: TableReadyEvent }) {
     console.log('READY: ', event.detail);
-    console.log('PUBLIC API: ', tableEl?.pagination);
-
     tableFilter = event.detail;
-    getCountries();
+    getUsers();
   }
 
   function onContextMenuEvent(event: any & { detail: ContextMenuEvent }) {
@@ -312,9 +341,7 @@
       <input type="checkbox" id="toggle-table" checked={showTable} onchange={() => (showTable = !showTable)} />
       Mostrar tabla
     </label>
-    <button onclick={() => tableEl?.pagination.reset()} disabled={loading}>
-      Resetear paginación
-    </button>
+    <button onclick={() => tableEl?.pagination.reset()} disabled={loading}> Resetear paginación </button>
     <!-- <button onclick={() => tableEl?.filter.reset()} disabled={loading}>
       Resetear Filtros
     </button>
@@ -326,11 +353,11 @@
     <dyn-table
       class:hidden={!showTable}
       id="main-table"
-      primaryKey="key"
+      primaryKey="id"
       {loading}
       {columns}
       {count}
-      data={filteredData}
+      {data}
       filterableType="none"
       pageableType="pagination"
       resizable={true}
@@ -440,6 +467,10 @@
   dyn-table::part(column-value-0) {
     width: 40px;
     height: auto;
+  }
+
+  dyn-table::part(column-value-1) {
+    font-weight: 700;
   }
 
   dyn-table::part(column-value-2) {
