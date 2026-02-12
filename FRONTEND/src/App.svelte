@@ -21,7 +21,7 @@
 
   let showTable: boolean = $state(true);
 
-  // 20 columnas
+  // 26 columnas
   let columns: Column[] = [
     {
       key: 'avatar',
@@ -142,6 +142,13 @@
       sortable: true
     },
     {
+      key: 'preferences.language',
+      name: 'Idioma',
+      type: 'string',
+      filterable: true,
+      sortable: true
+    },
+    {
       key: 'employment.company',
       name: 'Compañia empleadora',
       type: 'string',
@@ -248,6 +255,41 @@
           }
         ]
       }
+    },
+    {
+      key: 'lastLoginAt',
+      name: 'Último inicio de sesión',
+      type: 'string',
+      filterable: true,
+      sortable: true
+    },
+    {
+      key: 'createdAt',
+      name: 'Fecha de creación',
+      type: 'string',
+      filterable: true,
+      sortable: true
+    },
+    {
+      key: 'emergencyContact.name',
+      name: 'Contacto de emergencia',
+      type: 'string',
+      filterable: true,
+      sortable: true
+    },
+    {
+      key: 'emergencyContact.relationship',
+      name: 'Relación de contacto de emergencia',
+      type: 'string',
+      filterable: true,
+      sortable: true
+    },
+    {
+      key: 'emergencyContact.phone',
+      name: 'Teléfono de contacto de emergencia',
+      type: 'string',
+      filterable: true,
+      sortable: true
     }
   ];
 
