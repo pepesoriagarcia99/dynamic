@@ -61,19 +61,21 @@
           } else {
             selectedIds.push(key);
           }
+
+          _emitSelection();
         } else if (event.ctx.SHIFT) {
           // Lógica para selección múltiple con SHIFT
           // Aquí podrías implementar la lógica para seleccionar un rango de filas
         } else {
           selectedIds = [key];
+          _emitSelection();
         }
       } else if (event.type === 'rightclick') {
         if (!selectedIds.includes(key)) {
           selectedIds = [key];
+          _emitSelection();
         }
       }
-
-      _emitSelection();
     }
 
     ontoggle(event, $state.snapshot(selectedIds));
@@ -86,6 +88,7 @@
 
   export function deselectAll() {
     selectedIds = [];
+    _emitSelection();
   }
 </script>
 
