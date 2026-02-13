@@ -86,44 +86,6 @@
   let hasContextMenuSlot = $derived($$slots['context-menu']);
   const compiledColumns = $derived(columns.map(columnCompiler));
 
-  // const optimizedColumns: OptimizedColumn[] = $derived(
-  //   /**
-  //    * TODO: Revisar tipado Typescript
-  //    * TODO: Revisar rendimiento de esto
-  //    */
-  //   columns.map((column, index) => {
-  //     const optimizationColumn: OptimizedColumn = column as OptimizedColumn;
-  //     optimizationColumn.optimization = {
-  //       style: {
-  //         td: `column column-${index}`,
-  //         val: `column-value column-value-${index}`
-  //       },
-  //       valueGetter: buildValueGetter(column),
-  //       // styleGetter: buildStyleGetter(column)
-  //     };
-
-  //     // if (column.style) {
-  //     //   optimizationColumn.optimization.style.custom = styleTransformer.toString(column.style);
-  //     // }
-
-  //     // if (optimizationColumn?.configuration?.colorConfiguration && column?.configuration?.colorConfiguration) {
-  //     //   optimizationColumn.optimization.configuration = {
-  //     //     colorConfiguration: []
-  //     //   };
-
-  //     //   column.configuration?.colorConfiguration.forEach((colorConfig: ColorConfiguration) => {
-  //     //     optimizationColumn.optimization.configuration!.colorConfiguration!.push({
-  //     //       style: styleTransformer.toString(colorConfig.style)
-  //     //     });
-  //     //   });
-  //     // }
-
-  //     // optimizationColumn.resizable = column.resizable ?? untrack(() => resizable);
-
-  //     return optimizationColumn;
-  //   })
-  // );
-
   /** Contexts */
   setContext(TABLE_CONFIGURATION, () => ({
     selectableType,
@@ -266,6 +228,15 @@
     }
   }
 
+  function handleRowClick(event: RowEvent) {
+    if(hasContextMenuSlot && event.type === 'rightclick') {
+      event.mouse.preventDefault!();
+
+      contextMenuVisible = true;
+      contextMenuEvent = event;
+    }
+  }
+
   /**
    * EVENTS
    */
@@ -295,43 +266,6 @@
   //       value
   //     } as T;
   //   });
-  // }
-
-  // function onRowClick(event: RowEvent) {
-  //   console.log('-----> ', event);
-
-  // contextMenuVisible = false;
-
-  // if (selectableType !== 'none') {
-  //   if (event.type === 'leftclick') {
-  //     selectionStore.onSelectToggle(event);
-  //   } else if (event.type === 'rightclick' && hasContextMenuSlot === true) {
-  //     /**
-  //      * Se procesa estado de la seleccion con el menucontextual activo
-  //      */
-  //     const selectionState = selectionStore.state().filter((el) => el.value?.__ctx.isSelected === true);
-  //     const selectionCount = selectionState.length;
-
-  //     const isRightclickHoverSelection = Boolean(selectionState.find((el) => el.key === event.row[primaryKey!]));
-  //     if (selectionCount === 0) {
-  //       selectionStore.onSelectToggle(event);
-  //     } else if (isRightclickHoverSelection === false) {
-  //       selectionStore.onSelectToggle(event);
-  //     }
-
-  //     // se muestra el menu contextual del usuario
-  //     contextMenuVisible = true;
-  //     contextMenuEvent = event; // este event es el concreto, usado calcular x e y del contextmenu
-  //   }
-  // }
-
-  // el.dispatchEvent(
-  //   new CustomEvent(ROW_CLICK_EVENT_NAME, {
-  //     detail: event as RowEvent,
-  //     bubbles: true,
-  //     composed: true
-  //   })
-  // );
   // }
 </script>
 
@@ -364,7 +298,7 @@
 
         <!-- tbody de datos -->
         <tbody class="tbody" part="tbody" class:tbody-hidden={loading || data.length === 0}>
-          <Body {primaryKey} columns={compiledColumns} {data} />
+          <Body {primaryKey} columns={compiledColumns} {data} ontoggle={handleRowClick} />
         </tbody>
       </table>
     </div>

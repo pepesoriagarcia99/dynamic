@@ -7,7 +7,6 @@
   import type { RowData } from '../../models/RowData';
   import type { RowEvent, RowEventType } from '../../models/event/RowEvent';
   import type { TableConfiguration } from '../../models/configuration/TableConfiguration';
-  // import type { ContextMenuConfiguration } from '../../models/configuration/ContextMenuConfiguration';
 
   import { tooltip } from '../../../tooltip/directives/tooltip';
 
@@ -21,15 +20,14 @@
     selected: boolean;
     ontoggle: (event: RowEvent) => void;
   }
-  /** Inputs */ 
+  /** Inputs */
   const { index = 0, columns = [], row, selected, ontoggle }: RowProps = $props();
-  
+
   /** Values */
   let el: HTMLElement;
   const simpleTypes = new Set(['string', 'number', 'date', 'selector']);
 
   /** States */
-  // const contextMenuConfiguration: () => ContextMenuConfiguration = getContext(TABLE_CONFIGURATION);
   const tableConfiguration: () => TableConfiguration = getContext(TABLE_CONFIGURATION);
 
   let rowStaticStyle: string = `${index % 2 === 0 ? 'row-even' : 'row-odd'}`;
@@ -40,7 +38,6 @@
   );
 
   /** Methods */
-
   function onRowClick(event: MouseEvent, type: RowEventType, column?: Column) {
     event.stopPropagation();
 
@@ -58,7 +55,6 @@
       }
     };
 
-    ontoggle(customEventDetail);
     el.dispatchEvent(
       new CustomEvent(ROW_CLICK_EVENT_NAME, {
         detail: customEventDetail,
@@ -66,6 +62,9 @@
         composed: true
       })
     );
+
+    customEventDetail.mouse.preventDefault = () => event.preventDefault();
+    ontoggle(customEventDetail);
   }
 </script>
 

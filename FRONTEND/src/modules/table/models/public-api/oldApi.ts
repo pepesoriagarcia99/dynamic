@@ -12,3 +12,22 @@
 //     controls: ControlApi[];
 //     reset: () => void
 // }
+
+
+
+
+// export interface PaginationApi {
+//     setPage: (n: number) => void
+//     resetPage: (emitEvent?: boolean) => void
+// }
+
+
+
+// export interface SelectionApi {
+//     reset: () => void
+// }
+
+
+// export interface SortApi {
+//     reset: () => void
+// }

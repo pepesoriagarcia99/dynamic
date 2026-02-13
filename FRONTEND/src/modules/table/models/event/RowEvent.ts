@@ -11,6 +11,7 @@ export interface EventContext {
 export interface EventMouse {
   x?: number;
   y?: number;
+  preventDefault?: () => void; // función para prevenir el comportamiento por defecto del evento
 }
 
 export interface RowEvent {
