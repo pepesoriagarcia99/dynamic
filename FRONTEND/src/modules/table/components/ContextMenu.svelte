@@ -1,12 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+
   import type { RowEvent } from '../models/event/RowEvent';
-  import { CONTEXT_MENU_EVENT_NAME } from '../constant';
-  // import { selectionStore } from '../store/selection-store';
-  // import type { StoreComponentData } from '../../core/models/StoreComponent';
-  // import type { RowData } from '../models/RowData';
-  import type { ContextMenuEvent } from '../models/event/ContextMenuEvent';
-  import type { SelectionEvent } from '../models/event/TableEvent';
 
   interface ContextMenuProps {
     visible?: boolean;
@@ -18,7 +13,6 @@
   let menuElement: HTMLDivElement | undefined = $state();
   let x: number = $state(0);
   let y: number = $state(0);
-  let selection: SelectionEvent[] = $state<SelectionEvent[]>([]);
 
   $effect(() => {
     if (visible && event?.mouse) {
@@ -41,27 +35,7 @@
     }
   });
 
-  $effect(() => {
-    if (visible && menuElement) {
-      menuElement.dispatchEvent(
-        new CustomEvent(CONTEXT_MENU_EVENT_NAME, {
-          detail: {
-            row: event,
-            selection
-          } as ContextMenuEvent,
-          bubbles: true,
-          composed: true
-        })
-      );
-    }
-  });
-
   onMount(() => {
-    // selectionStore.subscribe((selectionEvent: StoreComponentData<RowData>[]) => {
-    //   // filter((e) => e.value?.__ctx.isSelected === true)
-    //   selection = selectionEvent as SelectionEvent[];
-    // });
-
     const handleClickOutside = (e: MouseEvent) => {
       if (menuElement && !menuElement.contains(e.target as Node)) {
         visible = false;
@@ -86,7 +60,7 @@
 
 {#if visible}
   <div class="context-menu" part="context-menu" bind:this={menuElement} style="left: {x}px; top: {y}px;">
-    <slot {event} {selection} />
+    <slot {event} />
   </div>
 {/if}
 

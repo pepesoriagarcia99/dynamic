@@ -9,6 +9,6 @@ export class Pagination {
     }
 
     public reset() {
-        this.paginationRef.resetPage(true);
+        this.paginationRef.resetPage();
     }
 }

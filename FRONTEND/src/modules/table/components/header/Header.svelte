@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getContext } from 'svelte';
-  import { TABLE_CONFIGURATION } from '../../constant';
+  import { TABLE_CONFIGURATION_STATE } from '../../constant';
   import type { ColumnCompiled } from '../../models/column/Column';
   import ColumnHeader from './ColumnHeader.svelte';
   import BasicFilter from './filter/BasicFilter.svelte';
@@ -15,7 +15,7 @@
   const { columns }: HeaderProps = $props();
 
   /** States */
-  const tableConfiguration: () => TableConfiguration = getContext(TABLE_CONFIGURATION);
+  const tableConfiguration: () => TableConfiguration = getContext(TABLE_CONFIGURATION_STATE);
 
 </script>
 

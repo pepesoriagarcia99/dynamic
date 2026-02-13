@@ -347,7 +347,7 @@
     console.log('CLICKED: ', event.detail);
   }
 
-  function onSelection(event: any & { detail: SelectionEvent }) {
+  function onSelectionChange(event: any & { detail: SelectionEvent }) {
     console.log('SELECTED: ', event.detail);
   }
 
@@ -409,7 +409,7 @@
       pageSize={100}
       {onReady}
       {onRowClick}
-      {onSelection}
+      {onSelectionChange}
       {onFilterChange}
       {onSortChange}
       {onPageChange}

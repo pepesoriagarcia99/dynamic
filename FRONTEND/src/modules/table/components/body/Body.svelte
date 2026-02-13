@@ -1,61 +1,92 @@
 <script lang="ts">
+  import { getContext } from 'svelte';
   import type { ColumnCompiled } from '../../models/column/Column';
+  import type { TableConfiguration } from '../../models/configuration/TableConfiguration';
   import type { RowEvent } from '../../models/event/RowEvent';
   import Row from './Row.svelte';
+  import { CONTEXT_MENU_VISIBLE_STATE, SELECTION_EVENT_NAME, TABLE_CONFIGURATION_STATE } from '../../constant';
+  import type { ContextConfiguration } from '../../models/configuration/ContextConfiguration';
 
   interface BodyProps {
     primaryKey: string;
     columns: ColumnCompiled[];
     data: any[];
-    ontoggle: (event: RowEvent) => void;
+    dispatchEvent: (event: CustomEvent) => void;
+    ontoggle: (event: RowEvent, selectedIds: any[]) => void;
   }
 
-  const { primaryKey, columns, data, ontoggle }: BodyProps = $props();
+  /** Inputs */
+  const { primaryKey, columns, data, dispatchEvent, ontoggle }: BodyProps = $props();
 
+  /** Context */
+  const tableConfiguration: () => TableConfiguration = getContext(TABLE_CONFIGURATION_STATE);
+  const contextMenuVisibleState: () => ContextConfiguration = getContext(CONTEXT_MENU_VISIBLE_STATE);
+
+  /** States */
   let selectedIds: any[] = $state([]);
+
+  /** Methods */
+  function _emitSelection() {
+    dispatchEvent(
+      new CustomEvent(SELECTION_EVENT_NAME, {
+        detail: $state.snapshot(selectedIds),
+        bubbles: true,
+        composed: true
+      })
+    );
+  }
+
   function onRowClick(event: RowEvent) {
     const key = event.row[primaryKey];
-    selectedIds.push(key);
 
-    ontoggle(event);
+    if (tableConfiguration().selectableType === 'single') {
+      if (event.type === 'leftclick') {
+        const index = selectedIds.indexOf(key);
+        if (index !== -1) {
+          selectedIds.splice(index, 1);
+        } else {
+          selectedIds = [key];
+        }
+      } else if (event.type === 'rightclick' && contextMenuVisibleState().has === true) {
+        selectedIds = [key];
+      }
+
+      _emitSelection();
+    } else if (tableConfiguration().selectableType === 'multiple') {
+      if (event.type === 'leftclick') {
+        if (event.ctx.CTRL) {
+          const index = selectedIds.indexOf(key);
+          if (index !== -1) {
+            selectedIds.splice(index, 1);
+          } else {
+            selectedIds.push(key);
+          }
+        } else if (event.ctx.SHIFT) {
+          // Lógica para selección múltiple con SHIFT
+          // Aquí podrías implementar la lógica para seleccionar un rango de filas
+        } else {
+          selectedIds = [key];
+        }
+      } else if (event.type === 'rightclick') {
+        if (!selectedIds.includes(key)) {
+          selectedIds = [key];
+        }
+      }
+
+      _emitSelection();
+    }
+
+    ontoggle(event, $state.snapshot(selectedIds));
   }
 
-    // function onRowClick(event: RowEvent) {
-  //   console.log('-----> ', event);
+  export function selectAll() {
+    // const allIds = data.map((row) => row[primaryKey]);
+    // selectedIds = allIds;
+  }
 
-  // contextMenuVisible = false;
-
-  // if (selectableType !== 'none') {
-  //   if (event.type === 'leftclick') {
-  //     selectionStore.onSelectToggle(event);
-  //   } else if (event.type === 'rightclick' && hasContextMenuSlot === true) {
-  //     /**
-  //      * Se procesa estado de la seleccion con el menucontextual activo
-  //      */
-  //     const selectionState = selectionStore.state().filter((el) => el.value?.__ctx.isSelected === true);
-  //     const selectionCount = selectionState.length;
-
-  //     const isRightclickHoverSelection = Boolean(selectionState.find((el) => el.key === event.row[primaryKey!]));
-  //     if (selectionCount === 0) {
-  //       selectionStore.onSelectToggle(event);
-  //     } else if (isRightclickHoverSelection === false) {
-  //       selectionStore.onSelectToggle(event);
-  //     }
-
-  //     // se muestra el menu contextual del usuario
-  //     contextMenuVisible = true;
-  //     contextMenuEvent = event; // este event es el concreto, usado calcular x e y del contextmenu
-  //   }
-  // }
-
-  // el.dispatchEvent(
-  //   new CustomEvent(ROW_CLICK_EVENT_NAME, {
-  //     detail: event as RowEvent,
-  //     bubbles: true,
-  //     composed: true
-  //   })
-  // );
-  // }
+  export function deselectAll() {
+    selectedIds = [];
+  }
 </script>
 
 {#each data as row, index (row[primaryKey])}

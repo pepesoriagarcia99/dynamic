@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getContext } from 'svelte';
 
-  import { ROW_CLICK_EVENT_NAME, TABLE_CONFIGURATION, TOOLTIP_DELAY } from '../../constant';
+  import { ROW_CLICK_EVENT_NAME, TABLE_CONFIGURATION_STATE, TOOLTIP_DELAY } from '../../constant';
 
   import type { Column, ColumnCompiled } from '../../models/column/Column';
   import type { RowData } from '../../models/RowData';
@@ -24,11 +24,11 @@
   const { index = 0, columns = [], row, selected, ontoggle }: RowProps = $props();
 
   /** Values */
-  let el: HTMLElement;
+  let tr: HTMLElement;
   const simpleTypes = new Set(['string', 'number', 'date', 'selector']);
 
   /** States */
-  const tableConfiguration: () => TableConfiguration = getContext(TABLE_CONFIGURATION);
+  const tableConfiguration: () => TableConfiguration = getContext(TABLE_CONFIGURATION_STATE);
 
   let rowStaticStyle: string = `${index % 2 === 0 ? 'row-even' : 'row-odd'}`;
   const rowStyle: string = $derived(
@@ -55,7 +55,7 @@
       }
     };
 
-    el.dispatchEvent(
+    tr.dispatchEvent(
       new CustomEvent(ROW_CLICK_EVENT_NAME, {
         detail: customEventDetail,
         bubbles: true,
@@ -68,7 +68,7 @@
   }
 </script>
 
-<tr bind:this={el} part={rowStyle + ' ' + rowStaticStyle} class={rowStyle + ' ' + rowStaticStyle}>
+<tr bind:this={tr} part={rowStyle + ' ' + rowStaticStyle} class={rowStyle + ' ' + rowStaticStyle}>
   {#each columns as column}
     {@const value = column.compiled.valueGetter(row)}
 

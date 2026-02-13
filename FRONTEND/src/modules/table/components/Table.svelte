@@ -18,7 +18,9 @@
     VALID_PAGEABLE_TYPES,
     READY_EVENT_NAME,
     LOADING_STATE,
-    TABLE_CONFIGURATION
+    TABLE_CONFIGURATION_STATE,
+    CONTEXT_MENU_EVENT_NAME,
+    CONTEXT_MENU_VISIBLE_STATE
   } from '../constant';
 
   import type { Column } from '../models/column/Column';
@@ -37,16 +39,16 @@
   import LoadingBody from './body/LoadingBody.svelte';
   import { columnCompiler } from '../services/column-compiler';
   import Body from './body/Body.svelte';
+  import type { ContextMenuEvent } from '../models/event/ContextMenuEvent';
+  import { declarePublicApi } from '../services/public-api/declare';
 
   interface TableProps {
     primaryKey: string;
     columns: Column[];
-
     loading?: boolean;
     count?: number;
     data?: any[];
     selectableType?: SelectableType;
-    // selectAll?: boolean;
     filterableType?: FilterableType;
     sortableType?: SortableType;
     pageableType?: PageableType;
@@ -63,11 +65,9 @@
     count = undefined,
     data = [],
     selectableType = DEFAULT_SELECTABLE_TYPE,
-    // selectAll = DEFAULT_SELECT_ALL,
     filterableType = DEFAULT_FILTERABLE,
     sortableType = DEFAULT_SORTABLE,
     pageableType = DEFAULT_PAGEABLE,
-
     pageSizeOptions = DEFAULT_PAGE_SIZE_OPTIONS,
     pageSize = DEFAULT_PAGE_SIZE,
     resizable = DEFAULT_RESIZABLE
@@ -80,6 +80,8 @@
 
   /** States */
   let paginationRef: Pagination | null = $state<Pagination | null>(null);
+  let bodyRef: Body | null = $state<Body | null>(null);
+
   let contextMenuVisible = $state(false);
   let contextMenuEvent = $state<RowEvent | undefined>(undefined);
 
@@ -87,7 +89,7 @@
   const compiledColumns = $derived(columns.map(columnCompiler));
 
   /** Contexts */
-  setContext(TABLE_CONFIGURATION, () => ({
+  setContext(TABLE_CONFIGURATION_STATE, () => ({
     selectableType,
     filterableType,
     sortableType,
@@ -96,6 +98,10 @@
     resizable
   }));
   setContext(LOADING_STATE, () => loading);
+  setContext(CONTEXT_MENU_VISIBLE_STATE, () => ({
+    visible: contextMenuVisible,
+    has: hasContextMenuSlot
+  }));
 
   /** Checks */
   // Validacion de configuracion requerida
@@ -166,7 +172,7 @@
 
   /** Methods */
   onMount(() => {
-    // declarePublicApi(el, paginationRef as Pagination);
+    declarePublicApi(el, paginationRef as Pagination, bodyRef as Body);
 
     window.addEventListener('keydown', handleKeyDown);
 
@@ -223,14 +229,25 @@
 
   function handleKeyDown(event: KeyboardEvent) {
     if (event.key === 'Escape') {
-      // selectionStore.clear();
+      bodyRef?.deselectAll();
       contextMenuVisible = false;
     }
   }
 
-  function handleRowClick(event: RowEvent) {
-    if(hasContextMenuSlot && event.type === 'rightclick') {
+  function handleRowClick(event: RowEvent, selection: any[]) {
+    if (hasContextMenuSlot && event.type === 'rightclick') {
       event.mouse.preventDefault!();
+
+      el.dispatchEvent(
+        new CustomEvent(CONTEXT_MENU_EVENT_NAME, {
+          detail: {
+            row: event,
+            selection
+          } as ContextMenuEvent,
+          bubbles: true,
+          composed: true
+        })
+      );
 
       contextMenuVisible = true;
       contextMenuEvent = event;
@@ -255,18 +272,6 @@
       })
     );
   }
-
-  // function mapColumnKey<T>(storeEvent: StoreComponentData<any>[]): T[] {
-  //   return storeEvent.map((event) => {
-  //     const { key, value } = event;
-
-  //     const column = indexColumns.find((col) => String(col.index) === key);
-  //     return {
-  //       key: column?.key || key,
-  //       value
-  //     } as T;
-  //   });
-  // }
 </script>
 
 <!-- TODO: CREAR LOS SLOTS -->
@@ -298,7 +303,14 @@
 
         <!-- tbody de datos -->
         <tbody class="tbody" part="tbody" class:tbody-hidden={loading || data.length === 0}>
-          <Body {primaryKey} columns={compiledColumns} {data} ontoggle={handleRowClick} />
+          <Body
+            bind:this={bodyRef}
+            {primaryKey}
+            columns={compiledColumns}
+            {data}
+            dispatchEvent={(event: CustomEvent) => el.dispatchEvent(event)}
+            ontoggle={handleRowClick}
+          />
         </tbody>
       </table>
     </div>

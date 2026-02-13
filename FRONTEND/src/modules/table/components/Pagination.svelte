@@ -9,7 +9,7 @@
 
   import SelectorControl from '../../controls/components/SelectorControl.svelte';
   import { LOADING_STATE, PAGE_CHANGE_EVENT_NAME } from '../constant';
-  import type { PageEvent } from '../models/event/TableEvent';
+  import type { PaginationEvent } from '../models/event/TableEvent';
 
   type PageActions = 'first' | 'last' | 'next' | 'previous';
 
@@ -69,7 +69,7 @@
         detail: {
           page: currentPage,
           pageSize: pageSize
-        } as PageEvent,
+        } as PaginationEvent,
         bubbles: true,
         composed: true
       })

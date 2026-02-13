@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { ColumnCompiled } from '../../models/column/Column';
 
-  import { LOADING_STATE, TABLE_CONFIGURATION, TOOLTIP_DELAY } from '../../constant';
+  import { LOADING_STATE, TABLE_CONFIGURATION_STATE, TOOLTIP_DELAY } from '../../constant';
   import resizeIcon from '../../../../assets/svg/resize.svg';
 
   import { tooltip } from '../../../tooltip/directives/tooltip';
@@ -21,7 +21,7 @@
 
   /** States */
   const loading: () => boolean = getContext(LOADING_STATE);
-  const tableConfiguration: () => TableConfiguration = getContext(TABLE_CONFIGURATION);
+  const tableConfiguration: () => TableConfiguration = getContext(TABLE_CONFIGURATION_STATE);
 
   let sortRef: Sort | null = $state<Sort | null>(null);
   let isResizing: boolean = $state(false);

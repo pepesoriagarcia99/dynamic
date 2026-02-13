@@ -1,13 +1,9 @@
-import type { RowData } from "../RowData";
 
 
 /**
- * Evento emitido por la selleccion
+ * Evento emitido por la seleccion
  */
-export interface SelectionEvent {
-    key: string;
-    value: RowData;
-}
+export type SelectionEvent = any[];
 
 /**
  * Evento emitido por la paginacion
