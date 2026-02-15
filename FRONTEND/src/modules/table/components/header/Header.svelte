@@ -1,11 +1,19 @@
 <script lang="ts">
   import { getContext } from 'svelte';
-  import { TABLE_CONFIGURATION_STATE } from '../../constant';
+
+  import { LOADING_STATE, TABLE_CONFIGURATION_STATE, TOOLTIP_DELAY } from '../../constant';
+
   import type { ColumnCompiled } from '../../models/column/Column';
-  import ColumnHeader from './ColumnHeader.svelte';
+  import type { SortEvent } from '../../models/event/TableEvent';
+  import type { TableConfiguration } from '../../models/configuration/TableConfiguration';
+
+  import resizeIcon from '../../../../assets/svg/resize.svg';
+  import { tooltip } from '../../../tooltip/directives/tooltip';
+
   import BasicFilter from './filter/BasicFilter.svelte';
   import SimpleFilter from './filter/SimpleFilter.svelte';
-  import type { TableConfiguration } from '../../models/configuration/TableConfiguration';
+  import Sort from './Sort.svelte';
+  import AdvanceFilter from './filter/AdvanceFilter.svelte';
 
   interface HeaderProps {
     columns: ColumnCompiled[];
@@ -14,18 +22,156 @@
   /** Inputs */
   const { columns }: HeaderProps = $props();
 
-  /** States */
+  /** Contexts */
+  const loading: () => boolean = getContext(LOADING_STATE);
   const tableConfiguration: () => TableConfiguration = getContext(TABLE_CONFIGURATION_STATE);
 
+  /** States */
+  let sorts: SortEvent[] = $state([]);
+  let isResizing: boolean = $state(false);
+  let startX: number = $state(0);
+  let startWidth: number = $state(0);
+  let thElements: HTMLTableCellElement[] = $state([]);
+
+  let onMouseMove: ((e: MouseEvent) => void) | null = null;
+  let onMouseUp: (() => void) | null = null;
+
+  /** Methods */
+  function handleResizeMouseDown(event: MouseEvent, index: number) {
+    event.stopPropagation();
+    event.preventDefault();
+
+    const thElement = thElements[index];
+    if (!thElement) return;
+
+    isResizing = true;
+    startX = event.clientX;
+    startWidth = thElement.getBoundingClientRect().width;
+
+    thElement.style.width = `${startWidth}px`;
+    thElement.style.minWidth = `${startWidth}px`;
+
+    // Agregar clase para mejorar el rendering durante resize
+    thElement.style.willChange = 'width';
+    document.body.style.cursor = 'ew-resize';
+    document.body.style.userSelect = 'none';
+
+    onMouseMove = (e: MouseEvent) => handleResizeMouseMove(e, thElement);
+    onMouseUp = () => handleResizeMouseUp(thElement);
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  }
+
+  function handleResizeMouseMove(event: MouseEvent, thElement: HTMLTableCellElement) {
+    if (!isResizing || !thElement) return;
+
+    // Usar requestAnimationFrame para suavizar el movimiento
+    requestAnimationFrame(() => {
+      const diff = event.clientX - startX;
+      const newWidth = Math.max(50, startWidth + diff);
+      thElement!.style.width = `${newWidth}px`;
+      thElement!.style.minWidth = `${newWidth}px`;
+    });
+  }
+
+  function handleResizeMouseUp(thElement: HTMLTableCellElement) {
+    isResizing = false;
+
+    // Limpiar estilos temporales
+    if (thElement) {
+      thElement.style.willChange = 'auto';
+    }
+    document.body.style.cursor = '';
+    document.body.style.userSelect = '';
+
+    if (onMouseMove) {
+      document.removeEventListener('mousemove', onMouseMove);
+      onMouseMove = null;
+    }
+    if (onMouseUp) {
+      document.removeEventListener('mouseup', onMouseUp);
+      onMouseUp = null;
+    }
+  }
+
+  function handleSort(key: string) {
+    const index = sorts.findIndex((event) => event.key === key);
+    if (index === -1) {
+      sorts.push({ key, direction: 'asc' });
+    } else {
+      const currentDirection = sorts[index].direction;
+      if (currentDirection === 'asc') {
+        sorts[index].direction = 'desc';
+      } else if (currentDirection === 'desc') {
+        sorts.splice(index, 1);
+      }
+    }
+  }
+
+  export function deselectAllSorts() {
+    sorts = [];
+  }
+
+  export function cleanFilters() {
+    if(tableConfiguration().filterable === 'basic') {
+
+    } else if(tableConfiguration().filterable === 'simple') {
+
+    } else if(tableConfiguration().filterable === 'advanced') {
+
+    }
+  }
+
+  export function getSortState() {
+    return $state.snapshot(sorts);
+  }
+
+  export function getFilterState() {
+    // Implementar lógica para obtener el estado de los filtros según el tipo de filtrado
+    return [];
+  }
 </script>
 
-<thead class="thead" part="thead" >
+<thead class="thead" part="thead">
   <tr class="thead-tr" part="thead-tr">
     {#each columns as column, index}
-      <ColumnHeader
-        {index}
-        {column}
-      />
+      {@const partNamesTh = `column-header-th column-header-th-${index}`}
+      {@const partNamesContent = `column-header-content column-header-content-${index}`}
+      {@const partNamesName = `column-header-name column-header-name-${index}`}
+
+      <th bind:this={thElements[index]} class={partNamesTh} part={partNamesTh} style={column.compiled.style?.column}>
+        <div class={partNamesContent} part={partNamesContent}>
+          <span
+            class={partNamesName}
+            part={partNamesName}
+            {@attach tooltip({ value: column?.name, position: 'top', delay: TOOLTIP_DELAY })}>{column?.name}</span
+          >
+          {#if tableConfiguration().sortableType !== 'none' && column.sortable === true}
+            <Sort {index} {column} sort={sorts.find((e) => e.key === column.key) || null} {handleSort} />
+          {/if}
+
+          {#if tableConfiguration().filterable === 'advanced' && column.filterable === true}
+            <AdvanceFilter {index} {column} />
+          {/if}
+        </div>
+        <!-- </button> -->
+        <!-- svelte-ignore a11y_no_static_element_interactions -->
+        <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+        {#if loading() === false && tableConfiguration().resizable === true && (column.resizable === true || column.resizable === undefined)}
+          {@const partNamesResize = `column-header-resize column-header-resize-${index}`}
+          {@const partNamesResizeIcon = `column-header-resize-icon column-header-resize-icon-${index}`}
+
+          <div
+            class={partNamesResize}
+            part={partNamesResize}
+            onmousedown={(e) => handleResizeMouseDown(e, index)}
+            role="separator"
+          >
+            <img src={resizeIcon} class={partNamesResizeIcon} part={partNamesResizeIcon} alt="resize" />
+          </div>
+        {/if}
+      </th>
     {/each}
   </tr>
 
@@ -33,6 +179,8 @@
     <BasicFilter {columns} />
   {:else if tableConfiguration().filterable === 'simple'}
     <SimpleFilter {columns} />
+  {:else if tableConfiguration().filterable === 'custom'}
+    <slot name="custom-filter" {columns} />
   {/if}
 </thead>
 
@@ -47,5 +195,85 @@
     top: 0;
     z-index: 5;
     background: var(--table-header-background);
+  }
+
+  th {
+    text-align: left;
+    box-sizing: border-box;
+    position: relative;
+
+    width: auto;
+    min-width: max-content;
+    white-space: nowrap;
+  }
+
+  .column-header-content {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: var(--table-column-margin-left);
+    margin-right: 20px; /* Espacio para el ícono de resize */
+  }
+
+  .column-header-th {
+    border-bottom: 1px solid var(--table-header-border-bottom-color);
+    border-top: 1px solid var(--table-header-border-top-color);
+    border-left: 1px solid var(--table-header-border-left-color);
+    border-right: 1px solid var(--table-header-border-right-color);
+    background: var(--table-header-background);
+    position: relative;
+  }
+
+  .column-header-btn {
+    background: none;
+    border: none;
+    cursor: default;
+
+    width: 100%;
+    height: var(--table-header-height);
+    padding: 0 16px 0 0;
+
+    font-weight: 600;
+    font-size: 16px;
+  }
+
+  .column-header-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
+  .resize-handle {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 8px;
+    cursor: col-resize;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+    user-select: none;
+  }
+
+  .column-header-resize {
+    cursor: ew-resize;
+    position: absolute;
+    right: 0.5px;
+    top: 0;
+    bottom: 0;
+    width: 8px;
+    display: flex;
+    align-items: end;
+    justify-content: end;
+  }
+
+  .column-header-resize-icon {
+    width: 22px;
+    height: 22px;
+    pointer-events: none;
   }
 </style>

@@ -81,11 +81,14 @@
   /** States */
   let paginationRef: Pagination | null = $state<Pagination | null>(null);
   let bodyRef: Body | null = $state<Body | null>(null);
+  let headerRef: Header | null = $state<Header | null>(null);
 
   let contextMenuVisible = $state(false);
   let contextMenuEvent = $state<RowEvent | undefined>(undefined);
-
   let hasContextMenuSlot = $derived($$slots['context-menu']);
+
+  let hasCustomFilterSlot = $derived($$slots['custom-filter']);
+
   const compiledColumns = $derived(columns.map(columnCompiler));
 
   /** Contexts */
@@ -162,17 +165,24 @@
 
   // validacion de configuracion de filtro
   $effect(() => {
-    // Valida los tipos de estados del filtro
-    if (filterableType && !VALID_FILTERABLE_TYPES.includes(filterableType)) {
-      throw new Error(
-        `The "filterable" property must be one of the following values: ${VALID_FILTERABLE_TYPES.join(', ')}.`
-      );
+    if (filterableType) {
+      // Valida los tipos de estados del filtro
+      if (!VALID_FILTERABLE_TYPES.includes(filterableType)) {
+        throw new Error(
+          `The "filterable" property must be one of the following values: ${VALID_FILTERABLE_TYPES.join(', ')}.`
+        );
+      }
+
+      // Valida que el tipo sea custom para usar el slot de filtro
+      if (filterableType !== 'custom' && hasCustomFilterSlot) {
+        throw new Error('The "custom-filter" slot is only available when "filterableType" is set to "custom".');
+      }
     }
   });
 
   /** Methods */
   onMount(() => {
-    declarePublicApi(el, paginationRef as Pagination, bodyRef as Body);
+    declarePublicApi(el, paginationRef as Pagination, bodyRef as Body, headerRef as Header);
 
     window.addEventListener('keydown', handleKeyDown);
 
@@ -258,15 +268,23 @@
    * EVENTS
    */
   function emitReady() {
+    let tableReadyEvent: TableReadyEvent = {};
+
+    if(pageableType !== 'none') {
+      tableReadyEvent.pagination = paginationRef!.getState();
+    }
+
+    if(!['none', 'custom'].includes(filterableType)) {
+      tableReadyEvent.filter = headerRef!.getFilterState();
+    }
+
+    if(sortableType !== 'none') {
+      tableReadyEvent.sort = headerRef!.getSortState();
+    }
+
     el.dispatchEvent(
       new CustomEvent(READY_EVENT_NAME, {
-        detail: {
-          pagination: paginationRef!.getState(),
-          filter: [],
-          sort: []
-          // filter: mapColumnKey<FilterEvent>(filterStore.state().filter((e) => e.value) as FilterEvent[]),
-          // sort: mapColumnKey<SortEvent>(sortStore.state().filter((e) => e.value))
-        } as TableReadyEvent,
+        detail: tableReadyEvent,
         bubbles: true,
         composed: true
       })
@@ -287,7 +305,9 @@
   <div class="table-container" part="table-container">
     <div class="table-scroll" part="table-scroll" onscroll={handleScroll}>
       <table class="table" part="table">
-        <Header columns={compiledColumns}></Header>
+        <Header bind:this={headerRef} columns={compiledColumns}>
+          <slot name="custom-filter" event={contextMenuEvent} />
+        </Header>
 
         <!-- tbody de carga -->
         <tbody class="tbody" part="tbody" class:tbody-hidden={!loading}>
@@ -358,14 +378,14 @@
     --table-header-border-right-color: var(--dyn-table-header-border-right-color);
     --table-header-border-bottom-color: var(--dyn-table-header-border-bottom-color, var(--border));
 
-    /** Table header sortable*/
-    --table-header-sortable-hover-background: var(--dyn-table-sortable-hover-background, var(--hover));
-    --table-header-sorted-background: var(--dyn-table-header-sorted-background, var(--selected));
-    --table-header-sorted-text-color: var(--dyn-table-header-sorted-text-color, var(--selected-text));
-    --table-header-sorted-icon-color: var(--dyn-table-header-sorted-icon-color, var(--selected-text));
+    /** Table header focusable*/
+    /* --table-header-focusable-hover-background: var(--dyn-table-focusable-hover-background, var(--hover)); */
+    /* --table-header-focused-background: var(--dyn-table-header-focused-background, var(--selected)); */
+    /* --table-header-focused-text-color: var(--dyn-table-header-focused-text-color, var(--selected-text)); */
+    /* --table-header-focused-icon-color: var(--dyn-table-header-focused-icon-color, var(--selected-text)); */
 
     /** Table header resized */
-    --table-header-resized-icon-color: var(--dyn-table-header-resized-icon-color, var(--selected-text));
+    /* --table-header-resized-icon-color: var(--dyn-table-header-resized-icon-color, var(--selected-text)); */
 
     /** Table header filter */
     --table-header-filter-border-top-color: var(--dyn-table-header-filter-border-top-color);

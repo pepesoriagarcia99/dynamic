@@ -1,15 +1,21 @@
-interface Control {
-  index: number;
-}
+import type { default as HeaderComponent } from '../../components/header/Header.svelte';
 
+// interface Control {
+//   index: number;
+// }
+
+
+/**
+ * ! No se si este filter api debe conocer el componente Header o solo debe conocer los componentes que gestionan filtros
+ */
 export class Filter {
-  private tableRef: HTMLElement;
+  private header: HeaderComponent;
 
-  private controls: Control[];
+  // private controls: Control[];
 
-  constructor(tableRef: HTMLElement) {
-    this.tableRef = tableRef;
-    this.controls = [];
+  constructor(header: HeaderComponent) {
+    this.header = header;
+    // this.controls = [];
   }
 
   reset() {}

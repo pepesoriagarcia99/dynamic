@@ -5,19 +5,19 @@
 
   import type { Column } from '../../../models/column/Column';
   import type { BasicControlEvent } from '../../../models/event/ControlEvent';
-  import type { StoreComponent, StoreComponentData } from '../../../../core/models/StoreComponent';
+  // import type { StoreComponent, StoreComponentData } from '../../../../core/models/StoreComponent';
 
-  import { filterStore } from '../../../store/filter-store';
+  // import { filterStore } from '../../../store/filter-store';
 
   import Skeleton from '../../Skeleton.svelte';
   import BasicControl from '../../../../controls/components/BasicControl.svelte';
 
-  interface Control {
-    column: Column;
-    storeComponent: StoreComponent<string>;
-    subscribeId?: string;
-    value: string;
-  }
+  // interface Control {
+  //   column: Column;
+  //   storeComponent: StoreComponent<string>;
+  //   subscribeId?: string;
+  //   value: string;
+  // }
 
   interface FilterProps {
     columns: Column[];
@@ -26,6 +26,7 @@
 
   /** Inputs */
   let { columns }: FilterProps = $props();
+  console.log("🚀 ~ columns:", columns)
 
   /** States */
   const loading: () => boolean = getContext(LOADING_STATE);
@@ -39,20 +40,20 @@
    * * Se tiene que crear un elemento ControlApi, que dara acceso a las funciones genericas del control 
   */
   onMount(() => {
-    controls = columns.map((column) => {
-      const control: Control = {
-        column,
-        storeComponent: filterStore.add(column.key, ''),
-        value: ''
-      };
+    // controls = columns.map((column) => {
+    //   // const control: Control = {
+    //   //   column,
+    //   //   storeComponent: filterStore.add(column.key, ''),
+    //   //   value: ''
+    //   // };
 
-      const subscribeId = control.storeComponent.subscribe((change: StoreComponentData<string>) => {
-        control.value = change.value ?? '';
-      });
-      control.subscribeId = subscribeId;
+    //   const subscribeId = control.storeComponent.subscribe((change: StoreComponentData<string>) => {
+    //     control.value = change.value ?? '';
+    //   });
+    //   control.subscribeId = subscribeId;
 
-      return control;
-    });
+    //   return control;
+    // });
   });
 
   function onChange(control: Control, value: any) {

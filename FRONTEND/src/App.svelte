@@ -14,9 +14,9 @@
     TableReadyEvent
   } from './modules/table/models/event/TableEvent';
   import type { ContextMenuEvent } from './modules/table/models/event/ContextMenuEvent';
-  import BasicControl from './modules/controls/components/BasicControl.svelte';
-  import SelectorControl from './modules/controls/components/SelectorControl.svelte';
-  import CheckControl from './modules/controls/components/CheckControl.svelte';
+  // import BasicControl from './modules/controls/components/BasicControl.svelte';
+  // import SelectorControl from './modules/controls/components/SelectorControl.svelte';
+  // import CheckControl from './modules/controls/components/CheckControl.svelte';
   import type { PublicApi } from './main-wc';
 
   let showTable: boolean = $state(true);
@@ -26,7 +26,9 @@
     {
       key: 'avatar',
       name: 'Avatar',
-      type: 'avatar'
+      type: 'avatar',
+      filterable: true,
+      sortable: false
     },
     {
       key: 'firstName',
@@ -305,8 +307,10 @@
     loading = true;
 
     const url = new URL('http://localhost:3001/api/users');
-    url.searchParams.set('page', String(tableFilter.pagination.page));
-    url.searchParams.set('limit', String(tableFilter.pagination.pageSize));
+    if (tableFilter.pagination) {
+      url.searchParams.set('page', String(tableFilter.pagination.page));
+      url.searchParams.set('limit', String(tableFilter.pagination.pageSize));
+    }
 
     // Filtros como header en formato JSON string
     const headers: HeadersInit = {
@@ -357,6 +361,9 @@
 
   function onSortChange(event: any & { detail: SortEvent }) {
     console.log('SORTED: ', event.detail);
+
+    tableFilter.sort = event.detail;
+    getUsers();
   }
 
   function onPageChange(event: any & { detail: PaginationEvent }) {
@@ -422,7 +429,7 @@
       </div>
     </dyn-table>
 
-    <div class:hidden={showTable}>
+    <!-- <div class:hidden={showTable}>
       <h3>Basico tipo text</h3>
       <BasicControl
         label="Control externo de prueba"
@@ -470,7 +477,7 @@
         triState={false}
         onChange={(value: any) => alert(`Valor seleccionado: ${value}`)}
       />
-    </div>
+    </div> -->
   </div>
 </main>
 

@@ -19,7 +19,7 @@ export interface PaginationEvent {
 export type SortOrder = 'asc' | 'desc';
 export interface SortEvent {
     key: string;
-    value: SortOrder | null;
+    direction: SortOrder | null;
 }
 
 
@@ -37,7 +37,7 @@ export interface FilterEvent {
  * Evento emitido cuando la tabla esta ready
  */
 export interface TableReadyEvent {
-    filter: FilterEvent[],
-    pagination: PaginationEvent,
-    sort: SortEvent[]
+    filter?: FilterEvent[],
+    pagination?: PaginationEvent,
+    sort?: SortEvent[]
 }

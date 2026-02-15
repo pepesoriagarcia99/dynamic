@@ -8,7 +8,7 @@ export const DEFAULT_RESIZABLE = false;
 
 export const VALID_SELECTABLE_TYPES = ['none', 'single', 'multiple'];
 export const VALID_SORTABLE_TYPES = ['none', 'single', 'multiple'];
-export const VALID_FILTERABLE_TYPES = ['none', 'basic', 'simple', 'advanced'];
+export const VALID_FILTERABLE_TYPES = ['none', 'basic', 'simple', 'advanced', 'custom'];
 export const VALID_PAGEABLE_TYPES = ['none', 'pagination', 'infinite'];
 
 export const READY_EVENT_NAME = 'Ready';

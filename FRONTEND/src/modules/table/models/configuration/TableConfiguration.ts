@@ -9,7 +9,7 @@ export type SortableType = 'single' | 'multiple' | 'none';
  * * advanced: Filtro avanzado segun el tipo decolumna y permite acciones logicas.
  * * none: Sin filtro
  */
-export type FilterableType = 'basic' | 'simple' | 'advanced' | 'none';
+export type FilterableType = 'basic' | 'simple' | 'advanced' | 'custom' | 'none';
 
 export type PageableType = 'pagination' | 'infinite' | 'none';
 
