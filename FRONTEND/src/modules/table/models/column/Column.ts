@@ -55,6 +55,9 @@ export interface Column {
   configuration?: ColumnConfiguration;
 }
 
+/**
+ * Modelo de Columna compilada.
+ */
 export interface ColumnCompiled extends Column {
   compiled: {
     class: {
@@ -67,27 +70,3 @@ export interface ColumnCompiled extends Column {
     valueGetter: (row: any) => any;
   }
 }
-
-// export interface OptimizedColumn extends Column {
-//   optimization: {
-//     style: {
-//       custom?: string;
-
-//       td: string;
-//       val: string;
-//     }
-
-//     configuration?: {
-//       colorConfiguration?: { style: string }[];
-//     }
-
-//     /**
-//      * Función personalizada para obtener el valor de la columna a partir de una fila.
-//      */
-//     valueGetter?: (row: any) => any;
-//     /**
-//      * Función personalizada para obtener el estilo de la columna a partir de su valor.
-//      */
-//     styleGetter?: (value: any) => string;
-//   }
-// }

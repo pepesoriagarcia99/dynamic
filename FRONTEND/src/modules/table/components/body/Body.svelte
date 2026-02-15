@@ -7,7 +7,7 @@
   import type { TableConfiguration } from '../../models/configuration/TableConfiguration';
   import type { RowEvent } from '../../models/event/RowEvent';
   import type { RowData } from '../../models/RowData';
-  import type { ContextConfiguration } from '../../models/configuration/ContextConfiguration';
+  import type { ContextMenuConfiguration } from '../../models/configuration/ContextMenuConfiguration';
 
   import Row from './Row.svelte';
 
@@ -24,7 +24,7 @@
 
   /** Context */
   const tableConfiguration: () => TableConfiguration = getContext(TABLE_CONFIGURATION_STATE);
-  const contextMenuVisibleState: () => ContextConfiguration = getContext(CONTEXT_MENU_VISIBLE_STATE);
+  const contextMenuVisibleState: () => ContextMenuConfiguration = getContext(CONTEXT_MENU_VISIBLE_STATE);
 
   /** States */
   let selectedIds: any[] = $state([]);

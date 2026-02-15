@@ -15,7 +15,6 @@
   import type { ContextMenuEvent } from '../modules/table/models/event/ContextMenuEvent';
   import type { PublicApi } from '../main-wc';
 
-
   // 26 columnas
   let columns: Column[] = [
     {
@@ -297,6 +296,7 @@
   let tableEl: (HTMLElement & PublicApi) | null;
 
   let tableFilter: TableReadyEvent;
+  let selection = $state<any[]>([]);
 
   function getUsers() {
     loading = true;
@@ -338,16 +338,13 @@
     tableEl = document.getElementById('main-table') as HTMLElement & PublicApi;
   });
 
-  function onScrollEndEvent(event: any & { detail: any }) {
-    console.log('SCROLL END EVENT: ', event.detail);
-  }
-
   function onRowClick(event: any & { detail: RowEvent }) {
     console.log('CLICKED: ', event.detail);
   }
 
   function onSelectionChange(event: any & { detail: SelectionEvent }) {
     console.log('SELECTED: ', event.detail);
+    selection = event.detail;
   }
 
   function onFilterChange(event: any & { detail: FilterEvent }) {
@@ -379,40 +376,60 @@
   }
 </script>
 
-<div class="content">
-  <dyn-table
-  id="main-table"
-  primaryKey="id"
-  {loading}
-  {columns}
-  {count}
-  {data}
-  filterableType="advanced"
-  pageableType="pagination"
-  resizable={true}
-  selectableType="multiple"
-  sortableType="multiple"
-  pageSizeOptions={[5, 50, 100, 200]}
-  pageSize={100}
-  {onReady}
-  {onRowClick}
-  {onSelectionChange}
-  {onFilterChange}
-  {onSortChange}
-  {onPageChange}
-  {onContextMenuEvent}
-  {onScrollEndEvent}
->
-  <div slot="context-menu" class="context-menu">
-    <button class="context-menu-btn"> Editar </button>
-    <button class="context-menu-btn"> Eliminar </button>
+<div>
+  <div class="toolbar">
+    <p>Elementos seleccionados: {selection.length}</p>
+    <button disabled={loading}> Seleccionar todo </button>
+    <button disabled={loading}> Resetear Selección </button>
+    <span>|</span>
+    <button disabled={loading}> Resetear paginación </button>
+    <span>|</span>
+    <button disabled={loading}> Resetear Filtros </button>
   </div>
-</dyn-table>
+  <div class="content">
+    <dyn-table
+      id="main-table"
+      primaryKey="id"
+      {loading}
+      {columns}
+      {count}
+      {data}
+      filterableType="advanced"
+      pageableType="pagination"
+      resizable={true}
+      selectableType="multiple"
+      sortableType="multiple"
+      pageSizeOptions={[5, 50, 100, 200]}
+      pageSize={100}
+      {onReady}
+      {onRowClick}
+      {onSelectionChange}
+      {onFilterChange}
+      {onSortChange}
+      {onPageChange}
+      {onContextMenuEvent}
+    >
+      <div slot="context-menu" class="context-menu">
+        <button class="context-menu-btn"> Editar </button>
+        <button class="context-menu-btn"> Eliminar </button>
+      </div>
+    </dyn-table>
+  </div>
 </div>
 
 <style>
   .content {
-    height: calc(100vh - 34px);
+    height: calc(100vh - 84px);
+    margin: 12px;
+  }
+
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 16px;
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
   }
 
   dyn-table {

@@ -19,10 +19,9 @@ export const FILTER_EVENT_NAME = 'FilterChange';
 export const SELECTION_EVENT_NAME = 'SelectionChange';
 export const CONTEXT_MENU_EVENT_NAME = 'ContextMenuEvent';
 export const SCROLL_END_EVENT_NAME = 'ScrollEndEvent';
-export const CONTROL_EVENT_NAME = 'ControlEvent';
 
 export const TOOLTIP_DELAY = 250;
 
 export const LOADING_STATE = Symbol('loading');
 export const CONTEXT_MENU_VISIBLE_STATE = Symbol('context-menu-visible');
-export const TABLE_CONFIGURATION_STATE = Symbol('table-configuration'); // Este elemento es estatico
+export const TABLE_CONFIGURATION_STATE = Symbol('table-configuration');

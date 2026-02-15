@@ -28,6 +28,5 @@
 <style>
   .content {
     margin-left: 7rem; /* Espacio para el menú lateral */
-    padding: 1rem;
   }
 </style>
