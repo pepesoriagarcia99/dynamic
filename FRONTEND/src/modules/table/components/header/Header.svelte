@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getContext } from 'svelte';
 
-  import { LOADING_STATE, TABLE_CONFIGURATION_STATE, TOOLTIP_DELAY } from '../../constant';
+  import { LOADING_STATE, SORT_EVENT_NAME, TABLE_CONFIGURATION_STATE, TOOLTIP_DELAY } from '../../constant';
 
   import type { ColumnCompiled } from '../../models/column/Column';
   import type { SortEvent } from '../../models/event/TableEvent';
@@ -21,6 +21,9 @@
 
   /** Inputs */
   const { columns }: HeaderProps = $props();
+
+  /** Values */
+  let el: HTMLElement;
 
   /** Contexts */
   const loading: () => boolean = getContext(LOADING_STATE);
@@ -107,6 +110,14 @@
         sorts.splice(index, 1);
       }
     }
+
+    el.dispatchEvent(
+      new CustomEvent(SORT_EVENT_NAME, {
+        detail: $state.snapshot(sorts),
+        bubbles: true,
+        composed: true
+      })
+    );
   }
 
   export function deselectAllSorts() {
@@ -114,12 +125,9 @@
   }
 
   export function cleanFilters() {
-    if(tableConfiguration().filterableType === 'basic') {
-
-    } else if(tableConfiguration().filterableType === 'simple') {
-
-    } else if(tableConfiguration().filterableType === 'advanced') {
-
+    if (tableConfiguration().filterableType === 'basic') {
+    } else if (tableConfiguration().filterableType === 'simple') {
+    } else if (tableConfiguration().filterableType === 'advanced') {
     }
   }
 
@@ -133,7 +141,7 @@
   }
 </script>
 
-<thead class="thead" part="thead">
+<thead bind:this={el} class="thead" part="thead">
   <tr class="thead-tr" part="thead-tr">
     {#each columns as column, index}
       {@const partNamesTh = `column-header-th column-header-th-${index}`}

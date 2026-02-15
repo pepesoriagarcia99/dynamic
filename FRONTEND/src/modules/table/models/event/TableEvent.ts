@@ -1,5 +1,3 @@
-
-
 /**
  * Evento emitido por la seleccion
  */
@@ -22,12 +20,9 @@ export interface SortEvent {
     direction: SortOrder | null;
 }
 
-
-
 /**
  * Evento emitido por el filtro basic y simple
  */
-
 export interface FilterEvent {
     key: string;
     value: string | null;

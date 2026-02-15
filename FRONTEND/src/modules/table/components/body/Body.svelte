@@ -1,16 +1,20 @@
 <script lang="ts">
   import { getContext } from 'svelte';
+
+  import { CONTEXT_MENU_VISIBLE_STATE, SELECTION_EVENT_NAME, TABLE_CONFIGURATION_STATE } from '../../constant';
+
   import type { ColumnCompiled } from '../../models/column/Column';
   import type { TableConfiguration } from '../../models/configuration/TableConfiguration';
   import type { RowEvent } from '../../models/event/RowEvent';
-  import Row from './Row.svelte';
-  import { CONTEXT_MENU_VISIBLE_STATE, SELECTION_EVENT_NAME, TABLE_CONFIGURATION_STATE } from '../../constant';
+  import type { RowData } from '../../models/RowData';
   import type { ContextConfiguration } from '../../models/configuration/ContextConfiguration';
+
+  import Row from './Row.svelte';
 
   interface BodyProps {
     primaryKey: string;
     columns: ColumnCompiled[];
-    data: any[];
+    data: RowData[];
     dispatchEvent: (event: CustomEvent) => void;
     ontoggle: (event: RowEvent, selectedIds: any[]) => void;
   }
