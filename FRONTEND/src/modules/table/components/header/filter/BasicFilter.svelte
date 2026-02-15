@@ -1,16 +1,16 @@
 <script lang="ts">
-  import { getContext, onMount } from 'svelte';
+  // import { getContext, onMount } from 'svelte';
 
-  import { CONTROL_EVENT_NAME, LOADING_STATE } from '../../../constant';
+  // import { CONTROL_EVENT_NAME, LOADING_STATE } from '../../../constant';
 
   import type { Column } from '../../../models/column/Column';
-  import type { BasicControlEvent } from '../../../models/event/ControlEvent';
+  // import type { BasicControlEvent } from '../../../models/event/ControlEvent';
   // import type { StoreComponent, StoreComponentData } from '../../../../core/models/StoreComponent';
 
   // import { filterStore } from '../../../store/filter-store';
 
-  import Skeleton from '../../Skeleton.svelte';
-  import BasicControl from '../../../../controls/components/BasicControl.svelte';
+  // import Skeleton from '../../Skeleton.svelte';
+  // import BasicControl from '../../../../controls/components/BasicControl.svelte';
 
   // interface Control {
   //   column: Column;
@@ -29,9 +29,9 @@
   console.log("🚀 ~ columns:", columns)
 
   /** States */
-  const loading: () => boolean = getContext(LOADING_STATE);
+  // const loading: () => boolean = getContext(LOADING_STATE);
   let trElement: HTMLTableRowElement | undefined = $state();
-  let controls: Control[] = $state([]);
+  // let controls: Control[] = $state([]);
 
   /** Methods */
   /**
@@ -39,7 +39,7 @@
    * 
    * * Se tiene que crear un elemento ControlApi, que dara acceso a las funciones genericas del control 
   */
-  onMount(() => {
+  // onMount(() => {
     // controls = columns.map((column) => {
     //   // const control: Control = {
     //   //   column,
@@ -54,28 +54,28 @@
 
     //   return control;
     // });
-  });
+  // });
 
-  function onChange(control: Control, value: any) {
-    control.storeComponent.setValue(value);
+  // function onChange(control: Control, value: any) {
+  //   control.storeComponent.setValue(value);
 
-    if (trElement) {
-      trElement.dispatchEvent(
-        new CustomEvent(`${CONTROL_EVENT_NAME}_${control.column.index}`, {
-          detail: {
-            column: control.column,
-            value
-          } as BasicControlEvent,
-          bubbles: true,
-          composed: true
-        })
-      );
-    }
-  }
+  //   if (trElement) {
+  //     trElement.dispatchEvent(
+  //       new CustomEvent(`${CONTROL_EVENT_NAME}_${control.column.index}`, {
+  //         detail: {
+  //           column: control.column,
+  //           value
+  //         } as BasicControlEvent,
+  //         bubbles: true,
+  //         composed: true
+  //       })
+  //     );
+  //   }
+  // }
 </script>
 
 <tr bind:this={trElement} class="filter-thead-tr" part="filter-thead-tr">
-  {#each controls as control}
+  <!-- {#each controls as control}
     {#if control.column.filterable === true}
       <th
         class="column-filter-th column-filter-th-{control.column.index}"
@@ -95,11 +95,11 @@
         class="column-filter-th column-filter-th-{control.column.index} column-filter-th-spacer"
         part="column-filter-th column-filter-th-{control.column.index}"
         style={control.column?.style as string}
-      >
+      > -->
         <!-- space -->
-      </th>
+      <!-- </th>
     {/if}
-  {/each}
+  {/each} -->
 </tr>
 
 <style>
