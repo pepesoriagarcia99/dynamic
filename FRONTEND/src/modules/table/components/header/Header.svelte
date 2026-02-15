@@ -114,11 +114,11 @@
   }
 
   export function cleanFilters() {
-    if(tableConfiguration().filterable === 'basic') {
+    if(tableConfiguration().filterableType === 'basic') {
 
-    } else if(tableConfiguration().filterable === 'simple') {
+    } else if(tableConfiguration().filterableType === 'simple') {
 
-    } else if(tableConfiguration().filterable === 'advanced') {
+    } else if(tableConfiguration().filterableType === 'advanced') {
 
     }
   }
@@ -151,7 +151,7 @@
             <Sort {index} {column} sort={sorts.find((e) => e.key === column.key) || null} {handleSort} />
           {/if}
 
-          {#if tableConfiguration().filterable === 'advanced' && column.filterable === true}
+          {#if tableConfiguration().filterableType === 'advanced' && column.filterable === true}
             <AdvanceFilter {index} {column} />
           {/if}
         </div>
@@ -175,11 +175,11 @@
     {/each}
   </tr>
 
-  {#if tableConfiguration().filterable === 'basic'}
+  {#if tableConfiguration().filterableType === 'basic'}
     <BasicFilter {columns} />
-  {:else if tableConfiguration().filterable === 'simple'}
+  {:else if tableConfiguration().filterableType === 'simple'}
     <SimpleFilter {columns} />
-  {:else if tableConfiguration().filterable === 'custom'}
+  {:else if tableConfiguration().filterableType === 'custom'}
     <slot name="custom-filter" {columns} />
   {/if}
 </thead>

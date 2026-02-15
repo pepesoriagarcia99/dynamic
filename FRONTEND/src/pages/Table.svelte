@@ -379,14 +379,15 @@
   }
 </script>
 
-<dyn-table
+<div class="content">
+  <dyn-table
   id="main-table"
   primaryKey="id"
   {loading}
   {columns}
   {count}
   {data}
-  filterableType="none"
+  filterableType="advanced"
   pageableType="pagination"
   resizable={true}
   selectableType="multiple"
@@ -407,8 +408,13 @@
     <button class="context-menu-btn"> Eliminar </button>
   </div>
 </dyn-table>
+</div>
 
 <style>
+  .content {
+    height: calc(100vh - 34px);
+  }
+
   dyn-table {
     display: block;
     height: 100%;

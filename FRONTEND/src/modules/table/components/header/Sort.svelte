@@ -81,8 +81,6 @@
   .sort-icon-active {
     width: 22px;
     height: 22px;
-    /* filter: invert(1) drop-shadow(0 0 0 var(--table-header-focused-icon-color))
-      drop-shadow(0 0 0 var(--table-header-focused-icon-color));
-    transform: scale(1.2); */
+    transform: scale(1.2);
   }
 </style>

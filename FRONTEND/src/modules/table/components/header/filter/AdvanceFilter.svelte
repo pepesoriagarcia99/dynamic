@@ -127,8 +127,8 @@
   }
 
   .advance-filter-icon {
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
     transform: scale(1.2);
     transition: transform 180ms ease-in-out;
     transform-origin: center;
@@ -139,11 +139,9 @@
   }
 
   .advance-filter-icon-active {
-    width: 22px;
-    height: 22px;
-    /* filter: invert(1) drop-shadow(0 0 0 var(--table-header-sorted-icon-color))
-      drop-shadow(0 0 0 var(--table-header-sorted-icon-color));
-    transform: scale(1.2); */
+    width: 20px;
+    height: 20px;
+    transform: scale(1.2);
   }
 
   .advance-filter-modal {

@@ -357,7 +357,7 @@
 
     /** TABLE */
     --hover: #e2e8f0;
-    --selected: #020617;
+    --selected: #000000;
     --selected-text: #ffffff;
     --border: #d1d1d1;
 
