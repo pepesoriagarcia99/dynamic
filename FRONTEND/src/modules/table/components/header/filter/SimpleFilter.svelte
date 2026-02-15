@@ -1,80 +1,78 @@
 <script lang="ts">
   import { getContext, onMount } from 'svelte';
 
-  import type { Column } from '../../../models/column/Column';
+  import { FILTER_EVENT_NAME, LOADING_STATE } from '../../../constant';
 
+  import type { ColumnCompiled } from '../../../models/column/Column';
 
   import Skeleton from '../../Skeleton.svelte';
   import BasicControl from '../../../../controls/components/BasicControl.svelte';
-  import SelectorControl from '../../../../controls/components/SelectorControl.svelte';
-  import CheckControl from '../../../../controls/components/CheckControl.svelte';
-  import DateControl from '../../../../controls/components/DateControl.svelte';
-  // import MultipleSelectorControl from '../../../../controls/components/MultipleSelectorControl.svelte';
-  import AutoCompleteControl from '../../../../controls/components/AutoCompleteControl.svelte';
-  import { LOADING_STATE } from '../../../constant';
+
+  interface Control {
+    column: ColumnCompiled;
+    value: string;
+  }
 
   interface FilterProps {
-    columns: Column[];
-    filterValue?: string;
+    columns: ColumnCompiled[];
   }
 
   /** Inputs */
   let { columns }: FilterProps = $props();
 
+  /** Values */
+  let el: HTMLElement;
+
   /** States */
   const loading: () => boolean = getContext(LOADING_STATE);
+  let controls: Control[] = $state([]);
 
   /** Methods */
   onMount(() => {
-    // columns.forEach((column) => {
-    // console.log("🚀 ~ column:", column)
-    // const filterStoreComponent: StoreComponent<string> = filterStore.add(column.key, value);
-    // filterStoreComponent.subscribe((change: StoreComponentData<string>) => {
-    //   value = change.value ?? '';
-    // });
-    // });
+    controls = columns.map((column) => ({
+      column,
+      value: ''
+    }));
   });
 
-  function onChange(value: any) {
-    console.log('🚀 ~ onChange ~ value:', value);
+  function _emit() {
+    const event = controls.filter((control) => control.value !== '').map((control) => ({
+      key: control.column.key,
+      value: control.value
+    }));
+
+    el?.dispatchEvent(
+      new CustomEvent(FILTER_EVENT_NAME, {
+        detail: event,
+        bubbles: true,
+        composed: true
+      })
+    );
+  }
+
+  function onChange(control: Control, value: any) {
+    control.value = value;
+    _emit();
   }
 </script>
 
-<tr class="filter-thead-tr" part="filter-thead-tr">
-  {#each columns as column}
-    {@const configuration: any = column.configuration}
-    {#if column.filterable === true}
-      <th
-        class="column-filter-th column-filter-th-{column.index}"
-        part="column-filter-th column-filter-th-{column.index}"
-        style={column?.style as string}
-      >
+<tr bind:this={el} class="filter-thead-tr" part="filter-thead-tr">
+  {#each controls as control, index}
+    {#if control.column.filterable === true}
+      {@const partNamesTh = `column-filter-th column-filter-th-${index}`}
+
+      <th class={partNamesTh} part={partNamesTh} style={control.column.compiled.style?.column}>
         {#if loading() === true}
           <div style="padding: 0 8px;">
             <Skeleton height="34px" />
           </div>
-        {:else if column.type === 'selector' && configuration?.options }
-          {#if !configuration.filterType || configuration.filterType === 'simple-selector'}
-            <SelectorControl options={configuration.options!} {onChange} />
-          {:else if configuration.filterType === 'auto-complete'}
-            <AutoCompleteControl options={configuration.options!} {onChange} />
-            <!-- {:else if configuration.filterType === 'multi-selector'}
-            <MultipleSelectorControl options={configuration.options!} {onChange} /> -->
-          {/if}
-        {:else if column.type === 'boolean'}
-          <CheckControl id={column.key} {onChange} triState={true} />
-        {:else if column.type === 'date'}
-          <DateControl id={column.key} {onChange} />
         {:else}
-          <BasicControl id={column.key} type={column.type === 'number' ? 'number' : 'text'} {onChange} />
+          <BasicControl id={control.column.key} type="text" onChange={(v) => onChange(control, v)} />
         {/if}
       </th>
     {:else}
-      <th
-        class="column-filter-th column-filter-th-{column.index} column-filter-th-spacer"
-        part="column-filter-th column-filter-th-{column.index}"
-        style={column?.style as string}
-      >
+      {@const partNamesTh = `column-filter-th column-filter-th-${index} column-filter-th-spacer`}
+      <th class={partNamesTh} part={partNamesTh} style={control.column.compiled.style?.column}>
         <!-- space -->
       </th>
     {/if}
@@ -97,9 +95,6 @@
     border-right: 1px solid var(--table-header-filter-border-right-color);
     box-sizing: border-box;
     padding-left: var(--table-column-margin-left);
-    padding-right: var(--table-column-margin-right); /** El valor debe ser el mismo para que quede centrado */
-    /* TODO: Usado para genera espacios al no exitir filtro */
-    /* width: 1%; */
-    /* white-space: nowrap; */
+    padding-right: var(--table-column-margin-right); /** El valor debe ser el mismo que padding-left para que quede centrado */
   }
 </style>

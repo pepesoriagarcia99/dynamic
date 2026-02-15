@@ -10,10 +10,10 @@
   import resizeIcon from '../../../../assets/svg/resize.svg';
   import { tooltip } from '../../../tooltip/directives/tooltip';
 
-  import BasicFilter from './filter/BasicFilter.svelte';
   import SimpleFilter from './filter/SimpleFilter.svelte';
-  import Sort from './Sort.svelte';
   import AdvanceFilter from './filter/AdvanceFilter.svelte';
+  import Sort from './Sort.svelte';
+  
 
   interface HeaderProps {
     columns: ColumnCompiled[];
@@ -183,9 +183,7 @@
     {/each}
   </tr>
 
-  {#if tableConfiguration().filterableType === 'basic'}
-    <BasicFilter {columns} />
-  {:else if tableConfiguration().filterableType === 'simple'}
+  {#if tableConfiguration().filterableType === 'simple'}
     <SimpleFilter {columns} />
   {:else if tableConfiguration().filterableType === 'custom'}
     <slot name="custom-filter" {columns} />

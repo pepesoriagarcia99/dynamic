@@ -394,7 +394,7 @@
       {columns}
       {count}
       {data}
-      filterableType="basic"
+      filterableType="simple"
       pageableType="pagination"
       resizable={true}
       selectableType="multiple"
