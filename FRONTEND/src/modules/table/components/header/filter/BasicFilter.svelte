@@ -1,105 +1,83 @@
 <script lang="ts">
-  // import { getContext, onMount } from 'svelte';
+  import { getContext, onMount } from 'svelte';
 
-  // import { CONTROL_EVENT_NAME, LOADING_STATE } from '../../../constant';
+  import { FILTER_EVENT_NAME, LOADING_STATE } from '../../../constant';
 
-  import type { Column } from '../../../models/column/Column';
-  // import type { BasicControlEvent } from '../../../models/event/ControlEvent';
-  // import type { StoreComponent, StoreComponentData } from '../../../../core/models/StoreComponent';
+  import type { ColumnCompiled } from '../../../models/column/Column';
 
-  // import { filterStore } from '../../../store/filter-store';
+  import Skeleton from '../../Skeleton.svelte';
+  import BasicControl from '../../../../controls/components/BasicControl.svelte';
 
-  // import Skeleton from '../../Skeleton.svelte';
-  // import BasicControl from '../../../../controls/components/BasicControl.svelte';
-
-  // interface Control {
-  //   column: Column;
-  //   storeComponent: StoreComponent<string>;
-  //   subscribeId?: string;
-  //   value: string;
-  // }
+  interface Control {
+    column: ColumnCompiled;
+    value: string;
+  }
 
   interface FilterProps {
-    columns: Column[];
-    filterValue?: string;
+    columns: ColumnCompiled[];
   }
 
   /** Inputs */
   let { columns }: FilterProps = $props();
-  console.log("🚀 ~ columns:", columns)
+
+  /** Values */
+  let el: HTMLElement;
 
   /** States */
-  // const loading: () => boolean = getContext(LOADING_STATE);
-  let trElement: HTMLTableRowElement | undefined = $state();
-  // let controls: Control[] = $state([]);
+  const loading: () => boolean = getContext(LOADING_STATE);
+  let controls: Control[] = $state([]);
 
   /** Methods */
-  /**
-   * ! NUEVO SISTEMA USANDO PUBLIC API
-   * 
-   * * Se tiene que crear un elemento ControlApi, que dara acceso a las funciones genericas del control 
-  */
-  // onMount(() => {
-    // controls = columns.map((column) => {
-    //   // const control: Control = {
-    //   //   column,
-    //   //   storeComponent: filterStore.add(column.key, ''),
-    //   //   value: ''
-    //   // };
+  onMount(() => {
+    controls = columns.map((column) => ({
+      column,
+      value: ''
+    }));
+  });
 
-    //   const subscribeId = control.storeComponent.subscribe((change: StoreComponentData<string>) => {
-    //     control.value = change.value ?? '';
-    //   });
-    //   control.subscribeId = subscribeId;
+  function _emit() {
+    const event = controls.filter((control) => control.value !== '').map((control) => ({
+      key: control.column.key,
+      value: control.value
+    }));
 
-    //   return control;
-    // });
-  // });
+    el?.dispatchEvent(
+      new CustomEvent(FILTER_EVENT_NAME, {
+        detail: event,
+        bubbles: true,
+        composed: true
+      })
+    );
 
-  // function onChange(control: Control, value: any) {
-  //   control.storeComponent.setValue(value);
+  }
 
-  //   if (trElement) {
-  //     trElement.dispatchEvent(
-  //       new CustomEvent(`${CONTROL_EVENT_NAME}_${control.column.index}`, {
-  //         detail: {
-  //           column: control.column,
-  //           value
-  //         } as BasicControlEvent,
-  //         bubbles: true,
-  //         composed: true
-  //       })
-  //     );
-  //   }
-  // }
+  function onChange(control: Control, value: any) {
+    control.value = value;
+    _emit();
+  }
 </script>
 
-<tr bind:this={trElement} class="filter-thead-tr" part="filter-thead-tr">
-  <!-- {#each controls as control}
+<tr bind:this={el} class="filter-thead-tr" part="filter-thead-tr">
+  {#each controls as control, index}
     {#if control.column.filterable === true}
-      <th
-        class="column-filter-th column-filter-th-{control.column.index}"
-        part="column-filter-th column-filter-th-{control.column.index}"
-        style={control.column?.style as string}
-      >
+      {@const partNamesTh = `column-filter-th column-filter-th-${index}`}
+
+      <th class={partNamesTh} part={partNamesTh} style={control.column.compiled.style?.column}>
         {#if loading() === true}
           <div style="padding: 0 8px;">
             <Skeleton height="34px" />
           </div>
         {:else}
-          <BasicControl id={control.column.key} type="text" onChange={(value) => onChange(control, value)} />
+          <BasicControl id={control.column.key} type="text" onChange={(v) => onChange(control, v)} />
         {/if}
       </th>
     {:else}
-      <th
-        class="column-filter-th column-filter-th-{control.column.index} column-filter-th-spacer"
-        part="column-filter-th column-filter-th-{control.column.index}"
-        style={control.column?.style as string}
-      > -->
+      {@const partNamesTh = `column-filter-th column-filter-th-${index} column-filter-th-spacer`}
+      <th class={partNamesTh} part={partNamesTh} style={control.column.compiled.style?.column}>
         <!-- space -->
-      <!-- </th>
+      </th>
     {/if}
-  {/each} -->
+  {/each}
 </tr>
 
 <style>
@@ -118,6 +96,6 @@
     border-right: 1px solid var(--table-header-filter-border-right-color);
     box-sizing: border-box;
     padding-left: var(--table-column-margin-left);
-    padding-right: var(--table-column-margin-right); /** El valor debe ser el mismo para que quede centrado */
+    padding-right: var(--table-column-margin-right); /** El valor debe ser el mismo que padding-left para que quede centrado */
   }
 </style>
