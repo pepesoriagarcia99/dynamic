@@ -13,7 +13,6 @@
   import SimpleFilter from './filter/SimpleFilter.svelte';
   import AdvanceFilter from './filter/AdvanceFilter.svelte';
   import Sort from './Sort.svelte';
-  
 
   interface HeaderProps {
     columns: ColumnCompiled[];
@@ -24,6 +23,7 @@
 
   /** Values */
   let el: HTMLElement;
+  let simpleFilter: SimpleFilter | null = $state<SimpleFilter | null>(null);
 
   /** Contexts */
   const loading: () => boolean = getContext(LOADING_STATE);
@@ -36,6 +36,7 @@
   let startWidth: number = $state(0);
   let thElements: HTMLTableCellElement[] = $state([]);
 
+  /** Values */
   let onMouseMove: ((e: MouseEvent) => void) | null = null;
   let onMouseUp: (() => void) | null = null;
 
@@ -124,20 +125,12 @@
     sorts = [];
   }
 
-  export function cleanFilters() {
-    if (tableConfiguration().filterableType === 'basic') {
-    } else if (tableConfiguration().filterableType === 'simple') {
-    } else if (tableConfiguration().filterableType === 'advanced') {
-    }
-  }
-
   export function getSortState() {
     return $state.snapshot(sorts);
   }
 
-  export function getFilterState() {
-    // Implementar lógica para obtener el estado de los filtros según el tipo de filtrado
-    return [];
+  export function getSimpleFilter(): SimpleFilter | null {
+    return simpleFilter;
   }
 </script>
 
@@ -186,7 +179,7 @@
   </tr>
 
   {#if tableConfiguration().filterableType === 'simple'}
-    <SimpleFilter {columns} />
+    <SimpleFilter bind:this={simpleFilter} {columns} />
   {:else if $$slots['simple'] && tableConfiguration().filterableType === 'custom'}
     <slot name="simple" />
   {/if}

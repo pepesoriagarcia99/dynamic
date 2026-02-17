@@ -25,7 +25,6 @@
   const partNamesLabel: string = $derived(`control-label basic-control-label basic-control-label-${id}`);
 
   /** Methods */
-
   function keydownHandler(event: KeyboardEvent) {
     if (event.key === 'Enter') {
       onEnter();

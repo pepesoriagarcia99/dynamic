@@ -5,6 +5,8 @@ import type { default as HeaderComponent } from '../../components/header/Header.
 import { Pagination } from '../../services/public-api/Pagination';
 import { Filter } from './Filter';
 import { Selection } from './Selection';
+import { Sort } from './Sort';
+
 
 export const declarePublicApi = (el: HTMLElement, paginationRef: PaginationComponent, bodyRef: BodyComponent, headerRef: HeaderComponent) => {
   if (!el) return;
@@ -14,5 +16,6 @@ export const declarePublicApi = (el: HTMLElement, paginationRef: PaginationCompo
 
   (host as any).pagination = new Pagination(paginationRef);
   (host as any).selection = new Selection(bodyRef);
+  (host as any).sort = new Sort(headerRef);
   (host as any).filter = new Filter(headerRef);
 };

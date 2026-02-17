@@ -11,4 +11,16 @@ export class Pagination {
     public reset() {
         this.paginationRef.resetPage();
     }
+
+    public setPage(page: number) {
+        this.paginationRef.setPage(page);
+    }
+
+    public setPageSize(size: number) {
+        this.paginationRef.setPageSize(size);
+    }
+
+    public state(): { page: number, pageSize: number } {
+        return this.paginationRef.getState();
+    }
 }

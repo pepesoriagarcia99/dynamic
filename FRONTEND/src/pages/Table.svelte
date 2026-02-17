@@ -374,17 +374,40 @@
   function onContextMenuEvent(event: any & { detail: ContextMenuEvent }) {
     console.log('CONTEXT MENU EVENT: ', event.detail);
   }
+
+  /** API */
+  function resetSelection() {
+    tableEl?.selection.reset();
+  }
+
+  function selectAll() {
+    tableEl?.selection.selectAll();
+  }
+
+  function resetSort() {
+    tableEl?.sort.reset();
+  }
+
+  function resetPagination() {
+    tableEl?.pagination.reset();
+  }
+
+  function resetFilters() {
+    tableEl?.filter.reset();
+  }
 </script>
 
 <div>
   <div class="toolbar">
     <p>Elementos seleccionados: {selection.length}</p>
-    <button disabled={loading}> Seleccionar todo </button>
-    <button disabled={loading}> Resetear Selección </button>
+    <button disabled={loading} onclick={selectAll}> Seleccionar todo </button>
+    <button disabled={loading} onclick={resetSelection}> Resetear Selección </button>
     <span>|</span>
-    <button disabled={loading}> Resetear paginación </button>
+    <button disabled={loading} onclick={resetSort}> Resetear Orden </button>
     <span>|</span>
-    <button disabled={loading}> Resetear Filtros </button>
+    <button disabled={loading} onclick={resetPagination}> Resetear paginación </button>
+    <span>|</span>
+    <button disabled={loading} onclick={resetFilters}> Resetear Filtros </button>
   </div>
   <div class="content">
     <dyn-table

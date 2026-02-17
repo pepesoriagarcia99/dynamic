@@ -26,6 +26,7 @@
   /** States */
   const loading: () => boolean = getContext(LOADING_STATE);
   let controls: Control[] = $state([]);
+  let values: any[] = $state([]);
 
   /** Methods */
   onMount(() => {
@@ -36,10 +37,12 @@
   });
 
   function _emit() {
-    const event = controls.filter((control) => control.value !== '').map((control) => ({
-      key: control.column.key,
-      value: control.value
-    }));
+    const event = controls
+      .filter((control) => control.value !== '')
+      .map((control) => ({
+        key: control.column.key,
+        value: control.value
+      }));
 
     el?.dispatchEvent(
       new CustomEvent(FILTER_EVENT_NAME, {
@@ -50,8 +53,14 @@
     );
   }
 
-  function onChange(control: Control, value: any) {
+  function onChange(value: any, control: Control) {
     control.value = value;
+    _emit();
+  }
+
+  export function reset() {
+    controls.forEach((control) => (control.value = ''));
+    values = [];
     _emit();
   }
 </script>
@@ -67,7 +76,12 @@
             <Skeleton height="34px" />
           </div>
         {:else}
-          <BasicControl id={control.column.key} type="text" onChange={(v) => onChange(control, v)} />
+          <BasicControl
+            id={control.column.key}
+            value={values[index]}
+            type="text"
+            onChange={(v) => onChange(v, control)}
+          />
         {/if}
       </th>
     {:else}
@@ -95,6 +109,8 @@
     border-right: 1px solid var(--table-header-filter-border-right-color);
     box-sizing: border-box;
     padding-left: var(--table-column-margin-left);
-    padding-right: var(--table-column-margin-right); /** El valor debe ser el mismo que padding-left para que quede centrado */
+    padding-right: var(
+      --table-column-margin-right
+    ); /** El valor debe ser el mismo que padding-left para que quede centrado */
   }
 </style>

@@ -86,9 +86,7 @@
   let contextMenuVisible = $state(false);
   let contextMenuEvent = $state<RowEvent | undefined>(undefined);
   let hasContextMenuSlot = $derived($$slots['context-menu']);
-
   let hasCustomFilterSlot = $derived($$slots['custom-simple-filter'] || $$slots['custom-advanced-filter']);
-
 
   const compiledColumns = $derived(columns.map(columnCompiler));
 
@@ -271,15 +269,15 @@
   function emitReady() {
     let tableReadyEvent: TableReadyEvent = {};
 
-    if(pageableType !== 'none') {
+    if (pageableType !== 'none') {
       tableReadyEvent.pagination = paginationRef!.getState();
     }
 
-    if(!['none', 'custom'].includes(filterableType)) {
-      tableReadyEvent.filter = headerRef!.getFilterState();
-    }
+    // if(!['none', 'custom'].includes(filterableType)) {
+    //   tableReadyEvent.filter = headerRef!.getFilterState();
+    // }
 
-    if(sortableType !== 'none') {
+    if (sortableType !== 'none') {
       tableReadyEvent.sort = headerRef!.getSortState();
     }
 
@@ -294,11 +292,7 @@
 </script>
 
 <!-- TODO: CREAR LOS SLOTS -->
-<!-- slot de loading -->
-<!-- slot de not data -->
-<!-- slot: menu contextual -->
 <!-- slot: paginacion -->
-<!-- slot: filter -->
 
 <svelte:window onmousedown={handleClickOutside} />
 
@@ -313,14 +307,22 @@
 
         <!-- tbody de carga -->
         <tbody class="tbody" part="tbody" class:tbody-hidden={!loading}>
-          <LoadingBody {columns} {pageSize} />
+          {#if $$slots['loading']}
+            <slot name="loading" />
+          {:else}
+            <LoadingBody {columns} {pageSize} />
+          {/if}
         </tbody>
 
         <!-- tbody cuando no hay datos -->
         <tbody class="tbody" part="tbody" class:tbody-hidden={loading || data.length > 0}>
-          <tr>
-            <td colspan={columns.length} class="table-no-data" part="table-no-data"> No data available. </td>
-          </tr>
+          {#if $$slots['no-data']}
+            <slot name="no-data" />
+          {:else}
+            <tr>
+              <td colspan={columns.length} class="table-no-data" part="table-no-data"> No data available. </td>
+            </tr>
+          {/if}
         </tbody>
 
         <!-- tbody de datos -->
@@ -379,15 +381,6 @@
     --table-header-border-left-color: var(--dyn-table-header-border-left-color);
     --table-header-border-right-color: var(--dyn-table-header-border-right-color);
     --table-header-border-bottom-color: var(--dyn-table-header-border-bottom-color, var(--border));
-
-    /** Table header focusable*/
-    /* --table-header-focusable-hover-background: var(--dyn-table-focusable-hover-background, var(--hover)); */
-    /* --table-header-focused-background: var(--dyn-table-header-focused-background, var(--selected)); */
-    /* --table-header-focused-text-color: var(--dyn-table-header-focused-text-color, var(--selected-text)); */
-    /* --table-header-focused-icon-color: var(--dyn-table-header-focused-icon-color, var(--selected-text)); */
-
-    /** Table header resized */
-    /* --table-header-resized-icon-color: var(--dyn-table-header-resized-icon-color, var(--selected-text)); */
 
     /** Table header filter */
     --table-header-filter-border-top-color: var(--dyn-table-header-filter-border-top-color);

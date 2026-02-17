@@ -101,6 +101,12 @@
     emitChange();
   }
 
+  export function setPageSize(size: number) {
+    pageSize = size;
+    currentPage = 1;
+    emitChange();
+  }
+
   /**
    * Resetea la página actual a 1
    */
@@ -111,8 +117,8 @@
 
   export function getState() {
     return {
-      page: currentPage,
-      pageSize
+      page: $state.snapshot(currentPage),
+      pageSize: $state.snapshot(pageSize)
     };
   }
 </script>

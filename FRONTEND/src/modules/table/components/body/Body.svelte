@@ -86,13 +86,23 @@
   }
 
   export function selectAll() {
-    // const allIds = data.map((row) => row[primaryKey]);
-    // selectedIds = allIds;
+    data.forEach((row) => {
+      const key = row[primaryKey];
+      if (!selectedIds.includes(key)) {
+        selectedIds.push(key);
+      }
+    });
+
+    _emitSelection();
   }
 
   export function deselectAll() {
     selectedIds = [];
     _emitSelection();
+  }
+
+  export function getSelectedIds() {
+    return $state.snapshot(selectedIds);
   }
 </script>
 

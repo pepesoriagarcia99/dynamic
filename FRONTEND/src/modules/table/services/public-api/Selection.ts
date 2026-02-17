@@ -8,7 +8,15 @@ export class Selection {
         this.bodyRef = bodyRef;
     }
 
-    // public reset() {
-    //     this.paginationRef.resetPage(true);
-    // }
+    public reset() {
+        this.bodyRef.deselectAll();
+    }
+
+    public selectAll() {
+        this.bodyRef.selectAll();
+    }
+
+    public state(): any[] {
+        return this.bodyRef.getSelectedIds();
+    }
 }
