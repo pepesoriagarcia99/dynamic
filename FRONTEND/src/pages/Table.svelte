@@ -404,10 +404,16 @@
   function resetFilters() {
     tableEl?.filter.reset();
   }
+
+  function refresh() {
+    getUsers();
+  }
 </script>
 
 <div>
   <div class="toolbar">
+    <button disabled={loading} onclick={refresh}> Refrescar </button>
+    <span>|</span>
     <p>Elementos seleccionados: {selection.length}</p>
     <button disabled={loading} onclick={selectAll}> Seleccionar todo </button>
     <button disabled={loading} onclick={resetSelection}> Resetear Selección </button>
@@ -432,7 +438,7 @@
       selectableType="multiple"
       sortableType="multiple"
       pageSizeOptions={[5, 50, 100, 200]}
-      pageSize={100}
+      pageSize={200}
       {onReady}
       {onRowClick}
       {onSelectionChange}

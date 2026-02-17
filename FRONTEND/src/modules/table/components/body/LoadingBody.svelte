@@ -1,5 +1,4 @@
 <script lang="ts">
-  // import { untrack } from 'svelte';
   import type { Column } from '../../models/column/Column';
   import Skeleton from '../Skeleton.svelte';
 
@@ -11,9 +10,7 @@
   /** Inputs */
   const { columns, pageSize = 100 }: LoadingBodyProps = $props();
 
-  // Optimización: usar array directo en lugar de Array.from con mapeo
-  // let skeletonRows = untrack(() => pageSize) ?? 100;
-
+  /** States */
   const colClasses = $derived(columns?.map((_, iCol) => `loading-column loading-column-${iCol}`) ?? []);
 </script>
 

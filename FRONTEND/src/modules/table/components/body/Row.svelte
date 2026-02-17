@@ -1,12 +1,10 @@
 <script lang="ts">
-  import { getContext } from 'svelte';
-
-  import { ROW_CLICK_EVENT_NAME, TABLE_CONFIGURATION_STATE, TOOLTIP_DELAY } from '../../constant';
+  import { ROW_CLICK_EVENT_NAME, TOOLTIP_DELAY } from '../../constant';
 
   import type { Column, ColumnCompiled } from '../../models/column/Column';
   import type { RowData } from '../../models/RowData';
   import type { RowEvent, RowEventType } from '../../models/event/RowEvent';
-  import type { TableConfiguration } from '../../models/configuration/TableConfiguration';
+  import type { SelectableType } from '../../models/configuration/TableConfiguration';
 
   import { tooltip } from '../../../tooltip/directives/tooltip';
 
@@ -14,27 +12,23 @@
   import BooleanComponent from './value/Boolean.svelte';
 
   interface RowProps {
-    index?: number;
-    columns?: ColumnCompiled[];
+    index: number;
+    columns: ColumnCompiled[];
     row: RowData;
     selected: boolean;
+    selectableType: SelectableType;
     ontoggle: (event: RowEvent) => void;
   }
   /** Inputs */
-  const { index = 0, columns = [], row, selected, ontoggle }: RowProps = $props();
+  const { index, columns, row, selected, selectableType, ontoggle }: RowProps = $props();
 
   /** Values */
   let tr: HTMLElement;
   const simpleTypes = new Set(['string', 'number', 'date', 'selector']);
 
   /** States */
-  const tableConfiguration: () => TableConfiguration = getContext(TABLE_CONFIGURATION_STATE);
-
-  let rowStaticStyle: string = `${index % 2 === 0 ? 'row-even' : 'row-odd'}`;
-  const rowStyle: string = $derived(
-    ['row', selected ? 'row-selected' : tableConfiguration().selectableType !== 'none' ? 'row-selectable' : null]
-      .filter(Boolean)
-      .join(' ')
+  const rowStyle = $derived(
+    `row ${index % 2 === 0 ? 'row-even' : 'row-odd'} ${selected ? 'row-selected' : selectableType !== 'none' ? 'row-selectable' : ''}`
   );
 
   /** Methods */
@@ -66,19 +60,45 @@
     customEventDetail.mouse.preventDefault = () => event.preventDefault();
     ontoggle(customEventDetail);
   }
+
+  function resolveColumnFromEvent(event: MouseEvent): Column | undefined {
+    const td = (event.target as HTMLElement | null)?.closest('td[data-col-index]') as HTMLTableCellElement | null;
+    if (!td) return undefined;
+
+    const index = Number(td.dataset.colIndex);
+    if (Number.isNaN(index)) return undefined;
+
+    return columns[index] as unknown as Column;
+  }
+
+  function onLeftClick(event: MouseEvent) {
+    onRowClick(event, 'leftclick', resolveColumnFromEvent(event));
+  }
+
+  function onRightClick(event: MouseEvent) {
+    onRowClick(event, 'rightclick', resolveColumnFromEvent(event));
+  }
+
+  function onDoubleClick(event: MouseEvent) {
+    onRowClick(event, 'doubleclick', resolveColumnFromEvent(event));
+  }
 </script>
 
-<tr bind:this={tr} part={rowStyle + ' ' + rowStaticStyle} class={rowStyle + ' ' + rowStaticStyle}>
-  {#each columns as column}
+<tr
+  bind:this={tr}
+  part={rowStyle}
+  class={rowStyle}
+  onclick={onLeftClick}
+  oncontextmenu={onRightClick}
+  ondblclick={onDoubleClick}
+>
+  {#each columns as column, colIndex}
     {@const value = column.compiled.valueGetter(row)}
-
     <td
+      data-col-index={colIndex}
       style={column.compiled.style?.column}
       class={column.compiled.class.column}
       part={column.compiled.class.column}
-      onclick={(event) => onRowClick(event, 'leftclick', column)}
-      oncontextmenu={(event) => onRowClick(event, 'rightclick', column)}
-      ondblclick={(event) => onRowClick(event, 'doubleclick', column)}
     >
       {#if simpleTypes.has(column.type)}
         <div
@@ -97,7 +117,6 @@
         <Avatar {value} />
       {:else if column.type === 'image'}
         <img
-          {@attach tooltip({ value, position: 'right', delay: TOOLTIP_DELAY })}
           src={value.src}
           alt={value?.alt}
           class={column.compiled.class.columnValue}

@@ -107,7 +107,14 @@
 </script>
 
 {#each data as row, index (row[primaryKey])}
-  <Row {index} {columns} {row} selected={selectedIds.includes(row[primaryKey] as any)} ontoggle={onRowClick} />
+  <Row
+    {index}
+    {columns}
+    {row}
+    selectableType={tableConfiguration().selectableType}
+    selected={selectedIds.includes(row[primaryKey] as any)}
+    ontoggle={onRowClick}
+  />
 {/each}
 
 <style>
