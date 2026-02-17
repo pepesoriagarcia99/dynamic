@@ -159,7 +159,9 @@
             <Sort {index} {column} sort={sorts.find((e) => e.key === column.key) || null} {handleSort} />
           {/if}
 
-          {#if tableConfiguration().filterableType === 'advanced' && column.filterable === true}
+          {#if $$slots['advanced'] && tableConfiguration().filterableType === 'custom'}
+            <slot name="advanced" {index} {column} />
+          {:else if tableConfiguration().filterableType === 'advanced' && column.filterable === true}
             <AdvanceFilter {index} {column} />
           {/if}
         </div>
@@ -185,8 +187,8 @@
 
   {#if tableConfiguration().filterableType === 'simple'}
     <SimpleFilter {columns} />
-  {:else if tableConfiguration().filterableType === 'custom'}
-    <slot name="custom-filter" {columns} />
+  {:else if $$slots['simple'] && tableConfiguration().filterableType === 'custom'}
+    <slot name="simple" />
   {/if}
 </thead>
 

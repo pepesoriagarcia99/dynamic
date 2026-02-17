@@ -87,7 +87,8 @@
   let contextMenuEvent = $state<RowEvent | undefined>(undefined);
   let hasContextMenuSlot = $derived($$slots['context-menu']);
 
-  let hasCustomFilterSlot = $derived($$slots['custom-filter']);
+  let hasCustomFilterSlot = $derived($$slots['custom-simple-filter'] || $$slots['custom-advanced-filter']);
+
 
   const compiledColumns = $derived(columns.map(columnCompiler));
 
@@ -306,7 +307,8 @@
     <div class="table-scroll" part="table-scroll" onscroll={handleScroll}>
       <table class="table" part="table">
         <Header bind:this={headerRef} columns={compiledColumns}>
-          <slot name="custom-filter" event={contextMenuEvent} />
+          <slot slot="simple" name="custom-simple-filter" event={contextMenuEvent} />
+          <slot slot="advanced" name="custom-advanced-filter" event={contextMenuEvent} />
         </Header>
 
         <!-- tbody de carga -->
