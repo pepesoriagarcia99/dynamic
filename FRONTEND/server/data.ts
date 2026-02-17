@@ -1,6 +1,8 @@
 import { IUser } from "./User.js";
 
-export const users: IUser[] = [
+
+
+const usersSeed: IUser[] = [
   {
     id: "u001",
     avatar: { picture: "https://gravatar.com/avatar/1?d=identicon", alt: "Avatar 1", name: "Ana Ruiz" },
@@ -33512,3 +33514,10 @@ export const users: IUser[] = [
     referralCode: "REF-MOCK-600",
   },
 ];
+
+const getRandomRating = (): number => Math.floor(Math.random() * 11);
+
+export const users: IUser[] = usersSeed.map((user) => ({
+  ...user,
+  rating: getRandomRating(),
+}));
