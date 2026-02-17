@@ -68,5 +68,6 @@ export interface ColumnCompiled extends Column {
       column?: string;
     },
     valueGetter: (row: any) => any;
+    styleGetter: (value: any) => string;
   }
 }

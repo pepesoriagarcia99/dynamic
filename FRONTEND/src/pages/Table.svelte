@@ -203,6 +203,15 @@
       configuration: {
         colorConfiguration: [
           {
+            value: 'enterprise',
+            style: {
+              color: '#1E3A8A',
+              'background-color': '#DBEAFE', 
+              'border-radius': '4px',
+              'font-weight': '600'
+            }
+          },
+          {
             value: 'pro',
             style: {
               color: '#065F46',

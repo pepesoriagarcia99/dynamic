@@ -81,13 +81,11 @@
       ondblclick={(event) => onRowClick(event, 'doubleclick', column)}
     >
       {#if simpleTypes.has(column.type)}
-        <!-- {@const style = column.compiled.styleGetter!(value)} -->
-
-        <!-- {style} -->
         <div
           {@attach tooltip({ value, position: 'right', delay: TOOLTIP_DELAY })}
           class={column.compiled.class.columnValue}
           part={column.compiled.class.columnValue}
+          style={column.compiled.styleGetter(value)}
         >
           {value}
         </div>
