@@ -18,6 +18,7 @@ export default defineConfig({
     })
   ],
   build: {
+    outDir: 'dist/lib-dynamic',
     minify: 'terser',
     terserOptions: {
       format: {
@@ -27,12 +28,12 @@ export default defineConfig({
     lib: {
       entry: './src/main-wc.ts',
       name: 'Dynamic',
-      fileName: 'dynamic',
+      fileName: 'index',
       formats: ['umd']
     },
     rollupOptions: {
       output: {
-        entryFileNames: 'dynamic.js',
+        entryFileNames: 'index.js',
         inlineDynamicImports: true,
         banner: undefined,
         footer: undefined
