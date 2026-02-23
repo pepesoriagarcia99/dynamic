@@ -55,6 +55,8 @@
       {/if}
 
       <div class="block">
+        <button onclick={() => onRemoveCondition(element.value, child)}>remove</button>
+
         <Block element={child} />
       </div>
     {/if}
