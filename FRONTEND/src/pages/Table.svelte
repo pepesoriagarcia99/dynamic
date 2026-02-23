@@ -432,7 +432,7 @@
       {columns}
       {count}
       {data}
-      filterableType="simple"
+      filterableType="advanced"
       pageableType="pagination"
       resizable={true}
       selectableType="multiple"

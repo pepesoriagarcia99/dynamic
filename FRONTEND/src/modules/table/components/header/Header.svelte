@@ -11,7 +11,7 @@
   import { tooltip } from '../../../tooltip/directives/tooltip';
 
   import SimpleFilter from './filter/SimpleFilter.svelte';
-  import AdvanceFilter from './filter/AdvanceFilter.svelte';
+  import AdvanceFilter from './filter/advance-filter/AdvanceFilter.svelte';
   import Sort from './Sort.svelte';
 
   interface HeaderProps {

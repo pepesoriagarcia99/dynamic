@@ -1,15 +1,45 @@
 <script lang="ts">
   import { getContext } from 'svelte';
 
-  import { LOADING_STATE } from '../../../constant';
+  import { LOADING_STATE } from '../../../../constant';
 
-  import advanceFilterIcon from '../../../../../assets/svg/advance-filter.svg';
-  import advanceFilterFillIcon from '../../../../../assets/svg/advance-filter-fill.svg';
+  import advanceFilterIcon from '../../../../../../assets/svg/advance-filter.svg';
+  import advanceFilterFillIcon from '../../../../../../assets/svg/advance-filter-fill.svg';
 
-  import type { Column } from '../../../models/column/Column';
+  import type { Column } from '../../../../models/column/Column';
 
-  import Skeleton from '../../Skeleton.svelte';
-  import SelectorControl from '../../../../controls/components/SelectorControl.svelte';
+  import Skeleton from '../../../Skeleton.svelte';
+  import Block from './Block.svelte';
+  import type { Element } from './models/elements';
+
+  // name contains "John" AND (age greater than 18 OR status equals "active")
+  // const filterTree: FilterGroup = {
+  //   type: 'group',
+  //   operator: 'AND',
+  //   conditions: [
+  //     {
+  //       field: 'name',
+  //       operator: 'contains',
+  //       value: 'John'
+  //     },
+  //     {
+  //       type: 'group',
+  //       operator: 'OR',
+  //       conditions: [
+  //         {
+  //           field: 'age',
+  //           operator: 'greaterThan',
+  //           value: 18
+  //         },
+  //         {
+  //           field: 'status',
+  //           operator: 'equals',
+  //           value: 'active'
+  //         }
+  //       ]
+  //     }
+  //   ]
+  // };
 
   interface AdvanceFilterIconProps {
     index: number;
@@ -18,6 +48,7 @@
 
   /** Inputs */
   let { index, column }: AdvanceFilterIconProps = $props();
+  console.log('🚀 ~ column:', column);
 
   /** States */
   const loading: () => boolean = getContext(LOADING_STATE);
@@ -25,9 +56,40 @@
   let buttonRef: HTMLButtonElement | null = $state(null);
   let value = $state<any>(null);
 
-  const partNamesIcon: string = $derived(`advance-filter-icon ${value || showModal ? 'advance-filter-icon-active' : ''} advance-filter-icon-${index}`);
+  const partNamesIcon: string = $derived(
+    `advance-filter-icon ${value || showModal ? 'advance-filter-icon-active' : ''} advance-filter-icon-${index}`
+  );
   const partNamesContainer: string = `advance-filter-container advance-filter-container-${index}`;
   const partNamesButton: string = `advance-filter-btn advance-filter-btn-${index}`;
+
+  const INIT_FILTER: Element = {
+    type: 'block',
+    operator: 'AND',
+    value: [
+      {
+        type: 'block',
+        operator: 'OR',
+        value: [
+          {
+            type: 'condition',
+            operator: 'contains',
+            value: 'John'
+          },
+          {
+            type: 'condition',
+            operator: 'contains',
+            value: 'John'
+          }
+        ]
+      },
+      {
+        type: 'condition',
+        operator: 'contains',
+        value: 'John'
+      }
+    ]
+  };
+  let filterTree = $state<Element>(INIT_FILTER);
 
   /** Methods */
   function toggleShowModal(event?: MouseEvent) {
@@ -56,6 +118,14 @@
   //     composed: true
   //   })
   // );
+  // }
+
+  // function onAddCondition(conditionType: 'AND' | 'OR') {
+  // (filterTree.conditions as BlockType[]).push({
+  //   type: 'block',
+  //   operator: conditionType,
+  //   conditions: []
+  // });
   // }
 </script>
 
@@ -90,25 +160,9 @@
         onkeydown={(e) => e.stopPropagation()}
       >
         <div class="advance-filter-modal-content">
-          <div class="selector-condition">
-            <SelectorControl options={[1, 2, 3, 4]} bind:value />
-          </div>
+          <button onclick={() => (filterTree = INIT_FILTER)}>clear</button>
 
-          <div>
-            {#if column.type === 'string'}
-              <input type="text" placeholder="Value" />
-            {:else if column.type === 'number'}
-              <input type="number" placeholder="Value" />
-            {:else if column.type === 'date'}
-              <input type="date" placeholder="Value" />
-            {/if}
-          </div>
-          <div>
-            <button onclick={() => (value = null)}>Clear</button>
-            <button onclick={() => toggleShowModal()}>Apply</button>
-        </div>
-
-
+          <Block element={filterTree} />
         </div>
       </div>
     {/if}

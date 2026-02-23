@@ -9,7 +9,7 @@
   let {
     id = crypto.randomUUID(),
     label,
-    placeholder = 'Enter key to search',
+    placeholder = '',
     value = $bindable(undefined),
     disabled = false,
     type = 'text',
