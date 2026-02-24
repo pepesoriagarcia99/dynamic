@@ -59,16 +59,6 @@
 <style>
   @import '../styles/control.css';
 
-  .basic-control-container {
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  .basic-control-input {
-    width: 100%;
-    box-sizing: border-box;
-  }
-
   input[type='number'] {
     appearance: textfield;
     -moz-appearance: textfield;

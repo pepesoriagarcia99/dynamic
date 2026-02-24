@@ -9,37 +9,10 @@
   import type { Column } from '../../../../models/column/Column';
 
   import Skeleton from '../../../Skeleton.svelte';
-  import Block from './Block.svelte';
-  import type { Element } from './models/elements';
+  import Block from './components/Block.svelte';
+  import type { Element } from './models/Elements';
 
-  // name contains "John" AND (age greater than 18 OR status equals "active")
-  // const filterTree: FilterGroup = {
-  //   type: 'group',
-  //   operator: 'AND',
-  //   conditions: [
-  //     {
-  //       field: 'name',
-  //       operator: 'contains',
-  //       value: 'John'
-  //     },
-  //     {
-  //       type: 'group',
-  //       operator: 'OR',
-  //       conditions: [
-  //         {
-  //           field: 'age',
-  //           operator: 'greaterThan',
-  //           value: 18
-  //         },
-  //         {
-  //           field: 'status',
-  //           operator: 'equals',
-  //           value: 'active'
-  //         }
-  //       ]
-  //     }
-  //   ]
-  // };
+  import dotEditIcon from '../../../../../../assets/svg/dots-options.svg';
 
   interface AdvanceFilterIconProps {
     index: number;
@@ -56,6 +29,7 @@
   let showModal = $state<boolean>(false);
   let buttonRef: HTMLButtonElement | null = $state(null);
   let value = $state<any>(null);
+  let showEditorOperatorMenu = $state(false);
 
   const partNamesIcon: string = $derived(
     `advance-filter-icon ${value || showModal ? 'advance-filter-icon-active' : ''} advance-filter-icon-${index}`
@@ -74,19 +48,19 @@
           {
             type: 'condition',
             operator: 'contains',
-            value: 'John'
+            value: 'Manolo'
           },
           {
             type: 'condition',
             operator: 'contains',
-            value: 'John'
+            value: 'Pepe'
           }
         ]
       },
       {
         type: 'condition',
         operator: 'contains',
-        value: 'John'
+        value: 'Paco'
       }
     ]
   };
@@ -110,6 +84,19 @@
 
   export function closeModal() {
     showModal = false;
+  }
+
+  function toggleOperatorMenu(event: MouseEvent) {
+    event.stopPropagation();
+    showEditorOperatorMenu = !showEditorOperatorMenu;
+  }
+
+  function switchOperator() {
+    filterTree = {
+      ...filterTree,
+      operator: filterTree.operator === 'AND' ? 'OR' : 'AND'
+    };
+    showEditorOperatorMenu = false;
   }
 
   // function controlEvent() {
@@ -169,9 +156,26 @@
         onkeydown={(e) => e.stopPropagation()}
       >
         <div class="advance-filter-modal-content">
-          <button onclick={() => (filterTree = INIT_FILTER)}>clear</button>
+          <div class="advance-filter-modal-header">
+            <button class="edit-block-btn" part="edit-block-btn" onclick={toggleOperatorMenu}>
+              <img src={dotEditIcon} alt="Edit block" class="edit-block-icon" part="edit-block-icon" />
+            </button>
+            {#if showEditorOperatorMenu}
+              <!-- onclick|stopPropagation -->
+              <div class="operator-menu">
+                <button class="operator-switch-btn" onclick={switchOperator}>
+                  Cambiar a {filterTree.operator === 'AND' ? 'OR' : 'AND'}
+                </button>
+              </div>
+            {/if}
+          </div>
 
           <Block element={filterTree} />
+
+          <div class="advance-filter-modal-actions">
+            <button class="clear-action" onclick={() => (filterTree = INIT_FILTER)}>clear</button>
+            <button class="apply-action">apply</button>
+          </div>
         </div>
       </div>
     {/if}
@@ -207,6 +211,31 @@
     transform: scale(1.2);
   }
 
+  .operator-menu {
+    position: absolute;
+    top: 36px;
+    right: 12px;
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.08);
+    z-index: 1100;
+    padding: 4px 0;
+    min-width: 120px;
+  }
+  .operator-switch-btn {
+    background: none;
+    border: none;
+    padding: 8px 16px;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .operator-switch-btn:hover {
+    background: #f1f3f5;
+  }
+
   .advance-filter-modal {
     position: absolute;
     top: calc(100% + 4px);
@@ -221,11 +250,51 @@
     animation: fadeIn 150ms ease-in;
   }
 
+  .advance-filter-modal-header {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .edit-block-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px;
+  }
+
+  .edit-block-icon {
+    width: 22px;
+    height: 22px;
+  }
+
   .advance-filter-modal-content {
     padding: 12px;
   }
 
-  .selector-condition {
+  .advance-filter-modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .clear-action {
+    background-color: transparent;
+    border: 1px solid #dee2e6;
+    color: #212529;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  .apply-action {
+    background-color: #007bff;
+    border: 1px solid #007bff;
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
     width: 100%;
   }
 </style>

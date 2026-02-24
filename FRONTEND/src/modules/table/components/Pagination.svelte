@@ -1,7 +1,6 @@
 <script lang="ts">
   import { getContext } from 'svelte';
 
-
   import firstPageIcon from '../../../assets/svg/arrow-to-left.svg';
   import lastPageIcon from '../../../assets/svg/arrow-to-right.svg';
   import previousPageIcon from '../../../assets/svg/left-arrow.svg';
@@ -32,7 +31,6 @@
   let currentPage: number = $state(1);
   let totalPages: number = $derived(Math.ceil(count / pageSize));
   let showPageNumbers: number[] = $state([]);
-
 
   $effect(() => {
     if (totalPages <= 5) {
@@ -176,13 +174,15 @@
   >
     <img src={lastPageIcon} alt="last page" class="last-page-icon" part="last-page-icon" />
   </button>
-  <SelectorControl
-    style="width: auto;"
-    options={pageSizeOptions}
-    bind:value={pageSize}
-    onChange={onChangePageSize}
-    disabled={loading()}
-  />
+  <div>
+    <SelectorControl
+      style="width: auto;"
+      options={pageSizeOptions}
+      bind:value={pageSize}
+      onChange={onChangePageSize}
+      disabled={loading()}
+    />
+  </div>
 </div>
 
 <style>

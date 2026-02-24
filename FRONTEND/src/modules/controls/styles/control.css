@@ -4,6 +4,8 @@
     flex-direction: column;
     gap: 0.5rem;
     height: var(--control-height);
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .control-item {
@@ -19,6 +21,7 @@
         box-shadow 0.2s;
     appearance: none;
     width: 100%;
+    box-sizing: border-box;
 }
 
 .control-label {
