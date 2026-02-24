@@ -44,10 +44,11 @@
   interface AdvanceFilterIconProps {
     index: number;
     column: Column;
+    onOpen: (index: number) => void;
   }
 
   /** Inputs */
-  let { index, column }: AdvanceFilterIconProps = $props();
+  let { index, column, onOpen = () => {} }: AdvanceFilterIconProps = $props();
   console.log('🚀 ~ column:', column);
 
   /** States */
@@ -95,12 +96,20 @@
   function toggleShowModal(event?: MouseEvent) {
     event?.stopPropagation();
     showModal = !showModal;
+
+    if (showModal) {
+      onOpen(index);
+    }
   }
 
   function handleClickOutside(event: MouseEvent) {
     if (showModal && buttonRef && !buttonRef.contains(event.target as Node)) {
       showModal = false;
     }
+  }
+
+  export function closeModal() {
+    showModal = false;
   }
 
   // function controlEvent() {
