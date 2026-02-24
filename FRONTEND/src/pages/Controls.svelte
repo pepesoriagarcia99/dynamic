@@ -1,21 +1,22 @@
 <script lang="ts">
+  // @ts-ignore
   import BasicControl from '../modules/controls/components/BasicControl.svelte';
-  import SelectorControl from '../modules/controls/components/SelectorControl.svelte';
-  import CheckControl from '../modules/controls/components/CheckControl.svelte';
+  // import SelectorControl from '../modules/controls/components/SelectorControl.svelte';
+  // import CheckControl from '../modules/controls/components/CheckControl.svelte';
 </script>
 
 <div class="content">
   <h3>Basico tipo text</h3>
-  <BasicControl
+  <dyn-basic-control
     label="Control externo de prueba"
     placeholder="Escribe algo y presiona enter"
     value={'valor test'}
     type="text"
     tooltip="Este es un tooltip de explicacion para el control externo"
     onChange={(value: any) => alert(`Valor ingresado: ${value}`)}
-  />
+  ></dyn-basic-control>
 
-  <h3>Basico tipo number</h3>
+  <!-- <h3>Basico tipo number</h3>
   <BasicControl
     label="Control externo de prueba"
     placeholder="Escribe algo y presiona enter"
@@ -51,7 +52,7 @@
     tooltip="Este es un tooltip de explicacion para el check externo"
     triState={false}
     onChange={(value: any) => alert(`Valor seleccionado: ${value}`)}
-  />
+  /> -->
 </div>
 
 <style>
