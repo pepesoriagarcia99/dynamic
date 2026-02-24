@@ -50,6 +50,11 @@ export interface Column {
   resizable?: boolean;
 
   /**
+   * Indica si la columna se muestra en vertical (en lugar de horizontal).
+   */
+  vertical?: boolean;
+
+  /**
    * Configuracion dinamica para las columnas
    */
   configuration?: ColumnConfiguration;

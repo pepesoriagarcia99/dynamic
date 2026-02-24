@@ -191,15 +191,13 @@
       key: 'isVerified',
       name: 'Verificado',
       type: 'boolean',
-      filterable: true,
-      sortable: true
+      vertical: true,
     },
     {
       key: 'subscription.plan',
       name: 'Plan de suscripción',
       type: 'string',
-      filterable: true,
-      sortable: true,
+      vertical: true,
       configuration: {
         colorConfiguration: [
           {

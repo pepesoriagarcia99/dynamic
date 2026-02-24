@@ -139,7 +139,7 @@
     {#each columns as column, index}
       {@const partNamesTh = `column-header-th column-header-th-${index}`}
       {@const partNamesContent = `column-header-content column-header-content-${index}`}
-      {@const partNamesName = `column-header-name column-header-name-${index}`}
+      {@const partNamesName = `column-header-name column-header-name-${index} ${column.vertical === true ? 'column-header-name-vertical' : ''}`}
 
       <th bind:this={thElements[index]} class={partNamesTh} part={partNamesTh} style={column.compiled.style?.column}>
         <div class={partNamesContent} part={partNamesContent}>
@@ -243,6 +243,18 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     max-width: 100%;
+    cursor: default;
+  }
+
+  .column-header-name-vertical {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    white-space: nowrap;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 4px;
+    max-height: var(--table-header-height);
   }
 
   .resize-handle {
