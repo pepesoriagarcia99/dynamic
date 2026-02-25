@@ -359,12 +359,6 @@
     width: 100%;
     height: 100%;
 
-    /** TABLE */
-    --hover: #e2e8f0;
-    --selected: #000000;
-    --selected-text: #ffffff;
-    --border: #d1d1d1;
-
     /** Table column */
     --table-column-margin-left: var(--dyn-table-column-margin-left, 12px);
     --table-column-margin-right: var(--dyn-table-column-margin-right, 12px);
@@ -413,22 +407,6 @@
     /** Context menu */
     --context-menu-border-color: var(--dyn-table-context-menu-border-color, var(--table-border-color));
     --context-menu-background: var(--dyn-table-context-menu-background, #ffffff);
-
-    /** CONTROLS */
-    --control-text-color: var(--dyn-table-control-color, #495057);
-    --control-background-color: var(--dyn-table-control-background, #ffffff);
-    --control-background-disabled-color: var(--dyn-table-control-disabled-background-color, #e9ecef);
-    --control-border-color: var(--dyn-table-control-border-color, #cbd5e1);
-    --control-border-hover-color: var(--dyn-table-control-border-hover-color, #94a3b8);
-    --control-border-focus-color: var(--dyn-table-control-border-hover-color, #020617);
-    --control-height: var(--dyn-table-control-height, 34px);
-    --control-border-radius: var(--dyn-table-control-border-radius, 6px);
-
-    /** TOOLTIP */
-    /** ESTO NO SE USA, EL MAPEO ESTA EN tooltip.css */
-    --tooltip-background-color: var(--dyn-tooltip-background-color, #020617);
-    --tooltip-text-color: var(--dyn-tooltip-text-color, #ffffff);
-    --tooltip-font-size: var(--dyn-tooltip-font-size, 14px);
   }
 
   .table-root {

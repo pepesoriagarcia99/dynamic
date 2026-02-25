@@ -12,10 +12,12 @@
 
   interface BlockProps {
     element: Element;
+    columns?: string[];
+    columnField?: string;
   }
 
   /** Inputs */
-  let { element = $bindable() }: BlockProps = $props();
+  let { element, columns, columnField }: BlockProps = $props();
 
   let operatorMenuRef: HTMLDivElement | null = $state(null);
   let showEditorOperatorMenu = $state(false);
@@ -23,6 +25,7 @@
   function onAddCondition(conditions: Element[]) {
     conditions.push({
       type: 'condition',
+      field: columnField ?? '',
       operator: '',
       value: '',
       expanded: true
@@ -68,7 +71,7 @@
       {#if index !== 0}
         <div>{element.operator}</div>
       {/if}
-      <Condition {element} {child} />
+      <Condition {element} {child} {columns} />
     {:else if child.type === 'block'}
       {#if index !== 0}
         <div>{element.operator}</div>

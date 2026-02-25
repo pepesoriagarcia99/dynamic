@@ -1,3 +1,14 @@
+:root {
+  --control-text-color: var(--dyn-control-color, #495057);
+  --control-background-color: var(--dyn-control-background, #ffffff);
+  --control-background-disabled-color: var(--dyn-control-disabled-background-color, #e9ecef);
+  --control-border-color: var(--dyn-control-border-color, #cbd5e1);
+  --control-border-hover-color: var(--dyn-control-border-hover-color, #94a3b8);
+  --control-border-focus-color: var(--dyn-control-border-focus-color, #020617);
+  --control-height: var(--dyn-control-height, 34px);
+  --control-border-radius: var(--dyn-control-border-radius, 6px);
+}
+
 .control-container {
     display: flex;
     align-items: center;

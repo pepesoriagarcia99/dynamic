@@ -1,1 +1,14 @@
 @import "tailwindcss";
+
+:root {
+    --hover: #e2e8f0;
+    --border: #d1d1d1;
+    --selected: #000000;
+    --selected-text: #ffffff;
+    
+
+    /** TOOLTIP */
+    --tooltip-background-color: var(--dyn-tooltip-background-color, #020617);
+    --tooltip-text-color: var(--dyn-tooltip-text-color, #ffffff);
+    --tooltip-font-size: var(--dyn-tooltip-font-size, 14px);
+}

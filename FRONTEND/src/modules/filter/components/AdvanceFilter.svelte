@@ -1,84 +1,69 @@
-<script lang="ts">
-  import { getContext } from 'svelte';
+<svelte:options customElement="dyn-advance-filter" />
 
-  import { LOADING_STATE } from '../../table/constant';
+<script lang="ts">
+import '../../controls/styles/control.css';
+  // import { getContext } from 'svelte';
+
+  // import { LOADING_STATE } from '../../table/constant';
 
   import type { Element } from '../models/Elements';
 
-  import advanceFilterIcon from '../../../assets/svg/advance-filter.svg';
-  import advanceFilterFillIcon from '../../../assets/svg/advance-filter-fill.svg';
+  // import advanceFilterIcon from '../../../assets/svg/advance-filter.svg';
+  // import advanceFilterFillIcon from '../../../assets/svg/advance-filter-fill.svg';
 
-  import Skeleton from '../../table/components/Skeleton.svelte';
+  // import Skeleton from '../../table/components/Skeleton.svelte';
   import Block from './Block.svelte';
   import DotsMenu from '../../core/components/DotsMenu.svelte';
   import Button from '../../core/components/Button.svelte';
-
-  interface AdvanceFilterIconProps {
-    index: number;
-    columnField?: string;
-    onOpen: (index: number) => void;
-  }
-
-  /** Inputs */
-  let { index, columnField, onOpen = () => {} }: AdvanceFilterIconProps = $props();
-  console.log('🚀 ~ columnField:', columnField);
-
-  /** States */
-  const loading: () => boolean = getContext(LOADING_STATE);
-  let showModal = $state<boolean>(false);
-  let buttonRef: HTMLButtonElement | null = $state(null);
-  let value = $state<any>(null);
-  let showEditorOperatorMenu = $state(false);
-
-  const partNamesIcon: string = $derived(
-    `advance-filter-icon ${value || showModal ? 'advance-filter-icon-active' : ''} advance-filter-icon-${index}`
-  );
-  const partNamesContainer: string = `advance-filter-container advance-filter-container-${index}`;
-  const partNamesButton: string = `advance-filter-btn advance-filter-btn-${index}`;
 
   const INIT_FILTER: Element = {
     type: 'block',
     operator: 'AND',
     expanded: true,
-    value: [
-      {
-        type: 'block',
-        operator: 'OR',
-        expanded: true,
-        value: [
-          {
-            type: 'condition',
-            operator: 'contains',
-            value: 'Manolo',
-            expanded: false
-          },
-          {
-            type: 'condition',
-            operator: 'contains',
-            value: 'Pepe',
-            expanded: false
-          }
-        ]
-      },
-      {
-        type: 'condition',
-        operator: 'contains',
-        value: 'Paco',
-        expanded: false
-      }
-    ]
+    value: []
   };
+
+  interface AdvanceFilterIconProps {
+    index: number;
+    columnField?: string;
+    columns?: string[];
+    // onOpen: (index: number) => void;
+  }
+
+  /** Inputs */
+  let { index, columnField, columns }: AdvanceFilterIconProps = $props();
+
+  /** Check */
+  $effect(() => {
+    if (!columnField && (!columns || columns.length === 0)) {
+      throw new Error('AdvanceFilterIcon requires either columnField or columns prop');
+    }
+  });
+
+  /** States */
+  // const loading: () => boolean = getContext(LOADING_STATE);
+  let showModal = $state<boolean>(false);
+  let buttonRef: HTMLButtonElement | null = $state(null);
+  // let value = $state<any>(null);
+  let showEditorOperatorMenu = $state(false);
+
+  // const partNamesIcon: string = $derived(
+  //   `advance-filter-icon ${value || showModal ? 'advance-filter-icon-active' : ''} advance-filter-icon-${index}`
+  // );
+  const partNamesContainer: string = `advance-filter-container advance-filter-container-${index}`;
+  // const partNamesButton: string = `advance-filter-btn advance-filter-btn-${index}`;
+
   let filterTree = $state<Element>(INIT_FILTER);
 
   /** Methods */
-  function toggleShowModal(event?: MouseEvent) {
-    event?.stopPropagation();
-    showModal = !showModal;
+  // function toggleShowModal(event?: MouseEvent) {
+  //   event?.stopPropagation();
+  //   showModal = !showModal;
 
-    if (showModal) {
-      onOpen(index);
-    }
-  }
+  //   if (showModal) {
+  //     onOpen(index);
+  //   }
+  // }
 
   function handleClickOutside(event: MouseEvent) {
     if (showModal && buttonRef && !buttonRef.contains(event.target as Node)) {
@@ -127,10 +112,10 @@
 <svelte:window on:click={handleClickOutside} />
 
 <div class={partNamesContainer} part={partNamesContainer}>
-  {#if loading() === true}
+  <!-- {#if loading() === true}
     <Skeleton width="26px" height="26px" />
-  {:else}
-    <button
+  {:else} -->
+  <!-- <button
       bind:this={buttonRef}
       onclick={(e) => toggleShowModal(e)}
       aria-label="Advance Filter"
@@ -142,10 +127,10 @@
       {:else}
         <img src={advanceFilterIcon} alt="Advance filter" class={partNamesIcon} part={partNamesIcon} />
       {/if}
-    </button>
+    </button> -->
 
-    {#if showModal}
-      <div
+  <!-- {#if showModal} -->
+  <!-- <div
         class="advance-filter-modal"
         part="advance-filter-modal"
         role="dialog"
@@ -163,19 +148,45 @@
             </DotsMenu>
           </div>
 
-          <Block element={filterTree} />
+          <Block element={filterTree} {columns} {columnField} />
 
           <div class="advance-filter-modal-actions">
             <Button type="basic" onClick={() => (filterTree = INIT_FILTER)}>clear</Button>
             <Button type="primary">apply</Button>
           </div>
         </div>
-      </div>
-    {/if}
-  {/if}
+      </div> -->
+  <!-- {/if} -->
+  <!-- {/if} -->
+</div>
+
+<!-- role="dialog"
+  aria-modal="true"
+  tabindex="-1"
+    onclick={(e) => e.stopPropagation()}
+  onkeydown={(e) => e.stopPropagation()} -->
+<div class={partNamesContainer} part={partNamesContainer}>
+  <div class="advance-filter-modal-content">
+    <div class="advance-filter-modal-header">
+      <DotsMenu>
+        <Button type="text" onClick={switchOperator}>
+          Cambiar a {filterTree.operator === 'AND' ? 'OR' : 'AND'}
+        </Button>
+      </DotsMenu>
+    </div>
+
+    <Block element={filterTree} {columns} {columnField} />
+
+    <div class="advance-filter-modal-actions">
+      <Button type="basic" onClick={() => (filterTree = INIT_FILTER)}>clear</Button>
+      <Button type="primary">apply</Button>
+    </div>
+  </div>
 </div>
 
 <style>
+  @import '../../controls/styles/control.css';
+
   .advance-filter-btn {
     display: flex;
     align-items: center;

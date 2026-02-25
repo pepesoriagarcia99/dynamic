@@ -21,14 +21,15 @@
 
 export type Element = ConditionELement | BlockElement;
 
-interface ConditionELement {
+export interface ConditionELement {
   type: 'condition';
+  field: string;
   operator: string;
   value: any;
   expanded: boolean;
 }
 
-interface BlockElement {
+export interface BlockElement {
   type: 'block';
   operator: 'AND' | 'OR';
   value: Element[];

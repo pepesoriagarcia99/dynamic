@@ -19,10 +19,6 @@
 </button>
 
 <style>
-  :host {
-    --default-border-color: #e5e7eb;
-  }
-
   button :global(img) {
     width: 18px;
     height: 18px;
@@ -53,13 +49,13 @@
 
   .basic {
     border-radius: 4px;
-    border: 1px solid var(--default-border-color);
+    border: 1px solid var(--border);
     background-color: white;
   }
 
   .basic:hover {
-    border: 1.5px solid #212529;
-    background-color: #f5f5f5;
+    border: 1.5px solid var(--border);
+    background-color: var(--hover);
   }
 
   /** text */
@@ -70,7 +66,7 @@
   }
 
   .text:hover {
-    background-color: var(--default-border-color);
+    background-color: var(--hover);
   }
 
   /** icon */
@@ -84,7 +80,7 @@
 
   .icon:hover {
     border-radius: 24px;
-    background-color: var(--default-border-color);
+    background-color: var(--hover);
   }
 
   button.icon :global(img) {

@@ -38,7 +38,7 @@
 
 <style>
   .panel {
-    border: 1px solid #ddd;
+    border: 1px solid var(--border);
     border-radius: 6px;
     overflow: hidden;
     background: #fff;
@@ -52,7 +52,7 @@
     padding: 8px 8px;
     background: #f7f7f7;
     user-select: none;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border);
   }
 
   .header-open-button {
@@ -71,7 +71,6 @@
     transform: rotate(90deg);
   }
   .body {
-    /* padding: 1rem; */
     overflow: hidden;
   }
 </style>

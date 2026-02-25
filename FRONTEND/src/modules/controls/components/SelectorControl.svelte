@@ -1,3 +1,5 @@
+<svelte:options customElement="dyn-selector-control" />
+
 <script lang="ts">
   import type { CommonControlProp } from '../models/CommonControlProp';
 

@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { Element } from '../models/Elements';
-  
+  import type { ConditionELement, Element } from '../models/Elements';
+
   import trashIcon from '../../../assets/svg/trash.svg';
 
   import BasicControl from '../../controls/components/BasicControl.svelte';
@@ -10,10 +10,11 @@
   interface ConditionProps {
     element: Element;
     child: Element;
+    columns?: string[];
   }
 
   /** Inputs */
-  let { element = $bindable(), child = $bindable() }: ConditionProps = $props();
+  let { element, child, columns }: ConditionProps = $props();
 
   const OPERATOR_OPTIONS = ['equals', 'not equals', 'greater than', 'less than', 'contains', 'does not contain'];
 
@@ -38,8 +39,11 @@
 
   <div class="condition">
     <div class="content">
+      {#if columns}
+        <SelectorControl bind:value={(child as ConditionELement).field} options={columns} />
+      {/if}
       <SelectorControl bind:value={child.operator} options={OPERATOR_OPTIONS} />
-      <BasicControl value={child.value} />
+      <BasicControl bind:value={child.value} />
     </div>
   </div>
 </ExpandPanel>

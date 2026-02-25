@@ -11,7 +11,7 @@
   import { tooltip } from '../../../tooltip/directives/tooltip';
 
   import SimpleFilter from './SimpleFilter.svelte';
-  import AdvanceFilter from '../../../filter/components/AdvanceFilter.svelte';
+  // import AdvanceFilter from '../../../filter/components/AdvanceFilter.svelte';
   import Sort from './Sort.svelte';
 
   interface HeaderProps {
@@ -35,8 +35,8 @@
   let startX: number = $state(0);
   let startWidth: number = $state(0);
   let thElements: HTMLTableCellElement[] = $state([]);
-  let advanceFilterRefs: (AdvanceFilter)[] = $state([]);
-  let advancedOpenFilter: number = $state(-1);
+  // let advanceFilterRefs: (AdvanceFilter)[] = $state([]);
+  // let advancedOpenFilter: number = $state(-1);
 
   /** Values */
   let onMouseMove: ((e: MouseEvent) => void) | null = null;
@@ -123,12 +123,12 @@
     );
   }
 
-  function handlerOpenAdvanceFilter(index: number) {
-    if(advancedOpenFilter !== -1 && advancedOpenFilter !== index) {
-      advanceFilterRefs[advancedOpenFilter]?.closeModal();
-    }
-    advancedOpenFilter = index;
-  }
+  // function handlerOpenAdvanceFilter(index: number) {
+  //   if(advancedOpenFilter !== -1 && advancedOpenFilter !== index) {
+  //     advanceFilterRefs[advancedOpenFilter]?.closeModal();
+  //   }
+  //   advancedOpenFilter = index;
+  // }
 
   export function deselectAllSorts() {
     sorts = [];
@@ -164,7 +164,7 @@
           {#if $$slots['advanced'] && tableConfiguration().filterableType === 'custom'}
             <slot name="advanced" {index} {column} />
           {:else if tableConfiguration().filterableType === 'advanced' && column.filterable === true}
-            <AdvanceFilter bind:this={advanceFilterRefs[index]} {index} columnField={column.key} onOpen={handlerOpenAdvanceFilter} />
+            <!-- <AdvanceFilter bind:this={advanceFilterRefs[index]} {index} columnField={column.key} onOpen={handlerOpenAdvanceFilter} /> -->
           {/if}
         </div>
         <!-- </button> -->

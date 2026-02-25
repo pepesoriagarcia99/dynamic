@@ -4,10 +4,12 @@
   import Header from './shared/Header.svelte';
   import Table from './pages/Table.svelte';
   import Controls from './pages/Controls.svelte';
+  import AdvanceFilter from './pages/AdvanceFilter.svelte';
 
   const menuItems = [
+    { key: 'advanceFilter', component: AdvanceFilter, label: 'Advance Filter' },
     { key: 'table', component: Table, label: 'Table' },
-    { key: 'controls', component: Controls, label: 'Controls' }
+    { key: 'controls', component: Controls, label: 'Controls' },
   ];
 
   let Component = $state<any>(menuItems[0].component);
