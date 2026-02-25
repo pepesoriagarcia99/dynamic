@@ -1,12 +1,12 @@
 <script lang="ts">
   import { getContext, onMount } from 'svelte';
 
-  import { FILTER_EVENT_NAME, LOADING_STATE } from '../../../constant';
+  import { FILTER_EVENT_NAME, LOADING_STATE } from '../../constant';
 
-  import type { ColumnCompiled } from '../../../models/column/Column';
+  import type { ColumnCompiled } from '../../models/column/Column';
 
-  import Skeleton from '../../Skeleton.svelte';
-  import BasicControl from '../../../../controls/components/BasicControl.svelte';
+  import Skeleton from '../Skeleton.svelte';
+  import BasicControl from '../../../controls/components/BasicControl.svelte';
 
   interface Control {
     column: ColumnCompiled;

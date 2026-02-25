@@ -1,8 +1,11 @@
 <script lang="ts">
   import type { Element } from '../models/Elements';
-  import trashIcon from '../../../../../../../assets/svg/trash.svg';
-  import BasicControl from '../../../../../../controls/components/BasicControl.svelte';
-  import SelectorControl from '../../../../../../controls/components/SelectorControl.svelte';
+  
+  import trashIcon from '../../../assets/svg/trash.svg';
+
+  import BasicControl from '../../controls/components/BasicControl.svelte';
+  import SelectorControl from '../../controls/components/SelectorControl.svelte';
+  import ExpandPanel from '../../core/components/ExpandPanel.svelte';
 
   interface ConditionProps {
     element: Element;
@@ -22,8 +25,8 @@
   }
 </script>
 
-<div class="condition">
-  <div class="header">
+<ExpandPanel bind:open={child.expanded} label="Condition">
+  <div slot="header" class="header">
     <button
       class="remove-condition-btn"
       part="remove-condition-btn"
@@ -33,17 +36,18 @@
     </button>
   </div>
 
-  <div class="content">
-    <SelectorControl bind:value={child.operator} options={OPERATOR_OPTIONS} />
-    <BasicControl value={child.value} />
+  <div class="condition">
+    <div class="content">
+      <SelectorControl bind:value={child.operator} options={OPERATOR_OPTIONS} />
+      <BasicControl value={child.value} />
+    </div>
   </div>
-</div>
+</ExpandPanel>
 
 <style>
   .condition {
-    margin: 8px;
-    background-color: aquamarine;
-    padding: 4px;
+    /* background-color: aquamarine; */
+    padding: 12px 4px 12px 4px;
     border-radius: 4px;
   }
 

@@ -1,12 +1,14 @@
 <script lang="ts">
+  import addIcon from '../../../assets/svg/plus.svg';
+  import trashIcon from '../../../assets/svg/trash.svg';
+
   import type { Element } from '../models/Elements';
+
   import Block from './Block.svelte';
   import Condition from './Condition.svelte';
-
-  import addIcon from '../../../../../../../assets/svg/plus.svg';
-  import trashIcon from '../../../../../../../assets/svg/trash.svg';
-  import Button from '../../../../../../core/components/Button.svelte';
-  import DotsMenu from '../../../../../../core/components/DotsMenu.svelte';
+  import Button from '../../core/components/Button.svelte';
+  import DotsMenu from '../../core/components/DotsMenu.svelte';
+  import ExpandPanel from '../../core/components/ExpandPanel.svelte';
 
   interface BlockProps {
     element: Element;
@@ -22,7 +24,8 @@
     conditions.push({
       type: 'condition',
       operator: '',
-      value: ''
+      value: '',
+      expanded: true
     });
   }
 
@@ -30,7 +33,8 @@
     conditions.push({
       type: 'block',
       operator: conditionType,
-      value: []
+      value: [],
+      expanded: true
     });
   }
 
@@ -41,16 +45,15 @@
     }
   }
 
-  function switchOperator(currentElement: Element) {
-    currentElement = {
-      ...currentElement,
-      operator: currentElement.operator === 'AND' ? 'OR' : 'AND'
-    };
-    showEditorOperatorMenu = false;
-  }
+  // function switchOperator(currentElement: Element) {
+  //   currentElement = {
+  //     ...currentElement,
+  //     operator: currentElement.operator === 'AND' ? 'OR' : 'AND'
+  //   };
+  //   showEditorOperatorMenu = false;
+  // }
 
   function handleClickOutsideMenu(event: MouseEvent) {
-    console.log('🚀 ~ handleClickOutsideMenu ~ showEditorOperatorMenu:', showEditorOperatorMenu);
     if (showEditorOperatorMenu && operatorMenuRef && !operatorMenuRef.contains(event.target as Node)) {
       showEditorOperatorMenu = false;
     }
@@ -71,23 +74,21 @@
         <div>{element.operator}</div>
       {/if}
 
-      <div class="block">
-        <div class="header">
-          <button
-            class="remove-block-btn"
-            part="remove-block-btn"
-            onclick={() => onRemoveCondition(element.value, child)}
-            ><img src={trashIcon} alt="Remove block" class="remove-block-icon" part="remove-block-icon" /></button
-          >
+      <ExpandPanel bind:open={child.expanded} label="Block">
+        <div slot="header" class="header">
+          <Button type="icon" onClick={() => onRemoveCondition(element.value, child)}>
+            <img src={trashIcon} alt="Remove block" />
+          </Button>
           <DotsMenu>
-            <Button type="text" onClick={() => switchOperator(element)}>
+            <!-- <Button type="text" onClick={() => switchOperator(element)}>
               <span>"{element.operator}" Cambiar a {element.operator === 'AND' ? 'OR' : 'AND'}</span>
-            </Button>
+            </Button> -->
           </DotsMenu>
         </div>
-
-        <Block element={child} />
-      </div>
+        <div class="block">
+          <Block element={child} />
+        </div>
+      </ExpandPanel>
     {/if}
   {/each}
 
@@ -114,8 +115,6 @@
 
 <style>
   .block {
-    background-color: darkred;
-    border: 1px solid white;
     padding: 8px;
     margin-bottom: 8px;
   }
@@ -123,18 +122,6 @@
   .header {
     display: flex;
     justify-content: flex-end;
-  }
-
-  .remove-block-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 2px;
-  }
-
-  .remove-block-icon {
-    width: 22px;
-    height: 22px;
   }
 
   .actions_content {

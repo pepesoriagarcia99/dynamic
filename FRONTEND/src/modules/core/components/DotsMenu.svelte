@@ -2,7 +2,6 @@
   import dotEditIcon from '../../../assets/svg/dots-options.svg';
   import Button from './Button.svelte';
 
-  let menuRef: HTMLDivElement | null = $state(null);
   let buttonRef: HTMLButtonElement | null = $state(null);
   let showMenu = $state(false);
   let menuPosition = $state({ top: 0, left: 0 });
@@ -18,20 +17,29 @@
       };
     }
   }
+
+  function handleClickOutside() {
+    if (showMenu) {
+      showMenu = false;
+    }
+  }
 </script>
 
+<svelte:window on:click|capture={handleClickOutside} />
+
 <div>
-  <Button bind:buttonRef={buttonRef} type="icon" onClick={toggleMenu}>
-    <img src={dotEditIcon} alt="Edit block" />
+  <Button bind:buttonRef type="icon" onClick={toggleMenu}>
+    {#if $$slots.icon}
+      <slot name="icon" />
+    {:else}
+      <img src={dotEditIcon} alt="Edit block" />
+    {/if}
   </Button>
 
   {#if showMenu}
-    <div
-      bind:this={menuRef}
-      class="menu-content"
-      style="top: {menuPosition.top}px; left: {menuPosition.left}px; position: fixed;"
-    >
+    <div class="menu-content" style="top: {menuPosition.top}px; left: {menuPosition.left}px; position: fixed;">
       <slot></slot>
+      <slot name="body" />
     </div>
   {/if}
 </div>

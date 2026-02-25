@@ -25,10 +25,12 @@ interface ConditionELement {
   type: 'condition';
   operator: string;
   value: any;
+  expanded: boolean;
 }
 
 interface BlockElement {
   type: 'block';
   operator: 'AND' | 'OR';
   value: Element[];
+  expanded: boolean;
 }

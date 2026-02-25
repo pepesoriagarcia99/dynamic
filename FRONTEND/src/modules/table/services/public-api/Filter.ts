@@ -1,5 +1,5 @@
 import type { default as HeaderComponent } from '../../components/header/Header.svelte';
-import type { default as SimpleFilterComponent } from '../../components/header/filter/SimpleFilter.svelte';
+import type { default as SimpleFilterComponent } from '../../components/header/SimpleFilter.svelte';
 
 
 export class Filter {

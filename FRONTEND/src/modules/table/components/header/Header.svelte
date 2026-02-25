@@ -10,8 +10,8 @@
   import resizeIcon from '../../../../assets/svg/resize.svg';
   import { tooltip } from '../../../tooltip/directives/tooltip';
 
-  import SimpleFilter from './filter/SimpleFilter.svelte';
-  import AdvanceFilter from './filter/advance-filter/AdvanceFilter.svelte';
+  import SimpleFilter from './SimpleFilter.svelte';
+  import AdvanceFilter from '../../../filter/components/AdvanceFilter.svelte';
   import Sort from './Sort.svelte';
 
   interface HeaderProps {
@@ -164,7 +164,7 @@
           {#if $$slots['advanced'] && tableConfiguration().filterableType === 'custom'}
             <slot name="advanced" {index} {column} />
           {:else if tableConfiguration().filterableType === 'advanced' && column.filterable === true}
-            <AdvanceFilter bind:this={advanceFilterRefs[index]} {index} {column} onOpen={handlerOpenAdvanceFilter} />
+            <AdvanceFilter bind:this={advanceFilterRefs[index]} {index} columnField={column.key} onOpen={handlerOpenAdvanceFilter} />
           {/if}
         </div>
         <!-- </button> -->

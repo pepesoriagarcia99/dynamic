@@ -1,28 +1,27 @@
 <script lang="ts">
   import { getContext } from 'svelte';
 
-  import { LOADING_STATE } from '../../../../constant';
+  import { LOADING_STATE } from '../../table/constant';
 
-  import advanceFilterIcon from '../../../../../../assets/svg/advance-filter.svg';
-  import advanceFilterFillIcon from '../../../../../../assets/svg/advance-filter-fill.svg';
+  import type { Element } from '../models/Elements';
 
-  import type { Column } from '../../../../models/column/Column';
+  import advanceFilterIcon from '../../../assets/svg/advance-filter.svg';
+  import advanceFilterFillIcon from '../../../assets/svg/advance-filter-fill.svg';
 
-  import Skeleton from '../../../Skeleton.svelte';
-  import Block from './components/Block.svelte';
-  import type { Element } from './models/Elements';
-
-  import dotEditIcon from '../../../../../../assets/svg/dots-options.svg';
+  import Skeleton from '../../table/components/Skeleton.svelte';
+  import Block from './Block.svelte';
+  import DotsMenu from '../../core/components/DotsMenu.svelte';
+  import Button from '../../core/components/Button.svelte';
 
   interface AdvanceFilterIconProps {
     index: number;
-    column: Column;
+    columnField?: string;
     onOpen: (index: number) => void;
   }
 
   /** Inputs */
-  let { index, column, onOpen = () => {} }: AdvanceFilterIconProps = $props();
-  console.log('🚀 ~ column:', column);
+  let { index, columnField, onOpen = () => {} }: AdvanceFilterIconProps = $props();
+  console.log('🚀 ~ columnField:', columnField);
 
   /** States */
   const loading: () => boolean = getContext(LOADING_STATE);
@@ -40,27 +39,32 @@
   const INIT_FILTER: Element = {
     type: 'block',
     operator: 'AND',
+    expanded: true,
     value: [
       {
         type: 'block',
         operator: 'OR',
+        expanded: true,
         value: [
           {
             type: 'condition',
             operator: 'contains',
-            value: 'Manolo'
+            value: 'Manolo',
+            expanded: false
           },
           {
             type: 'condition',
             operator: 'contains',
-            value: 'Pepe'
+            value: 'Pepe',
+            expanded: false
           }
         ]
       },
       {
         type: 'condition',
         operator: 'contains',
-        value: 'Paco'
+        value: 'Paco',
+        expanded: false
       }
     ]
   };
@@ -82,21 +86,16 @@
     }
   }
 
-  export function closeModal() {
-    showModal = false;
-  }
-
-  function toggleOperatorMenu(event: MouseEvent) {
-    event.stopPropagation();
-    showEditorOperatorMenu = !showEditorOperatorMenu;
-  }
-
   function switchOperator() {
     filterTree = {
       ...filterTree,
       operator: filterTree.operator === 'AND' ? 'OR' : 'AND'
     };
     showEditorOperatorMenu = false;
+  }
+
+  export function closeModal() {
+    showModal = false;
   }
 
   // function controlEvent() {
@@ -157,24 +156,18 @@
       >
         <div class="advance-filter-modal-content">
           <div class="advance-filter-modal-header">
-            <button class="edit-block-btn" part="edit-block-btn" onclick={toggleOperatorMenu}>
-              <img src={dotEditIcon} alt="Edit block" class="edit-block-icon" part="edit-block-icon" />
-            </button>
-            {#if showEditorOperatorMenu}
-              <!-- onclick|stopPropagation -->
-              <div class="operator-menu">
-                <button class="operator-switch-btn" onclick={switchOperator}>
-                  Cambiar a {filterTree.operator === 'AND' ? 'OR' : 'AND'}
-                </button>
-              </div>
-            {/if}
+            <DotsMenu>
+              <Button type="text" onClick={switchOperator}>
+                Cambiar a {filterTree.operator === 'AND' ? 'OR' : 'AND'}
+              </Button>
+            </DotsMenu>
           </div>
 
           <Block element={filterTree} />
 
           <div class="advance-filter-modal-actions">
-            <button class="clear-action" onclick={() => (filterTree = INIT_FILTER)}>clear</button>
-            <button class="apply-action">apply</button>
+            <Button type="basic" onClick={() => (filterTree = INIT_FILTER)}>clear</Button>
+            <Button type="primary">apply</Button>
           </div>
         </div>
       </div>
@@ -211,31 +204,6 @@
     transform: scale(1.2);
   }
 
-  .operator-menu {
-    position: absolute;
-    top: 36px;
-    right: 12px;
-    background: #fff;
-    border: 1px solid #dee2e6;
-    border-radius: 4px;
-    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.08);
-    z-index: 1100;
-    padding: 4px 0;
-    min-width: 120px;
-  }
-  .operator-switch-btn {
-    background: none;
-    border: none;
-    padding: 8px 16px;
-    width: 100%;
-    text-align: left;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  .operator-switch-btn:hover {
-    background: #f1f3f5;
-  }
-
   .advance-filter-modal {
     position: absolute;
     top: calc(100% + 4px);
@@ -250,25 +218,14 @@
     animation: fadeIn 150ms ease-in;
   }
 
+  .advance-filter-modal-content {
+    padding: 12px;
+  }
+
   .advance-filter-modal-header {
     display: flex;
     justify-content: flex-end;
-  }
-
-  .edit-block-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 2px;
-  }
-
-  .edit-block-icon {
-    width: 22px;
-    height: 22px;
-  }
-
-  .advance-filter-modal-content {
-    padding: 12px;
+    margin-bottom: 8px;
   }
 
   .advance-filter-modal-actions {
@@ -276,25 +233,5 @@
     justify-content: center;
     gap: 8px;
     margin-top: 12px;
-  }
-
-  .clear-action {
-    background-color: transparent;
-    border: 1px solid #dee2e6;
-    color: #212529;
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    width: 100%;
-  }
-
-  .apply-action {
-    background-color: #007bff;
-    border: 1px solid #007bff;
-    color: #ffffff;
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    width: 100%;
   }
 </style>

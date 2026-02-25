@@ -19,6 +19,10 @@
 </button>
 
 <style>
+  :host {
+    --default-border-color: #e5e7eb;
+  }
+
   button :global(img) {
     width: 18px;
     height: 18px;
@@ -34,17 +38,31 @@
     cursor: pointer;
     width: 100%;
     padding: 6px;
+    margin: 2px;
   }
+
+  /** primary */
+  .primary {
+    background-color: black;
+    color: white;
+    border-radius: 4px;
+    border: none;
+  }
+
+  /** basic */
 
   .basic {
     border-radius: 4px;
-    border: 1px solid #dee2e6;
+    border: 1px solid var(--default-border-color);
     background-color: white;
   }
 
   .basic:hover {
-    border: 1px solid #212529;
+    border: 1.5px solid #212529;
+    background-color: #f5f5f5;
   }
+
+  /** text */
 
   .text {
     background: none;
@@ -52,17 +70,25 @@
   }
 
   .text:hover {
-    background-color: #dee2e6;
+    background-color: var(--default-border-color);
   }
+
+  /** icon */
 
   .icon {
     background: none;
     border: none;
     padding: 0;
+    vertical-align: middle;
   }
 
   .icon:hover {
     border-radius: 24px;
-    background-color: #dee2e6;
+    background-color: var(--default-border-color);
+  }
+
+  button.icon :global(img) {
+    width: 22px;
+    height: 22px;
   }
 </style>
