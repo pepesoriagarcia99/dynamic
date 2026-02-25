@@ -1,4 +1,4 @@
-import type { Style } from "../modules/table/models/column/Style";
+import type { Style } from "../models/column/Style";
 
 
 class StyleTransformer {

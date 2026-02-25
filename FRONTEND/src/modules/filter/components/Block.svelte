@@ -2,7 +2,7 @@
   import addIcon from '../../../assets/svg/plus.svg';
   import trashIcon from '../../../assets/svg/trash.svg';
 
-  import type { Element } from '../models/Elements';
+  import type { FilterElement } from '../models/Elements';
 
   import Block from './Block.svelte';
   import Condition from './Condition.svelte';
@@ -10,7 +10,7 @@
   import ExpandPanel from '../../core/components/ExpandPanel.svelte';
 
   interface BlockProps {
-    element: Element;
+    element: FilterElement;
     columns?: string[];
     columnField?: string;
   }
@@ -18,7 +18,7 @@
   /** Inputs */
   let { element, columns, columnField }: BlockProps = $props();
 
-  function onAddCondition(conditions: Element[]) {
+  function onAddCondition(conditions: FilterElement[]) {
     conditions.push({
       type: 'condition',
       field: columnField ?? '',
@@ -28,7 +28,7 @@
     });
   }
 
-  function onAddBlock(conditions: Element[], conditionType: 'AND' | 'OR') {
+  function onAddBlock(conditions: FilterElement[], conditionType: 'AND' | 'OR') {
     conditions.push({
       type: 'block',
       operator: conditionType,
@@ -37,7 +37,7 @@
     });
   }
 
-  function onRemoveCondition(conditions: Element[], conditionToRemove: Element) {
+  function onRemoveCondition(conditions: FilterElement[], conditionToRemove: FilterElement) {
     const index = conditions.indexOf(conditionToRemove);
     if (index > -1) {
       conditions.splice(index, 1);

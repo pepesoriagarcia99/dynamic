@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { ConditionELement, Element } from '../models/Elements';
+  import type { ConditionELement, FilterElement } from '../models/Elements';
 
   import trashIcon from '../../../assets/svg/trash.svg';
 
@@ -8,8 +8,8 @@
   import ExpandPanel from '../../core/components/ExpandPanel.svelte';
 
   interface ConditionProps {
-    element: Element;
-    child: Element;
+    element: FilterElement;
+    child: FilterElement;
     columns?: string[];
   }
 
@@ -18,7 +18,7 @@
 
   const OPERATOR_OPTIONS = ['equals', 'not equals', 'greater than', 'less than', 'contains', 'does not contain'];
 
-  function onRemoveCondition(conditions: Element[], conditionToRemove: Element) {
+  function onRemoveCondition(conditions: FilterElement[], conditionToRemove: FilterElement) {
     const index = conditions.indexOf(conditionToRemove);
     if (index > -1) {
       conditions.splice(index, 1);

@@ -18,6 +18,8 @@
     event?.stopPropagation();
     showMenu = !showMenu;
     if (showMenu && buttonRef) {
+      onOpen();
+
       const rect = buttonRef.getBoundingClientRect();
       const viewportWidth = window.innerWidth;
       let left = rect.left;
@@ -34,7 +36,6 @@
 
   function handleClickOutside() {
     if (showMenu) closeMenu();
-    else openMenu();
   }
 
   export function openMenu() {

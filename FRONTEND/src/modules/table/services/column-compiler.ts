@@ -1,4 +1,4 @@
-import { styleTransformer } from "../../../utils/style-transformer";
+import { styleTransformer } from "../utils/style-transformer";
 import type { Column, ColumnCompiled } from "../models/column/Column";
 import { buildStyleGetter } from "./style";
 import { buildValueGetter } from "./value";

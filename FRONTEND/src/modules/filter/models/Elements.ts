@@ -19,7 +19,7 @@
 //   value?: any;
 // }
 
-export type Element = ConditionELement | BlockElement;
+export type FilterElement = ConditionELement | BlockElement;
 
 export interface ConditionELement {
   type: 'condition';

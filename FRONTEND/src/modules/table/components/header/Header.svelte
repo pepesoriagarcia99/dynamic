@@ -6,6 +6,7 @@
   import type { ColumnCompiled } from '../../models/column/Column';
   import type { SortEvent } from '../../models/event/TableEvent';
   import type { TableConfiguration } from '../../models/configuration/TableConfiguration';
+  import type { FilterElement } from '../../../filter/models/Elements';
 
   import resizeIcon from '../../../../assets/svg/resize.svg';
   import advanceFilterIcon from '../../../../assets/svg/advance-filter.svg';
@@ -41,6 +42,14 @@
   let thElements: HTMLTableCellElement[] = $state([]);
   let simpleFilter: SimpleFilter | null = $state<SimpleFilter | null>(null);
   let advanceFilterMenu: SimpleMenu[] = $state([]);
+  let advanceFilterValues: FilterElement[] = $state(
+    columns.map(() => ({
+      type: 'block',
+      operator: 'AND',
+      expanded: true,
+      value: []
+    }))
+  );
 
   /** Values */
   let onMouseMove: ((e: MouseEvent) => void) | null = null;
@@ -127,20 +136,21 @@
     );
   }
 
-  // function handlerOpenAdvanceFilter(index: number) {
-  //   if(advancedOpenFilter !== -1 && advancedOpenFilter !== index) {
-  //     advanceFilterRefs[advancedOpenFilter]?.closeModal();
-  //   }
-  //   advancedOpenFilter = index;
-  // }
-
-  function handlerOpenAdvanceFilter() {
-    advanceFilterMenu.forEach((menu) => {
-      if (menu.menuState() === true) {
+  function handlerOpenAdvanceFilter(currentIndex: number) {
+    advanceFilterMenu.forEach((menu, index) => {
+      if (index !== currentIndex && menu.menuState() === true) {
         menu.closeMenu();
       }
     });
   }
+
+  // function onApplyAdvanceFilter(filter: FilterElement, index: number) {
+  //   console.log('🚀 ~ onApplyAdvanceFilter ~ index:', index);
+  //   console.log('🚀 ~ onApply ~ filter:', filter);
+
+  //   advanceFilterValues[index] = filter;
+  //   console.log('🚀 ~ onApplyAdvanceFilter ~ advanceFilterValues:', advanceFilterValues);
+  // }
 
   export function deselectAllSorts() {
     sorts = [];
@@ -183,10 +193,10 @@
                 bind:this={advanceFilterMenu[index]}
                 width={330}
                 height="auto"
-                onOpen={handlerOpenAdvanceFilter}
+                onOpen={() => handlerOpenAdvanceFilter(index)}
               >
                 <div slot="icon">
-                  {#if advanceFilterMenu[index]?.menuState()}
+                  {#if advanceFilterMenu[index]?.menuState() || advanceFilterValues[index].value.length > 0}
                     <img src={advanceFilterFillIcon} alt="Advance filter" />
                   {:else}
                     <img src={advanceFilterIcon} alt="Advance filter" />
@@ -194,7 +204,7 @@
                 </div>
 
                 <div slot="body">
-                  <AdvanceFilter columnField={column.key} />
+                  <AdvanceFilter bind:value={advanceFilterValues[index]} columnField={column.key} />
                 </div>
               </SimpleMenu>
             {/if}

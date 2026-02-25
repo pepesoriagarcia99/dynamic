@@ -1,4 +1,4 @@
-import { styleTransformer } from "../../../utils/style-transformer";
+import { styleTransformer } from "../utils/style-transformer";
 import type { Column } from "../models/column/Column";
 
 export const buildStyleGetter = (column: Column) => {

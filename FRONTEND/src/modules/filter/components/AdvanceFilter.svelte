@@ -2,13 +2,13 @@
 
 <script lang="ts">
   import '../../controls/styles/control.css';
-  import type { Element } from '../models/Elements';
+  import type { FilterElement } from '../models/Elements';
 
   import Block from './Block.svelte';
   import SimpleMenu from '../../core/components/SimpleMenu.svelte';
   import Button from '../../core/components/Button.svelte';
 
-  const INIT_FILTER: Element = {
+  const INIT_FILTER: FilterElement = {
     type: 'block',
     operator: 'AND',
     expanded: true,
@@ -16,12 +16,14 @@
   };
 
   interface AdvanceFilterIconProps {
+    value?: FilterElement;
     columnField?: string;
     columns?: string[];
+    onApply?: (filter: FilterElement) => void;
   }
 
   /** Inputs */
-  let { columnField, columns }: AdvanceFilterIconProps = $props();
+  let { value = $bindable<FilterElement>(INIT_FILTER), columnField, columns, onApply = () => {} }: AdvanceFilterIconProps = $props();
 
   /** Check */
   $effect(() => {
@@ -33,7 +35,7 @@
   /** States */
   let showModal = $state<boolean>(false);
   let buttonRef: HTMLButtonElement | null = $state(null);
-  let filterTree = $state<Element>(INIT_FILTER);
+  // let filterTree = $state<FilterElement>(value);
 
   /** Values */
   const partNamesContainer: string = `advance-filter-container`;
@@ -49,7 +51,7 @@
   }
 
   function switchOperator() {
-    filterTree.operator = filterTree.operator === 'AND' ? 'OR' : 'AND';
+    value.operator = value.operator === 'AND' ? 'OR' : 'AND';
   }
 
   export function closeModal() {
@@ -71,16 +73,16 @@
     <div class={partNamesHeader} part={partNamesHeader}>
       <SimpleMenu>
         <Button type="text" action={switchOperator}>
-          Cambiar a {filterTree.operator === 'AND' ? 'OR' : 'AND'}
+          Cambiar a {value.operator === 'AND' ? 'OR' : 'AND'}
         </Button>
       </SimpleMenu>
     </div>
 
-    <Block element={filterTree} {columns} {columnField} />
+    <Block element={value} {columns} {columnField} />
 
     <div class={partNamesActions} part={partNamesActions}>
-      <Button type="basic" action={() => (filterTree = INIT_FILTER)}>clear</Button>
-      <Button type="primary" action={() => {}}>apply</Button>
+      <Button type="basic" action={() => (value = INIT_FILTER)}>clear</Button>
+      <Button type="primary" action={() => onApply(value)}>apply</Button>
     </div>
   </div>
 </div>
