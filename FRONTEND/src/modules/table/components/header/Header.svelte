@@ -8,11 +8,16 @@
   import type { TableConfiguration } from '../../models/configuration/TableConfiguration';
 
   import resizeIcon from '../../../../assets/svg/resize.svg';
+  import advanceFilterIcon from '../../../../assets/svg/advance-filter.svg';
+  import advanceFilterFillIcon from '../../../../assets/svg/advance-filter-fill.svg';
+
   import { tooltip } from '../../../tooltip/directives/tooltip';
 
   import SimpleFilter from './SimpleFilter.svelte';
-  // import AdvanceFilter from '../../../filter/components/AdvanceFilter.svelte';
+  import SimpleMenu from '../../../core/components/SimpleMenu.svelte';
+  import AdvanceFilter from '../../../filter/components/AdvanceFilter.svelte';
   import Sort from './Sort.svelte';
+  import Skeleton from '../Skeleton.svelte';
 
   interface HeaderProps {
     columns: ColumnCompiled[];
@@ -23,7 +28,6 @@
 
   /** Values */
   let el: HTMLElement;
-  let simpleFilter: SimpleFilter | null = $state<SimpleFilter | null>(null);
 
   /** Contexts */
   const loading: () => boolean = getContext(LOADING_STATE);
@@ -35,8 +39,8 @@
   let startX: number = $state(0);
   let startWidth: number = $state(0);
   let thElements: HTMLTableCellElement[] = $state([]);
-  // let advanceFilterRefs: (AdvanceFilter)[] = $state([]);
-  // let advancedOpenFilter: number = $state(-1);
+  let simpleFilter: SimpleFilter | null = $state<SimpleFilter | null>(null);
+  let advanceFilterMenu: SimpleMenu[] = $state([]);
 
   /** Values */
   let onMouseMove: ((e: MouseEvent) => void) | null = null;
@@ -130,6 +134,14 @@
   //   advancedOpenFilter = index;
   // }
 
+  function handlerOpenAdvanceFilter() {
+    advanceFilterMenu.forEach((menu) => {
+      if (menu.menuState() === true) {
+        menu.closeMenu();
+      }
+    });
+  }
+
   export function deselectAllSorts() {
     sorts = [];
   }
@@ -164,10 +176,30 @@
           {#if $$slots['advanced'] && tableConfiguration().filterableType === 'custom'}
             <slot name="advanced" {index} {column} />
           {:else if tableConfiguration().filterableType === 'advanced' && column.filterable === true}
-            <!-- <AdvanceFilter bind:this={advanceFilterRefs[index]} {index} columnField={column.key} onOpen={handlerOpenAdvanceFilter} /> -->
+            {#if loading() === true}
+              <Skeleton width="26px" height="26px" />
+            {:else}
+              <SimpleMenu
+                bind:this={advanceFilterMenu[index]}
+                width={330}
+                height="auto"
+                onOpen={handlerOpenAdvanceFilter}
+              >
+                <div slot="icon">
+                  {#if advanceFilterMenu[index]?.menuState()}
+                    <img src={advanceFilterFillIcon} alt="Advance filter" />
+                  {:else}
+                    <img src={advanceFilterIcon} alt="Advance filter" />
+                  {/if}
+                </div>
+
+                <div slot="body">
+                  <AdvanceFilter columnField={column.key} />
+                </div>
+              </SimpleMenu>
+            {/if}
           {/if}
         </div>
-        <!-- </button> -->
         <!-- svelte-ignore a11y_no_static_element_interactions -->
         <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
         {#if loading() === false && tableConfiguration().resizable === true && (column.resizable === true || column.resizable === undefined)}

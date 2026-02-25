@@ -7,8 +7,8 @@
   import AdvanceFilter from './pages/AdvanceFilter.svelte';
 
   const menuItems = [
-    { key: 'advanceFilter', component: AdvanceFilter, label: 'Advance Filter' },
     { key: 'table', component: Table, label: 'Table' },
+    { key: 'advanceFilter', component: AdvanceFilter, label: 'Advance Filter' },
     { key: 'controls', component: Controls, label: 'Controls' },
   ];
 

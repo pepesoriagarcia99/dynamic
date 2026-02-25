@@ -50,7 +50,6 @@
 
 <style>
   .condition {
-    /* background-color: aquamarine; */
     padding: 12px 4px 12px 4px;
     border-radius: 4px;
   }

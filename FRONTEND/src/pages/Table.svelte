@@ -191,7 +191,7 @@
       key: 'isVerified',
       name: 'Verificado',
       type: 'boolean',
-      vertical: true,
+      vertical: true
     },
     {
       key: 'subscription.plan',
@@ -204,7 +204,7 @@
             value: 'enterprise',
             style: {
               color: '#1E3A8A',
-              'background-color': '#DBEAFE', 
+              'background-color': '#DBEAFE',
               'border-radius': '4px',
               'font-weight': '600'
             }
@@ -234,8 +234,7 @@
       key: 'rating',
       name: 'Calificación',
       type: 'string',
-      filterable: true,
-      sortable: true,
+      vertical: true,
       configuration: {
         colorConfiguration: [
           {

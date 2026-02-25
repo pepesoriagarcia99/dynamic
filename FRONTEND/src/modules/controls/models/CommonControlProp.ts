@@ -9,3 +9,7 @@ export interface CommonControlProp {
     value?: any;
     onChange?: (change: string) => void;
 }
+
+export interface LazyControlProp {
+    lazy?: boolean; // esta propiedad indica que el control debe cargar datos de forma perezosa
+}

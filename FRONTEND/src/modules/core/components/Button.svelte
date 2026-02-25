@@ -3,18 +3,22 @@
     buttonRef?: HTMLButtonElement | null;
     type?: 'primary' | 'secondary' | 'basic' | 'text' | 'icon';
     disabled?: boolean;
-    onClick?: (event: MouseEvent) => void;
+    action?: (event?: MouseEvent) => void;
   }
 
-  let { buttonRef = $bindable(), type = 'basic', disabled = false, onClick = () => {} }: ButtonProps = $props();
+  let { buttonRef = $bindable(), type = 'basic', disabled = false, action }: ButtonProps = $props();
   let localButtonRef = $state<HTMLButtonElement | null>(null);
 
   $effect(() => {
     buttonRef = localButtonRef;
   });
+
+  function handleClick(event: MouseEvent) {
+    action?.(event);
+  }
 </script>
 
-<button bind:this={localButtonRef} class={type} {disabled} onclick={(event: MouseEvent) => onClick(event)}>
+<button bind:this={localButtonRef} class={type} {disabled} onclick={handleClick}>
   <slot />
 </button>
 

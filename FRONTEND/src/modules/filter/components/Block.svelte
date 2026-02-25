@@ -7,7 +7,6 @@
   import Block from './Block.svelte';
   import Condition from './Condition.svelte';
   import Button from '../../core/components/Button.svelte';
-  import DotsMenu from '../../core/components/DotsMenu.svelte';
   import ExpandPanel from '../../core/components/ExpandPanel.svelte';
 
   interface BlockProps {
@@ -18,9 +17,6 @@
 
   /** Inputs */
   let { element, columns, columnField }: BlockProps = $props();
-
-  let operatorMenuRef: HTMLDivElement | null = $state(null);
-  let showEditorOperatorMenu = $state(false);
 
   function onAddCondition(conditions: Element[]) {
     conditions.push({
@@ -47,23 +43,7 @@
       conditions.splice(index, 1);
     }
   }
-
-  // function switchOperator(currentElement: Element) {
-  //   currentElement = {
-  //     ...currentElement,
-  //     operator: currentElement.operator === 'AND' ? 'OR' : 'AND'
-  //   };
-  //   showEditorOperatorMenu = false;
-  // }
-
-  function handleClickOutsideMenu(event: MouseEvent) {
-    if (showEditorOperatorMenu && operatorMenuRef && !operatorMenuRef.contains(event.target as Node)) {
-      showEditorOperatorMenu = false;
-    }
-  }
 </script>
-
-<svelte:window on:click={handleClickOutsideMenu} />
 
 <div>
   {#each element.value as child, index}
@@ -79,17 +59,12 @@
 
       <ExpandPanel bind:open={child.expanded} label="Block">
         <div slot="header" class="header">
-          <Button type="icon" onClick={() => onRemoveCondition(element.value, child)}>
+          <Button type="icon" action={() => onRemoveCondition(element.value, child)}>
             <img src={trashIcon} alt="Remove block" />
           </Button>
-          <DotsMenu>
-            <!-- <Button type="text" onClick={() => switchOperator(element)}>
-              <span>"{element.operator}" Cambiar a {element.operator === 'AND' ? 'OR' : 'AND'}</span>
-            </Button> -->
-          </DotsMenu>
         </div>
         <div class="block">
-          <Block element={child} />
+          <Block element={child} {columns} {columnField} />
         </div>
       </ExpandPanel>
     {/if}
@@ -97,18 +72,18 @@
 
   <div class="actions_content">
     <div>
-      <Button onClick={() => onAddCondition(element.value)}>
+      <Button action={() => onAddCondition(element.value)}>
         <img src={addIcon} alt="Add condition" />
         <span>Condition</span>
       </Button>
     </div>
     <div class="block_content">
-      <Button onClick={() => onAddBlock(element.value, 'AND')}>
+      <Button action={() => onAddBlock(element.value, 'AND')}>
         <img src={addIcon} alt="Add block" />
         <span>AND</span>
       </Button>
 
-      <Button onClick={() => onAddBlock(element.value, 'OR')}>
+      <Button action={() => onAddBlock(element.value, 'OR')}>
         <img src={addIcon} alt="Add block" />
         <span>OR</span>
       </Button>
