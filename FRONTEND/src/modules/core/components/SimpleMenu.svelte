@@ -52,7 +52,6 @@
   }
 </script>
 
-<!-- capture -->
 <svelte:window on:click={handleClickOutside} />
 
 <div>
