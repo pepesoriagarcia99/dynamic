@@ -72,7 +72,7 @@
 
   <div class="actions_content">
     <div>
-      <Button action={() => onAddCondition(element.value)}>
+      <Button type="blue" action={() => onAddCondition(element.value)}>
         <img src={addIcon} alt="Add condition" />
         <span>Condition</span>
       </Button>

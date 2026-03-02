@@ -364,7 +364,7 @@
     --table-column-margin-right: var(--dyn-table-column-margin-right, 12px);
 
     /** Table border*/
-    --table-border-color: var(--dyn-table-border-color, #e2e8f0);
+    --table-border-color: var(--dyn-table-border-color, var(--border));
 
     /** Table header */
     --table-header-height: var(--dyn-table-header-height, 56px);
@@ -385,11 +385,11 @@
     /** Table selection */
     --select-color: var(--dyn-table-select-color, var(--selected));
     --select-text-color: var(--dyn-table-select-text-color, var(--selected-text));
-    --select-hover-color: var(--dyn-table-select-hover-color, var(--hover));
+    --select-hover-color: var(--dyn-table-select-hover-color, var(--hover-bg));
 
     /** Table rows*/
     --table-row-height: var(--dyn-table-row-height, 50px);
-    --table-row-text-color: var(--dyn-table-row-text-color, #495057);
+    --table-row-text-color: var(--dyn-table-row-text-color, var(--text));
 
     --row-border-top-color: var(--dyn-table-border-top-color);
     --row-border-left-color: var(--dyn-table-border-left-color);
@@ -401,8 +401,8 @@
     --pagination-height: var(--dyn-table-pagination-height, 50px);
     --pagination-page-num-btn-selected: var(--dyn-table-pagination-page-num-btn-selected, var(--selected));
     --pagination-page-num-text-selected: var(--dyn-table-pagination-page-num-text-selected, var(--selected-text));
-    --pagination-page-num-btn-hover: var(--dyn-table-pagination-page-num-btn-hover, var(--hover));
-    --pagination-action-btn-hover: var(--dyn-table-pagination-action-btn-hover, var(--hover));
+    --pagination-page-num-btn-hover: var(--dyn-table-pagination-page-num-btn-hover, var(--hover-bg));
+    --pagination-action-btn-hover: var(--dyn-table-pagination-action-btn-hover, var(--hover-bg));
 
     /** Context menu */
     --context-menu-border-color: var(--dyn-table-context-menu-border-color, var(--table-border-color));

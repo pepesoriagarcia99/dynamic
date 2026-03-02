@@ -73,7 +73,7 @@
     <div class={partNamesHeader} part={partNamesHeader}>
       <SimpleMenu>
         <Button type="text" action={switchOperator}>
-          Cambiar a {value.operator === 'AND' ? 'OR' : 'AND'}
+          Change to {value.operator === 'AND' ? 'OR' : 'AND'}
         </Button>
       </SimpleMenu>
     </div>
@@ -81,8 +81,8 @@
     <Block element={value} {columns} {columnField} />
 
     <div class={partNamesActions} part={partNamesActions}>
-      <Button type="basic" action={() => (value = INIT_FILTER)}>clear</Button>
-      <Button type="primary" action={() => onApply(value)}>apply</Button>
+      <Button type="secondary" action={() => (value = INIT_FILTER)}>Clear</Button>
+      <Button type="primary" action={() => onApply(value)}>Apply</Button>
     </div>
   </div>
 </div>
@@ -106,6 +106,8 @@
     display: flex;
     justify-content: center;
     gap: 8px;
-    margin-top: 12px;
+    margin-top: 18px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
   }
 </style>

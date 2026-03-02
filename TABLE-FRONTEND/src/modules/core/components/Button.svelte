@@ -1,7 +1,7 @@
 <script lang="ts">
   interface ButtonProps {
     buttonRef?: HTMLButtonElement | null;
-    type?: 'primary' | 'secondary' | 'basic' | 'text' | 'icon';
+    type?: 'primary' | 'secondary' | 'basic' | 'text' | 'icon' | 'blue';
     disabled?: boolean;
     action?: (event?: MouseEvent) => void;
   }
@@ -49,6 +49,37 @@
     border: none;
   }
 
+  /** secondary */
+
+  .secondary {
+    background-color: #f1f5f9;
+    color: #475569;
+    border-radius: 4px;
+    border: 1px solid #f1f5f9;
+  }
+
+  .secondary:hover {
+    /* background-color: #bfc7d1; */
+  }
+
+  /** blue */
+
+  .blue {
+    background-color: #ffffff;
+    color: #0ea5e9;
+    border-radius: 4px;
+    border: none;
+  }
+
+  button :global(img) {
+    color: #0ea5e9;
+    fill: currentColor;
+  }
+
+  .blue:hover {
+    background-color: #f0f9ff;
+  }
+
   /** basic */
 
   .basic {
@@ -59,7 +90,7 @@
 
   .basic:hover {
     border: 1.5px solid var(--border);
-    background-color: var(--hover);
+    background-color: var(--hover-bg);
   }
 
   /** text */
@@ -70,7 +101,7 @@
   }
 
   .text:hover {
-    background-color: var(--hover);
+    background-color: var(--hover-bg);
   }
 
   /** icon */
@@ -84,7 +115,7 @@
 
   .icon:hover {
     border-radius: 24px;
-    background-color: var(--hover);
+    background-color: var(--hover-bg);
   }
 
   button.icon :global(img) {
