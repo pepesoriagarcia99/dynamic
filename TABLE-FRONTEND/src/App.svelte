@@ -2,12 +2,14 @@
   import './app.css';
 
   import Header from './shared/Header.svelte';
-  import Table from './pages/Table.svelte';
+  import TableComplex from './pages/TableComplex.svelte';
   import Controls from './pages/Controls.svelte';
   import AdvanceFilter from './pages/AdvanceFilter.svelte';
+  import TableSimple from './pages/TableSimple.svelte';
 
   const menuItems = [
-    { key: 'table', component: Table, label: 'Table' },
+    { key: 'table_complex', component: TableComplex, label: 'Complex table' },
+    { key: 'table_simple', component: TableSimple, label: 'Simple table' },
     { key: 'advanceFilter', component: AdvanceFilter, label: 'Advance Filter' },
     { key: 'controls', component: Controls, label: 'Controls' },
   ];
