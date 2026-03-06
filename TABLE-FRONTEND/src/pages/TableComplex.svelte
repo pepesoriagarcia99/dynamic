@@ -191,13 +191,11 @@
       key: 'isVerified',
       name: 'Verificado',
       type: 'boolean',
-      vertical: 45
     },
     {
       key: 'subscription.plan',
       name: 'Plan de suscripción',
       type: 'string',
-      vertical: 45,
       configuration: {
         colorConfiguration: [
           {
@@ -234,7 +232,6 @@
       key: 'rating',
       name: 'Calificación',
       type: 'string',
-      vertical: 45,
       configuration: {
         colorConfiguration: [
           {

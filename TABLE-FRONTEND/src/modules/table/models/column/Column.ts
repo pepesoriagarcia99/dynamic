@@ -50,12 +50,6 @@ export interface Column {
   resizable?: boolean;
 
   /**
-   * Indica los grados de inclinacion del texto del encabezado.
-   * Rango permitido: 0 (horizontal) a 90 (completamente vertical).
-   */
-  vertical?: number;
-
-  /**
    * Configuracion dinamica para las columnas
    */
   configuration?: ColumnConfiguration;
