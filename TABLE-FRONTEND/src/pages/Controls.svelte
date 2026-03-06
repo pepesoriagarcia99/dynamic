@@ -57,8 +57,8 @@
 
 <style>
   .content {
-    margin: 1rem;
-    height: calc(100vh - 6rem);
-    width: calc(100vw - 2rem);
+    padding: 1rem;
+    height: 100%;
+    width: 100%;
   }
 </style>

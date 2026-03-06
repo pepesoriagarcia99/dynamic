@@ -8,10 +8,11 @@
   import TableSimple from './pages/TableSimple.svelte';
 
   const menuItems = [
+    { key: 'controls', component: Controls, label: 'Controls' },
     { key: 'table_complex', component: TableComplex, label: 'Complex table' },
     { key: 'table_simple', component: TableSimple, label: 'Simple table' },
     { key: 'advanceFilter', component: AdvanceFilter, label: 'Advance Filter' },
-    { key: 'controls', component: Controls, label: 'Controls' },
+    
   ];
 
   let Component = $state<any>(menuItems[0].component);

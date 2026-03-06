@@ -3,7 +3,7 @@
   --control-background-color: var(--dyn-control-background, #ffffff);
   --control-background-disabled-color: var(--dyn-control-disabled-background-color, var(--disabled));
   --control-border-color: var(--dyn-control-border-color, var(--border));
-  --control-border-hover-color: var(--dyn-control-border-hover-color, var(--hover-borde));
+  --control-border-hover-color: var(--dyn-control-border-hover-color, var(--hover-border));
   --control-border-focus-color: var(--dyn-control-border-focus-color, var(--focus));
   --control-height: var(--dyn-control-height, 34px);
   --control-border-radius: var(--dyn-control-border-radius, 6px);
