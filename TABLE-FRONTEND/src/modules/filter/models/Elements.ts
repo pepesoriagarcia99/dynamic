@@ -1,24 +1,3 @@
-// export interface Condition {
-//   field: string;
-//   operator: string;
-//   value: any;
-// }
-
-// export interface Block {
-//   type: 'block';
-//   operator: 'AND' | 'OR';
-//   conditions: Condition[] | Block[];
-// }
-
-
-
-// export interface Element {
-//   type: 'condition' | 'block';
-//   operator: 'AND' | 'OR' | string;
-//   conditions: Element[];
-//   value?: any;
-// }
-
 export type FilterElement = ConditionELement | BlockElement;
 
 export interface ConditionELement {
@@ -32,6 +11,6 @@ export interface ConditionELement {
 export interface BlockElement {
   type: 'block';
   operator: 'AND' | 'OR';
-  value: Element[];
+  value: FilterElement[];
   expanded: boolean;
 }
