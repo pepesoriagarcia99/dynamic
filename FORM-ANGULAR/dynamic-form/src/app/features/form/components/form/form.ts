@@ -11,11 +11,15 @@ export class DynamicForm {
 
   /** configuración del formulario (controls) */
 
-  /** tiene que recibir la estrategia de validacion */
+  /** 
+   * * tiene que recibir la estrategia de validacion y de gestion de cambios 
+   * patron strategy.
+   * debe validar y gestionar cambios en una tab, en varias tab o en todas.
+  */
 
   /** valores del formulario (edicion) */
 
-  /** cambios del formulario (recuperacion de cambios) */
+  /** cambios del formulario (formulario de recuperacion) */
 
 
 }
