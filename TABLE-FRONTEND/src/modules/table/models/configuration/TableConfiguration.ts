@@ -16,10 +16,10 @@ export type PageableType = 'pagination' | 'infinite' | 'none';
 export interface TableConfiguration {
     /** Rows actions */
     selectableType: SelectableType; // Si es diferente de none emite evento de seleccion de fila o filas
-    selectAll: boolean; // Si esta activo muestra checkbox en cabecera para seleccionar todas las filas y muestra checkbox en cada fila. REQUIERE selectableType: 'multiple'
     filterableType: FilterableType;
     sortableType: SortableType; // Si es diferente de none muestra iconos de ordenacion en cabecera, emite evento de ordenacion
     pageableType: PageableType; 
     primaryKey?: string; // Clave primaria de la fila
     resizable: boolean; // Si esta activo permite redimensionar las columnas
+    expansible: boolean; // Si esta activo permite expandir filas para mostrar contenido adicional
 }

@@ -12,7 +12,7 @@
   let { items = [], onSelect }: Props = $props();
   let activeKey = $state('');
 
-  function handleClick(item: any) {
+  export function handleClick(item: any) {
     activeKey = item.key;
     onSelect?.(item);
   }

@@ -5,6 +5,7 @@ export const DEFAULT_PAGEABLE = 'none';
 export const DEFAULT_PAGE_SIZE_OPTIONS = [10, 25, 50, 100, 200];
 export const DEFAULT_PAGE_SIZE = 10;
 export const DEFAULT_RESIZABLE = false;
+export const DEFAULT_EXPANSIBLE = false;
 
 export const VALID_SELECTABLE_TYPES = ['none', 'single', 'multiple'];
 export const VALID_SORTABLE_TYPES = ['none', 'single', 'multiple'];

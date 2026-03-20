@@ -20,7 +20,8 @@
     LOADING_STATE,
     TABLE_CONFIGURATION_STATE,
     CONTEXT_MENU_EVENT_NAME,
-    CONTEXT_MENU_VISIBLE_STATE
+    CONTEXT_MENU_VISIBLE_STATE,
+    DEFAULT_EXPANSIBLE
   } from '../constant';
 
   import type { Column } from '../models/column/Column';
@@ -55,6 +56,7 @@
     pageSizeOptions?: number[];
     pageSize?: number;
     resizable?: boolean;
+    expansible?: boolean;
   }
 
   /** Inputs */
@@ -70,7 +72,8 @@
     pageableType = DEFAULT_PAGEABLE,
     pageSizeOptions = DEFAULT_PAGE_SIZE_OPTIONS,
     pageSize = DEFAULT_PAGE_SIZE,
-    resizable = DEFAULT_RESIZABLE
+    resizable = DEFAULT_RESIZABLE,
+    expansible = DEFAULT_EXPANSIBLE
   }: TableProps = $props();
 
   /** Values */
@@ -97,7 +100,8 @@
     sortableType,
     pageableType,
     primaryKey,
-    resizable
+    resizable,
+    expansible
   }));
   setContext(LOADING_STATE, () => loading);
   setContext(CONTEXT_MENU_VISIBLE_STATE, () => ({
@@ -181,7 +185,21 @@
 
   /** Methods */
   onMount(() => {
-    declarePublicApi(el, paginationRef as Pagination, bodyRef as Body, headerRef as Header);
+    declarePublicApi(
+      {
+        selectableType,
+        filterableType,
+        sortableType,
+        pageableType,
+        primaryKey,
+        resizable,
+        expansible
+      },
+      el,
+      paginationRef as Pagination,
+      bodyRef as Body,
+      headerRef as Header
+    );
 
     window.addEventListener('keydown', handleKeyDown);
 
@@ -332,18 +350,20 @@
             {primaryKey}
             columns={compiledColumns}
             {data}
-            dispatchEvent={(event: CustomEvent) => el.dispatchEvent(event)}
+            dispatchEvent={(event: CustomEvent) => el?.dispatchEvent(event)}
             ontoggle={handleRowClick}
-          />
+          >
+            <slot name="row-expansion" slot="row-expansion" />
+          </Body>
         </tbody>
       </table>
     </div>
 
-    <div class="pagination-root" part="pagination-root">
-      {#if pageableType === 'pagination' && count !== undefined}
+    {#if pageableType === 'pagination' && count !== undefined}
+      <div class="pagination-root" part="pagination-root">
         <Pagination bind:this={paginationRef} {count} {pageSizeOptions} {pageSize} />
-      {/if}
-    </div>
+      </div>
+    {/if}
   </div>
 
   {#if hasContextMenuSlot}
@@ -368,7 +388,7 @@
 
     /** Table header */
     --table-header-height: var(--dyn-table-header-height, 56px);
-    --table-header-background: var(--dyn-table-header-background, #ffffff);
+    --table-header-background: var(--dyn-table-header-background, var(--bg));
 
     /** Table header borders */
     --table-header-border-top-color: var(--dyn-table-header-border-top-color);
@@ -390,14 +410,23 @@
     /** Table rows*/
     --table-row-height: var(--dyn-table-row-height, 50px);
     --table-row-text-color: var(--dyn-table-row-text-color, var(--text));
+    --table-row-bg: var(--dyn-table-row-bg, var(--bg));
 
-    --row-border-top-color: var(--dyn-table-border-top-color);
-    --row-border-left-color: var(--dyn-table-border-left-color);
-    --row-border-right-color: var(--dyn-table-border-right-color);
-    --row-border-bottom-color: var(--dyn-table-border-bottom-color, var(--border));
+    --table-row-hover-bg: var(--dyn-table-row-hover-bg, var(--hover-bg));
+
+    --table-row-selected-bg: var(--dyn-table-row-selected-bg, var(--selected));
+    --table-row-selected-text-color: var(--dyn-table-row-selected-text-color, var(--selected-text));
+
+    --table-row-border-top-color: var(--dyn-table-row-border-top-color);
+    --table-row-border-left-color: var(--dyn-table-row-border-left-color);
+    --table-row-border-right-color: var(--dyn-table-row-border-right-color);
+    --table-row-border-bottom-color: var(--dyn-table-row-border-bottom-color, var(--border));
+
+    /** Table expansion */
+    --table-row-expansion-bg: var(--dyn-table-expansion-bg, var(--bg-2));
 
     /** Pagination */
-    --pagination-background: var(--dyn-table-pagination-background, #ffffff);
+    --pagination-background: var(--dyn-table-pagination-background, var(--bg));
     --pagination-height: var(--dyn-table-pagination-height, 50px);
     --pagination-page-num-btn-selected: var(--dyn-table-pagination-page-num-btn-selected, var(--selected));
     --pagination-page-num-text-selected: var(--dyn-table-pagination-page-num-text-selected, var(--selected-text));
@@ -405,7 +434,7 @@
     --pagination-action-btn-hover: var(--dyn-table-pagination-action-btn-hover, var(--hover-bg));
 
     /** Context menu */
-    --context-menu-border-color: var(--dyn-table-context-menu-border-color, var(--table-border-color));
+    --context-menu-border-color: var(--dyn-table-context-menu-border-color, var(--border));
     --context-menu-background: var(--dyn-table-context-menu-background, #ffffff);
   }
 
@@ -415,11 +444,6 @@
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
-
-    border-color: var(--table-border-color);
-    border-width: 1px;
-    border-style: solid;
-    border-radius: 12px;
 
     overflow: hidden;
   }
@@ -439,6 +463,20 @@
     overflow-y: auto;
     position: relative;
     min-height: 0;
+  }
+
+  .table-scroll::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .table-scroll::-webkit-scrollbar-track {
+    margin-top: var(--table-header-height);
+  }
+
+  .table-scroll::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
   }
 
   .table {

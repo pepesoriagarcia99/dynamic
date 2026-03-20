@@ -128,23 +128,23 @@
 
   /** API */
   function resetSelection() {
-    tableEl?.selection.reset();
+    tableEl?.selection?.reset();
   }
 
   function selectAll() {
-    tableEl?.selection.selectAll();
+    tableEl?.selection?.selectAll();
   }
 
   function resetSort() {
-    tableEl?.sort.reset();
+    tableEl?.sort?.reset();
   }
 
   function resetPagination() {
-    tableEl?.pagination.reset();
+    tableEl?.pagination?.reset();
   }
 
   function resetFilters() {
-    tableEl?.filter.reset();
+    tableEl?.filter?.reset();
   }
 
   function refresh() {
@@ -177,7 +177,7 @@
       filterableType="advanced"
       pageableType="pagination"
       resizable={true}
-      selectableType="multiple"
+      selectableType="none"
       sortableType="multiple"
       pageSizeOptions={[5, 50, 100, 200]}
       pageSize={200}

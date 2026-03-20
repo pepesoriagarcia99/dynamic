@@ -28,20 +28,32 @@
 
   /** States */
   let selectedIds: any[] = $state([]);
+  let expandedRow: any = $state(null);
+
+  /** Variables */
+  let initRangeSelection: number | undefined;
+
+  /** Effects */
+  $effect(() => {
+    if (!!dispatchEvent) {
+      dispatchEvent(
+        new CustomEvent(SELECTION_EVENT_NAME, {
+          detail: $state.snapshot(selectedIds),
+          bubbles: true,
+          composed: true
+        })
+      );
+    }
+  });
 
   /** Methods */
-  function _emitSelection() {
-    dispatchEvent(
-      new CustomEvent(SELECTION_EVENT_NAME, {
-        detail: $state.snapshot(selectedIds),
-        bubbles: true,
-        composed: true
-      })
-    );
-  }
-
-  function onRowClick(event: RowEvent) {
+  export function onRowClick(event: RowEvent) {
     const key = event.row[primaryKey];
+
+    // Reseteo de selección por rango si no se mantiene presionada la tecla SHIFT
+    if (!event.ctx.SHIFT) {
+      initRangeSelection = undefined;
+    }
 
     if (tableConfiguration().selectableType === 'single') {
       if (event.type === 'leftclick') {
@@ -54,8 +66,6 @@
       } else if (event.type === 'rightclick' && contextMenuVisibleState().has === true) {
         selectedIds = [key];
       }
-
-      _emitSelection();
     } else if (tableConfiguration().selectableType === 'multiple') {
       if (event.type === 'leftclick') {
         if (event.ctx.CTRL) {
@@ -65,24 +75,50 @@
           } else {
             selectedIds.push(key);
           }
-
-          _emitSelection();
         } else if (event.ctx.SHIFT) {
-          // Lógica para selección múltiple con SHIFT
-          // Aquí podrías implementar la lógica para seleccionar un rango de filas
+          if (!initRangeSelection) {
+            initRangeSelection = event.index!;
+          }
+
+          if (initRangeSelection !== undefined) {
+            const start = Math.min(initRangeSelection, event.index!);
+            const end = Math.max(initRangeSelection, event.index!);
+
+            for (let i = start; i <= end; i++) {
+              selectedIds.push(data[i][primaryKey]);
+            }
+          }
+        } else if (selectedIds.length === 1 && selectedIds.includes(key)) {
+          selectedIds = [];
         } else {
           selectedIds = [key];
-          _emitSelection();
         }
       } else if (event.type === 'rightclick') {
         if (!selectedIds.includes(key)) {
           selectedIds = [key];
-          _emitSelection();
         }
       }
     }
 
     ontoggle(event, $state.snapshot(selectedIds));
+
+    /**
+     * Row expansion logic:
+     * - No se mostrara si existen varias filas seleccionadas.
+     * - No se mostrara si el evento es por CTRL o SHIFT.
+     * - No se mostrara si el evento es por click derecho.
+    */
+    if (
+      tableConfiguration().expansible === true &&
+      selectedIds.length === 1 &&
+      !event.ctx.SHIFT &&
+      !event.ctx.CTRL &&
+      event.type !== 'rightclick'
+    ) {
+      expandedRow = selectedIds[0];
+    } else {
+      expandedRow = null;
+    }
   }
 
   export function selectAll() {
@@ -92,13 +128,10 @@
         selectedIds.push(key);
       }
     });
-
-    _emitSelection();
   }
 
   export function deselectAll() {
     selectedIds = [];
-    _emitSelection();
   }
 
   export function getSelectedIds() {
@@ -113,8 +146,11 @@
     {row}
     selectableType={tableConfiguration().selectableType}
     selected={selectedIds.includes(row[primaryKey] as any)}
+    expanded={expandedRow === row[primaryKey]}
     ontoggle={onRowClick}
-  />
+  >
+    <slot name="row-expansion" slot="expansion" />
+  </Row>
 {/each}
 
 <style>

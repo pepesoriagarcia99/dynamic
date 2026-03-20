@@ -1,4 +1,7 @@
 <script lang="ts">
+  import { slide } from 'svelte/transition';
+  import { cubicOut } from 'svelte/easing';
+
   import { ROW_CLICK_EVENT_NAME, TOOLTIP_DELAY } from '../../constant';
 
   import type { Column, ColumnCompiled } from '../../models/column/Column';
@@ -17,10 +20,11 @@
     row: RowData;
     selected: boolean;
     selectableType: SelectableType;
+    expanded: boolean;
     ontoggle: (event: RowEvent) => void;
   }
   /** Inputs */
-  const { index, columns, row, selected, selectableType, ontoggle }: RowProps = $props();
+  const { index, columns, row, selected, selectableType, expanded, ontoggle }: RowProps = $props();
 
   /** Values */
   let tr: HTMLElement;
@@ -37,6 +41,7 @@
 
     const customEventDetail: RowEvent = {
       type,
+      index,
       row,
       column,
       ctx: {
@@ -91,6 +96,9 @@
   onclick={onLeftClick}
   oncontextmenu={onRightClick}
   ondblclick={onDoubleClick}
+  onmousedown={(e) => {
+    if (e.shiftKey) e.preventDefault();
+  }}
 >
   {#each columns as column, colIndex}
     {@const value = column.compiled.valueGetter(row)}
@@ -127,6 +135,18 @@
   {/each}
 </tr>
 
+{#if expanded}
+  <tr class="expansion-row" part="expansion-row">
+    <td colspan={columns.length} class="expansion-cell" part="expansion-cell">
+      <div transition:slide={{ duration: 150, easing: cubicOut }} class="expansion-wrapper">
+        <div class="expansion-container" part="expansion-container">
+          <slot name="expansion" />
+        </div>
+      </div>
+    </td>
+  </tr>
+{/if}
+
 <style>
   /* ROW */
 
@@ -136,17 +156,41 @@
 
   .row:not(.row-selected) {
     color: var(--table-row-text-color);
+    background: var(--table-row-bg);
   }
 
   .row-selected {
-    background: var(--select-color);
-    color: var(--select-text-color);
+    background: var(--table-row-selected-bg);
+    color: var(--table-row-selected-text-color);
     cursor: pointer;
   }
 
   .row-selectable:hover {
     cursor: pointer;
-    background: var(--select-hover-color);
+    background: var(--table-row-hover-bg);
+  }
+
+  /** EXPANSION ROW */
+
+  .expansion-row {
+    background: var(--table-row-expansion-bg);
+  }
+
+  .expansion-cell {
+    padding: 0;
+    border-bottom: 1px solid var(--table-row-border-bottom-color);
+    white-space: normal;
+  }
+
+  .expansion-wrapper {
+    /* overflow: hidden; */
+    will-change: height;
+  }
+
+  .expansion-container {
+    padding: 12px;
+    overflow: auto;
+    contain: inline-size;
   }
 
   /* COLUMNA  */
@@ -157,10 +201,10 @@
   }
 
   .column {
-    border-bottom: 1px solid var(--row-border-bottom-color);
-    border-top: 1px solid var(--row-border-top-color);
-    border-left: 1px solid var(--row-border-left-color);
-    border-right: 1px solid var(--row-border-right-color);
+    border-bottom: 1px solid var(--table-row-border-bottom-color);
+    border-top: 1px solid var(--table-row-border-top-color);
+    border-left: 1px solid var(--table-row-border-left-color);
+    border-right: 1px solid var(--table-row-border-right-color);
   }
 
   .column-value {

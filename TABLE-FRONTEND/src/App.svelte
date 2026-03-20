@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import './app.css';
 
   import Header from './shared/Header.svelte';
@@ -6,16 +7,22 @@
   import Controls from './pages/Controls.svelte';
   import AdvanceFilter from './pages/AdvanceFilter.svelte';
   import TableSimple from './pages/TableSimple.svelte';
+  import TableExpansive from './pages/TableExpansive.svelte';
 
   const menuItems = [
-    { key: 'controls', component: Controls, label: 'Controls' },
     { key: 'table_complex', component: TableComplex, label: 'Complex table' },
+    { key: 'table_expansible', component: TableExpansive, label: 'Expansible table' },
     { key: 'table_simple', component: TableSimple, label: 'Simple table' },
-    { key: 'advanceFilter', component: AdvanceFilter, label: 'Advance Filter' },
-    
+    { key: 'controls', component: Controls, label: 'Controls' },
+    { key: 'advanceFilter', component: AdvanceFilter, label: 'Advance Filter' }
   ];
 
-  let Component = $state<any>(menuItems[0].component);
+  let header: Header | null = $state<Header | null>(null);
+  let Component = $state<any>();
+
+  onMount(() => {
+    header?.handleClick(menuItems[0]);
+  });
 
   function handleMenuSelect(e: any) {
     Component = e.component;
@@ -23,7 +30,7 @@
 </script>
 
 <main>
-  <Header items={menuItems} onSelect={handleMenuSelect} />
+  <Header bind:this={header} items={menuItems} onSelect={handleMenuSelect} />
 
   <div class="content">
     <Component />

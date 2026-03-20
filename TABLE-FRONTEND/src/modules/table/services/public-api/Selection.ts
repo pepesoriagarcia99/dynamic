@@ -1,4 +1,6 @@
+import type { RowEvent } from '../../models/event/RowEvent';
 import type { default as BodyComponent } from '../../components/body/Body.svelte';
+
 
 export class Selection {
 
@@ -14,6 +16,10 @@ export class Selection {
 
     public selectAll() {
         this.bodyRef.selectAll();
+    }
+
+    public select(event: RowEvent) {
+        this.bodyRef.onRowClick(event);
     }
 
     public state(): any[] {
