@@ -1,5 +1,5 @@
-import type { ColorConfiguration } from "../common/ColorConfiguration";
+import type { StyleConfiguration } from "../common/StyleConfiguration";
 
 export interface ColumnConfiguration {
-  colorConfiguration?: ColorConfiguration[];
+  styleConfiguration?: StyleConfiguration[];
 }

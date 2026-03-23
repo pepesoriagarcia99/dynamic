@@ -14,7 +14,7 @@ export const columnCompiler = (column: Column, index: number): ColumnCompiled =>
             column: styleTransformer.toString(column.style),
         },
         valueGetter: buildValueGetter(column.key),
-        styleGetter: buildStyleGetter(column.configuration?.colorConfiguration)
+        styleGetter: buildStyleGetter(column.configuration?.styleConfiguration)
     };
 
     return compiledColum;

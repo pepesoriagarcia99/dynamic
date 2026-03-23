@@ -95,11 +95,11 @@
    */
   function getRowStyle(): string | undefined {
     let style = '';
-    rowConfiguration?.rowColorConfiguration?.forEach((rowColorConfig) => {
-      const styleGetter = rowConfiguration.compiled?.styleGetters![rowColorConfig.column];
+    rowConfiguration?.rowStyleConfiguration?.forEach((rowStyleConfig) => {
+      const styleGetter = rowConfiguration.compiled?.styleGetters![rowStyleConfig.column];
       if (!styleGetter) return;
 
-      const valueGetter = rowConfiguration.compiled?.valueGetters![rowColorConfig.column];
+      const valueGetter = rowConfiguration.compiled?.valueGetters![rowStyleConfig.column];
       if (!valueGetter) return;
 
       const value = valueGetter(row);

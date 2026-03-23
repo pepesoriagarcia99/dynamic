@@ -1,14 +1,14 @@
 import { styleTransformer } from '../utils/style-transformer';
-import type { ColorConfiguration } from '../models/common/ColorConfiguration';
+import type { StyleConfiguration } from '../models/common/StyleConfiguration';
 
-export const buildStyleGetter = (colorConfiguration: ColorConfiguration[] = []) => {
+export const buildStyleGetter = (styleConfiguration: StyleConfiguration[] = []) => {
   const compiledStyles: string[] = [];
-  colorConfiguration?.forEach((element) => {
+  styleConfiguration?.forEach((element) => {
     compiledStyles.push(styleTransformer.toString(element.style));
   });
 
   return (value: any): string => {
-    const index = colorConfiguration.findIndex((config) => {
+    const index = styleConfiguration.findIndex((config) => {
       if (config.range) {
         if (Number(value) >= Number(config.range?.min) && Number(value) <= Number(config.range?.max)) {
           return true;

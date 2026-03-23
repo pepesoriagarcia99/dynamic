@@ -19,10 +19,10 @@
    * Configuraciones para la tabla
   */
   const configuration = {
-    rowColorConfiguration: [
+    rowStyleConfiguration: [
       {
         column: 'rating',
-        colorConfiguration: [
+        styleConfiguration: [
           {
             range: { min: 0, max: 0 },
             style: {
@@ -33,7 +33,7 @@
       },
       {
         column: 'subscription.plan',
-        colorConfiguration: [
+        styleConfiguration: [
           {
             value: 'basic',
             style: {
@@ -104,7 +104,7 @@
       filterable: true,
       sortable: true,
       configuration: {
-        colorConfiguration: [
+        styleConfiguration: [
           {
             value: 'female',
             style: {
@@ -196,7 +196,7 @@
       filterable: true,
       sortable: true,
       configuration: {
-        colorConfiguration: [
+        styleConfiguration: [
           {
             value: 'Low',
             style: {
@@ -228,7 +228,7 @@
       name: 'Plan de suscripción',
       type: 'string',
       configuration: {
-        colorConfiguration: [
+        styleConfiguration: [
           {
             value: 'enterprise',
             style: {
@@ -264,7 +264,7 @@
       name: 'Calificación',
       type: 'string',
       configuration: {
-        colorConfiguration: [
+        styleConfiguration: [
           {
             range: { min: 7, max: 10 },
             style: {

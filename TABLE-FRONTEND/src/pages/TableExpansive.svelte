@@ -73,7 +73,7 @@
       filterable: true,
       sortable: true,
       configuration: {
-        colorConfiguration: [
+        styleConfiguration: [
           {
             value: 'female',
             style: {
@@ -165,7 +165,7 @@
       filterable: true,
       sortable: true,
       configuration: {
-        colorConfiguration: [
+        styleConfiguration: [
           {
             value: 'Low',
             style: {
@@ -197,7 +197,7 @@
       name: 'Plan de suscripción',
       type: 'string',
       configuration: {
-        colorConfiguration: [
+        styleConfiguration: [
           {
             value: 'enterprise',
             style: {
@@ -233,7 +233,7 @@
       name: 'Calificación',
       type: 'string',
       configuration: {
-        colorConfiguration: [
+        styleConfiguration: [
           {
             range: { min: 7, max: 10 },
             style: {

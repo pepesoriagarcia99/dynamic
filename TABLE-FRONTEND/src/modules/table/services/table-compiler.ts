@@ -6,8 +6,8 @@ export const tableCompiler = (configuration: RowConfiguration): RowConfiguration
   const styleGetters: Record<string, (value: any) => string> = {};
   const valueGetters: Record<string, (row: any) => any> = {};
 
-  configuration.rowColorConfiguration?.forEach((config) => {
-    styleGetters[config.column] = buildStyleGetter(config.colorConfiguration);
+  configuration.rowStyleConfiguration?.forEach((config) => {
+    styleGetters[config.column] = buildStyleGetter(config.styleConfiguration);
     valueGetters[config.column] = buildValueGetter(config.column);
   });
 

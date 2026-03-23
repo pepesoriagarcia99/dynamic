@@ -1,6 +1,6 @@
 import type { Style } from "./Style";
 
-export interface ColorConfiguration {
+export interface StyleConfiguration {
   range?: {
     min: any;
     max: any;
