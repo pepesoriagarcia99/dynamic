@@ -1,5 +1,5 @@
 import type { Column } from '../column/Column';
-import type { RowData } from '../RowData';
+import type { RowData } from '../row/RowData';
 
 export type RowEventType = 'leftclick' | 'rightclick' | 'doubleclick';
 

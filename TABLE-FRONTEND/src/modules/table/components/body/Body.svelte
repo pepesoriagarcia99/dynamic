@@ -6,8 +6,8 @@
   import type { ColumnCompiled } from '../../models/column/Column';
   import type { TableConfiguration } from '../../models/configuration/TableConfiguration';
   import type { RowEvent } from '../../models/event/RowEvent';
-  import type { RowData } from '../../models/RowData';
   import type { ContextMenuConfiguration } from '../../models/configuration/ContextMenuConfiguration';
+  import type { RowData } from '../../models/row/RowData';
 
   import Row from './Row.svelte';
 
@@ -147,6 +147,7 @@
     selectableType={tableConfiguration().selectableType}
     selected={selectedIds.includes(row[primaryKey] as any)}
     expanded={expandedRow === row[primaryKey]}
+    rowConfiguration={tableConfiguration().configurationCompiled}
     ontoggle={onRowClick}
   >
     <slot name="row-expansion" slot="expansion" />

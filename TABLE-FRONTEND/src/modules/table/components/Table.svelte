@@ -30,18 +30,22 @@
     FilterableType,
     PageableType,
     SelectableType,
-    SortableType
+    SortableType,
+    TableConfiguration
   } from '../models/configuration/TableConfiguration';
   import type { TableReadyEvent } from '../models/event/TableEvent';
+  import type { RowConfiguration } from '../models/row/RowConfiguration';
+  import type { ContextMenuEvent } from '../models/event/ContextMenuEvent';
 
   import Header from './header/Header.svelte';
   import Pagination from './Pagination.svelte';
   import ContextMenu from './ContextMenu.svelte';
   import LoadingBody from './body/LoadingBody.svelte';
-  import { columnCompiler } from '../services/column-compiler';
   import Body from './body/Body.svelte';
-  import type { ContextMenuEvent } from '../models/event/ContextMenuEvent';
+
+  import { columnCompiler } from '../services/column-compiler';
   import { declarePublicApi } from '../services/public-api/declare';
+  import { tableCompiler } from '../services/table-compiler';
 
   interface TableProps {
     primaryKey: string;
@@ -57,6 +61,7 @@
     pageSize?: number;
     resizable?: boolean;
     expansible?: boolean;
+    configuration?: RowConfiguration;
   }
 
   /** Inputs */
@@ -73,7 +78,8 @@
     pageSizeOptions = DEFAULT_PAGE_SIZE_OPTIONS,
     pageSize = DEFAULT_PAGE_SIZE,
     resizable = DEFAULT_RESIZABLE,
-    expansible = DEFAULT_EXPANSIBLE
+    expansible = DEFAULT_EXPANSIBLE,
+    configuration = {}
   }: TableProps = $props();
 
   /** Values */
@@ -101,8 +107,9 @@
     pageableType,
     primaryKey,
     resizable,
-    expansible
-  }));
+    expansible,
+    configurationCompiled: tableCompiler(configuration)
+  } as TableConfiguration));
   setContext(LOADING_STATE, () => loading);
   setContext(CONTEXT_MENU_VISIBLE_STATE, () => ({
     visible: contextMenuVisible,

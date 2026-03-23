@@ -13,8 +13,8 @@ export const columnCompiler = (column: Column, index: number): ColumnCompiled =>
         style: {
             column: styleTransformer.toString(column.style),
         },
-        valueGetter: buildValueGetter(column),
-        styleGetter: buildStyleGetter(column)
+        valueGetter: buildValueGetter(column.key),
+        styleGetter: buildStyleGetter(column.configuration?.colorConfiguration)
     };
 
     return compiledColum;

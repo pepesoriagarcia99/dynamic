@@ -5,9 +5,10 @@
   import { ROW_CLICK_EVENT_NAME, TOOLTIP_DELAY } from '../../constant';
 
   import type { Column, ColumnCompiled } from '../../models/column/Column';
-  import type { RowData } from '../../models/RowData';
+  import type { RowData } from '../../models/row/RowData';
   import type { RowEvent, RowEventType } from '../../models/event/RowEvent';
   import type { SelectableType } from '../../models/configuration/TableConfiguration';
+  import type { RowConfigurationCompiled } from '../../models/row/RowConfiguration';
 
   import { tooltip } from '../../../tooltip/directives/tooltip';
 
@@ -21,10 +22,11 @@
     selected: boolean;
     selectableType: SelectableType;
     expanded: boolean;
+    rowConfiguration?: RowConfigurationCompiled;
     ontoggle: (event: RowEvent) => void;
   }
   /** Inputs */
-  const { index, columns, row, selected, selectableType, expanded, ontoggle }: RowProps = $props();
+  const { index, columns, row, selected, selectableType, expanded, rowConfiguration, ontoggle }: RowProps = $props();
 
   /** Values */
   let tr: HTMLElement;
@@ -87,12 +89,32 @@
   function onDoubleClick(event: MouseEvent) {
     onRowClick(event, 'doubleclick', resolveColumnFromEvent(event));
   }
+
+  /**
+   * TODO: Optimizar este codigo para mejorar la performance
+   */
+  function getRowStyle(): string | undefined {
+    let style = '';
+    rowConfiguration?.rowColorConfiguration?.forEach((rowColorConfig) => {
+      const styleGetter = rowConfiguration.compiled?.styleGetters![rowColorConfig.column];
+      if (!styleGetter) return;
+
+      const valueGetter = rowConfiguration.compiled?.valueGetters![rowColorConfig.column];
+      if (!valueGetter) return;
+
+      const value = valueGetter(row);
+      style += styleGetter(value);
+    });
+
+    return style;
+  }
 </script>
 
 <tr
   bind:this={tr}
   part={rowStyle}
   class={rowStyle}
+  style={selected ? undefined : getRowStyle()}
   onclick={onLeftClick}
   oncontextmenu={onRightClick}
   ondblclick={onDoubleClick}

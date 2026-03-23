@@ -15,6 +15,37 @@
   import type { ContextMenuEvent } from '../modules/table/models/event/ContextMenuEvent';
   import type { PublicApi } from '../main-wc';
 
+  /**
+   * Configuraciones para la tabla
+  */
+  const configuration = {
+    rowColorConfiguration: [
+      {
+        column: 'rating',
+        colorConfiguration: [
+          {
+            range: { min: 0, max: 0 },
+            style: {
+              'background-color': '#FECACA'
+            }
+          }
+        ]
+      },
+      {
+        column: 'subscription.plan',
+        colorConfiguration: [
+          {
+            value: 'basic',
+            style: {
+              'color': '#854D0E',
+              'font-weight': '600'
+            }
+          }
+        ]
+      }
+    ]
+  };
+
   // 26 columnas
   let columns: Column[] = [
     {
@@ -190,7 +221,7 @@
     {
       key: 'isVerified',
       name: 'Verificado',
-      type: 'boolean',
+      type: 'boolean'
     },
     {
       key: 'subscription.plan',
@@ -380,23 +411,23 @@
 
   /** API */
   function resetSelection() {
-    tableEl?.selection.reset();
+    tableEl?.selection?.reset();
   }
 
   function selectAll() {
-    tableEl?.selection.selectAll();
+    tableEl?.selection?.selectAll();
   }
 
   function resetSort() {
-    tableEl?.sort.reset();
+    tableEl?.sort?.reset();
   }
 
   function resetPagination() {
-    tableEl?.pagination.reset();
+    tableEl?.pagination?.reset();
   }
 
   function resetFilters() {
-    tableEl?.filter.reset();
+    tableEl?.filter?.reset();
   }
 
   function refresh() {
@@ -426,6 +457,7 @@
       {columns}
       {count}
       {data}
+      {configuration}
       filterableType="advanced"
       pageableType="pagination"
       resizable={true}

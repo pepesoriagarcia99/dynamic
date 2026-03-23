@@ -4,7 +4,7 @@ export { Table };
 
 // Exportar tipos de modelos
 export type { Column, ColumnType } from './modules/table/models/column/Column';
-export type { RowData } from './modules/table/models/RowData';
+export type { RowData } from './modules/table/models/row/RowData';
 
 // Exportar tipos de columnas específicas
 export type { ColorConfiguration, ColumnConfiguration } from './modules/table/models/column/ColumnConfiguration';

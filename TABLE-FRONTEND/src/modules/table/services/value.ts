@@ -1,5 +1,3 @@
-import type { Column } from "../models/column/Column";
-
 type PathPart = string | number;
 
 /**
@@ -8,9 +6,7 @@ type PathPart = string | number;
  * Se ejecuta UNA sola vez por columna
  * El resultado es una función ultra barata
  */
-export function buildValueGetter(column: Column): (row: any) => any {
-  const key = column.key;
-
+export function buildValueGetter(key: string): (row: any) => any {
   // Fast-path: acceso directo (sin '.','[')
   if (key.indexOf('.') === -1 && key.indexOf('[') === -1) {
     return function (row: any) {

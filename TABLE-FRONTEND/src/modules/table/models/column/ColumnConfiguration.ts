@@ -1,14 +1,4 @@
-import type { Style } from "./Style";
-
-export interface ColorConfiguration {
-  range?: {
-    min: any;
-    max: any;
-  };
-
-  value?: any;
-  style: Style;
-}
+import type { ColorConfiguration } from "../common/ColorConfiguration";
 
 export interface ColumnConfiguration {
   colorConfiguration?: ColorConfiguration[];

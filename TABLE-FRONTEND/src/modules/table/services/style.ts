@@ -1,18 +1,14 @@
-import { styleTransformer } from "../utils/style-transformer";
-import type { Column } from "../models/column/Column";
+import { styleTransformer } from '../utils/style-transformer';
+import type { ColorConfiguration } from '../models/common/ColorConfiguration';
 
-export const buildStyleGetter = (column: Column) => {
+export const buildStyleGetter = (colorConfiguration: ColorConfiguration[] = []) => {
   const compiledStyles: string[] = [];
-  column.configuration?.colorConfiguration?.forEach(element => {
+  colorConfiguration?.forEach((element) => {
     compiledStyles.push(styleTransformer.toString(element.style));
   });
 
   return (value: any): string => {
-    if (!column.configuration?.colorConfiguration) {
-      return '';
-    }
-
-    const index = column.configuration?.colorConfiguration?.findIndex((config) => {
+    const index = colorConfiguration.findIndex((config) => {
       if (config.range) {
         if (Number(value) >= Number(config.range?.min) && Number(value) <= Number(config.range?.max)) {
           return true;
@@ -28,4 +24,4 @@ export const buildStyleGetter = (column: Column) => {
 
     return index !== -1 ? compiledStyles[index] : '';
   };
-}
+};

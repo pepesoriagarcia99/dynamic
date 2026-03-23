@@ -1,5 +1,5 @@
 import type { ColumnConfiguration } from './ColumnConfiguration';
-import type { Style } from './Style';
+import type { Style } from '../common/Style';
 
 export type ColumnType = 'string' | 'number' | 'boolean' | 'date' | 'image' | 'avatar' | 'selector';
 
